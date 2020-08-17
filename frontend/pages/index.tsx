@@ -55,91 +55,6 @@ export default function Index() {
     )
 }
 
-// function IndexNavbar() {
-//     // prettier-ignore
-//     const dropdownRef = useRef<HTMLDivElement>(null)
-//     const [menuOpen, setMenuOpen] = useState(false)
-
-//     //TODO: properly define the type of event, this is a weird edge case in typescript types that isnt clear
-//     const handleClickOutsideDropdown = (e: any) => {
-//         if (dropdownRef?.current?.contains(e.target)) {
-//             return
-//         }
-//         setMenuOpen(false)
-//     }
-
-//     useEffect(() => {
-//         if (menuOpen) {
-//             document.addEventListener('mousedown', handleClickOutsideDropdown)
-//         } else {
-//             document.removeEventListener('mousedown', handleClickOutsideDropdown)
-//         }
-//     }, [menuOpen])
-
-//     return (
-//         <>
-//             <header className="h-16 container mx-auto flex justify-between items-center">
-//                 <a href="/">
-//                     <LogoIcon className="w-32 h-12 text-white" hover="hover:text-gray-200" />
-//                 </a>
-//                 <ul className="hidden md:flex space-x-6 text-white">
-//                     <li tabIndex={0}>Contact</li>
-//                     <li tabIndex={0}>Pricing</li>
-//                     <li tabIndex={0}>Documentation</li>
-//                 </ul>
-//                 <div className="hidden md:flex md:items-center">
-//                     <Link href="/account/sign-in">
-//                         <a className="mr-6 text-white" href="/account/sign-in">
-//                             Sign in
-//                         </a>
-//                     </Link>
-//                     <Link href="/accounts/sign-up">
-//                         <a
-//                             className="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:shadow"
-//                             href="/accounts/sign-up"
-//                         >
-//                             Join now
-//                         </a>
-//                     </Link>
-//                 </div>
-//                 <button
-//                     className="md:hidden"
-//                     onClick={() => {
-//                         console.log('click')
-//                         setMenuOpen(!menuOpen)
-//                     }}
-//                 >
-//                     <BurgerMenuIcon className="h-8 w-8 text-white" />
-//                 </button>
-//             </header>
-//             <div
-//                 ref={dropdownRef}
-//                 className={`${menuOpen ? 'flex' : 'hidden'} mt-4 flex-col container mx-auto space-y-6`}
-//             >
-//                 <ul className="inline-flex flex-col space-y-2 text-white">
-//                     <li tabIndex={0}>Contact</li>
-//                     <li tabIndex={0}>Pricing</li>
-//                     <li tabIndex={0}>Documentation</li>
-//                 </ul>
-
-//                 <Link href="/account/sign-in">
-//                     <a className="mr-6 text-white" href="/account/sign-in">
-//                         Sign in
-//                     </a>
-//                 </Link>
-//                 <Link href="/account/sign-up">
-//                     <a
-//                         className="block bg-blue-500 text-white font-medium px-4 py-2 rounded shadow-md"
-//                         href="/account/sign-up"
-//                     >
-//                         Join now
-//                     </a>
-//                 </Link>
-//             </div>
-//         </>
-//     )
-// }
-
 export function IndexNavbar() {
     //prettier-ignore
     const dropdownRef = useRef<HTMLDivElement>(null)
@@ -167,7 +82,7 @@ export function IndexNavbar() {
                     <div className="flex items-center">
                         <div className="flex-shrink-0">
                             <a href="/">
-                                <LogoIcon className="w-32 h-12 text-white" hover="hover:text-gray-200" />
+                                <LogoIcon className="-mt-1 w-32 h-12 text-white" hover="hover:text-gray-200" />
                             </a>
                         </div>
                     </div>
