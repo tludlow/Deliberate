@@ -7,17 +7,22 @@ import { useState, useRef, useEffect } from 'react'
 export default function Index() {
     return (
         <Layout title="Deliberate - Team management made easy" hideNav>
-            <section className="w-full px-3 xl:px-0 pb-6 bg-brand index-hero shadow-lg">
+            {/* Hero section */}
+            <section className="w-full px-3 xl:px-0 bg-brand index-hero shadow-lg">
                 <IndexNavbar />
-                <h2 className="mt-6 text-center text-white text-3xl md:text-4xl font-bold md:font-extrabold">
-                    An automated approach to small team management
+                <h2 className="mt-6 text-center text-white text-2xl md:text-4xl font-bold md:font-extrabold">
+                    An <span className="md:underline">automated</span> approach to{' '}
+                    <span className="md:underline">small team management</span>
                 </h2>
-                <h5 className="mt-3 w-10/12 sm:w-8/12 md:w-5/12 mx-auto text-center text-lg text-gray-200">
+                <h5 className="mt-3 w-10/12 sm:w-8/12 lg:w-5/12 mx-auto text-center md:text-lg text-gray-200">
                     Stop using the tools which are complicated, contribute nothing to your productivity and are more
                     hassle than they are worth
                 </h5>
-                <div className="mt-8 mb-15 flex justify-center">
-                    <button className="flex items-center p-2 border-2 border-blue-500 rounded cursor-pointer group">
+                <div className="mt-8 pb-8 flex justify-center">
+                    <button
+                        className="flex items-center p-2 border-2 border-blue-500 rounded cursor-pointer group"
+                        style={{ backgroundColor: '#316bbc' }}
+                    >
                         <svg
                             viewBox="0 0 20 20"
                             fill="currentColor"
@@ -34,6 +39,9 @@ export default function Index() {
                         </p>
                     </button>
                 </div>
+            </section>
+            <section className="mt-12 container mx-auto">
+                <h3 className="font-bold text-3xl text-cool-gray-800 text-center">How it works</h3>
             </section>
         </Layout>
     )
@@ -74,7 +82,9 @@ function IndexNavbar() {
                     <a className="mr-6 text-white" href="">
                         Sign in
                     </a>
-                    <button className="bg-blue-500 text-white font-medium px-4 py-2 rounded">Join now</button>
+                    <button className="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:shadow">
+                        Join now
+                    </button>
                 </div>
                 <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
                     <BurgerMenuIcon className="h-8 w-8 text-white" />
