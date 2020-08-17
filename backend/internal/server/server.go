@@ -9,10 +9,9 @@ import (
 )
 
 type Server struct {
-	Pool *pgxpool.Pool    //database
-	Router *gin.Engine  //http router
+	Pool   *pgxpool.Pool //database
+	Router *gin.Engine   //http router
 }
-
 
 func New(ctx context.Context) (*Server, error) {
 	server := &Server{}

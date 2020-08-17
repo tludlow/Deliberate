@@ -37,14 +37,13 @@ func actualMain(ctx context.Context) error {
 		return errors.Wrap(err, "server.New")
 	}
 
-
 	//Need to make my own HTTP serve/listen system here so that we can close the server on context
 	//Example in google-exposure server, related to done on line 15 of this file
 	//TODO
-	
+
 	//Transform our gin router to be ran on a stdlib http server so we can gracefull handle shutdowns related to context
 	srv := &http.Server{
-		Addr: ":" + os.Getenv("PORT"),
+		Addr:    ":" + os.Getenv("PORT"),
 		Handler: server.Router,
 	}
 

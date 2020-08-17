@@ -1,15 +1,16 @@
 {
     "name": "deliberate",
     "version": "0.1.0",
-    "description": "An automated management solution for small, agile teams",
+    "description": "an automated solution to small team project management",
     "main": "index.js",
     "scripts": {
-        "dev": "next",
+        "dev": "yarn && next",
         "build": "next build",
         "start": "next start",
+        "starthttps": "node server.js"
     },
     "keywords": [],
-    "author": "",
+    "author": "Thomas Ludlow",
     "license": "ISC",
     "dependencies": {
         "@tailwindcss/ui": "^0.3.0",
@@ -20,6 +21,18 @@
         "postcss-nesting": "^7.0.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
-        "tailwindcss": "^1.4.6"
+        "react-redux": "^7.2.0",
+        "redux": "^4.0.5",
+        "redux-api-middleware": "^3.2.1",
+        "redux-devtools-extension": "^2.13.8",
+        "redux-persist": "^6.0.0",
+        "redux-thunk": "^2.3.0",
+        "tailwindcss": "^1.6.2"
     },
+    "devDependencies": {
+        "@types/node": "^14.0.27",
+        "@types/react": "^16.9.46",
+        "@types/react-redux": "^7.1.9",
+        "typescript": "^3.9.7"
+    }
 }

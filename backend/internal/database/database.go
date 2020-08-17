@@ -8,7 +8,7 @@ import (
 )
 
 func Connect(ctx context.Context) (*pgxpool.Pool, error) {
-	pool, err := pgxpool.Connect(ctx, "user=deliberate password=randompasswordlol host=localhost port=5432 database=deliberate sslmode=disable")
+	pool, err := pgxpool.Connect(ctx, "user=deliberate password=testpassword host=localhost port=5432 database=deliberate sslmode=disable")
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to connect to the database")
 	}

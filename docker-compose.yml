@@ -1,15 +1,15 @@
 version: '3'
-
 services:
     database:
-        image: 'postgres'
+        image: postgres
         environment:
-            POSTGRES_USER: deliberate
-            POSTGRES_PASSWORD: randompasswordlol
-        volumes:
-            - db-data:/var/lib/postgresql/data
+            - POSTGRES_USER=deliberate
+            - POSTGRES_PASSWORD=testpassword
+            - POSTGRES_DB=deliberate
         ports:
             - '5432:5432'
+        volumes:
+            - database-data:/var/lib/postgresql/data/
 
 volumes:
-    db-data:
+    database-data:
