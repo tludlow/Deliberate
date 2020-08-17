@@ -15,6 +15,9 @@ module.exports = {
             fontFamily: {
                 sans: ['Inter var', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                brand: '#3356BC',
+            },
             backgroundColor: (theme) => ({
                 brand: '#3356BC',
             }),

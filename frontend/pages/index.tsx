@@ -3,6 +3,8 @@ import { LogoIcon } from '@/components/icons/Logo'
 import { BurgerMenuIcon } from '../components/icons/BurgerMenu'
 
 import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
+import useOnClickOutside from '../hooks/useOnClickOutside'
 
 export default function Index() {
     return (
@@ -10,11 +12,17 @@ export default function Index() {
             {/* Hero section */}
             <section className="w-full px-3 xl:px-0 bg-brand index-hero shadow-lg">
                 <IndexNavbar />
-                <h2 className="mt-6 text-center text-white text-2xl md:text-4xl font-bold md:font-extrabold">
-                    An <span className="md:underline">automated</span> approach to{' '}
-                    <span className="md:underline">small team management</span>
+                <h2 className="mt-6 text-center text-white text-3xl md:text-4xl font-bold md:font-extrabold">
+                    An{' '}
+                    <span className="md:underline p-0.5 shadow-sm" style={{ backgroundColor: '#316bbc' }}>
+                        automated
+                    </span>{' '}
+                    approach to{' '}
+                    <span className="md:underline p-0.5 shadow-sm" style={{ backgroundColor: '#316bbc' }}>
+                        small team project management
+                    </span>
                 </h2>
-                <h5 className="mt-3 w-10/12 sm:w-8/12 lg:w-5/12 mx-auto text-center md:text-lg text-gray-200">
+                <h5 className="mt-3 w-10/12 lg:w-7/12 xl:w-5/12 mx-auto text-center md:text-lg text-gray-200">
                     Stop using the tools which are complicated, contribute nothing to your productivity and are more
                     hassle than they are worth
                 </h5>
@@ -47,12 +55,96 @@ export default function Index() {
     )
 }
 
-function IndexNavbar() {
-    // prettier-ignore
-    const dropdownRef = useRef<HTMLElement>(null)
+// function IndexNavbar() {
+//     // prettier-ignore
+//     const dropdownRef = useRef<HTMLDivElement>(null)
+//     const [menuOpen, setMenuOpen] = useState(false)
+
+//     //TODO: properly define the type of event, this is a weird edge case in typescript types that isnt clear
+//     const handleClickOutsideDropdown = (e: any) => {
+//         if (dropdownRef?.current?.contains(e.target)) {
+//             return
+//         }
+//         setMenuOpen(false)
+//     }
+
+//     useEffect(() => {
+//         if (menuOpen) {
+//             document.addEventListener('mousedown', handleClickOutsideDropdown)
+//         } else {
+//             document.removeEventListener('mousedown', handleClickOutsideDropdown)
+//         }
+//     }, [menuOpen])
+
+//     return (
+//         <>
+//             <header className="h-16 container mx-auto flex justify-between items-center">
+//                 <a href="/">
+//                     <LogoIcon className="w-32 h-12 text-white" hover="hover:text-gray-200" />
+//                 </a>
+//                 <ul className="hidden md:flex space-x-6 text-white">
+//                     <li tabIndex={0}>Contact</li>
+//                     <li tabIndex={0}>Pricing</li>
+//                     <li tabIndex={0}>Documentation</li>
+//                 </ul>
+//                 <div className="hidden md:flex md:items-center">
+//                     <Link href="/account/sign-in">
+//                         <a className="mr-6 text-white" href="/account/sign-in">
+//                             Sign in
+//                         </a>
+//                     </Link>
+//                     <Link href="/accounts/sign-up">
+//                         <a
+//                             className="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:shadow"
+//                             href="/accounts/sign-up"
+//                         >
+//                             Join now
+//                         </a>
+//                     </Link>
+//                 </div>
+//                 <button
+//                     className="md:hidden"
+//                     onClick={() => {
+//                         console.log('click')
+//                         setMenuOpen(!menuOpen)
+//                     }}
+//                 >
+//                     <BurgerMenuIcon className="h-8 w-8 text-white" />
+//                 </button>
+//             </header>
+//             <div
+//                 ref={dropdownRef}
+//                 className={`${menuOpen ? 'flex' : 'hidden'} mt-4 flex-col container mx-auto space-y-6`}
+//             >
+//                 <ul className="inline-flex flex-col space-y-2 text-white">
+//                     <li tabIndex={0}>Contact</li>
+//                     <li tabIndex={0}>Pricing</li>
+//                     <li tabIndex={0}>Documentation</li>
+//                 </ul>
+
+//                 <Link href="/account/sign-in">
+//                     <a className="mr-6 text-white" href="/account/sign-in">
+//                         Sign in
+//                     </a>
+//                 </Link>
+//                 <Link href="/account/sign-up">
+//                     <a
+//                         className="block bg-blue-500 text-white font-medium px-4 py-2 rounded shadow-md"
+//                         href="/account/sign-up"
+//                     >
+//                         Join now
+//                     </a>
+//                 </Link>
+//             </div>
+//         </>
+//     )
+// }
+
+export function IndexNavbar() {
+    //prettier-ignore
+    const dropdownRef = useRef<HTMLDivElement>(null)
     const [menuOpen, setMenuOpen] = useState(false)
 
-    //TODO: properly define the type of event, this is a weird edge case in typescript types that isnt clear
     const handleClickOutsideDropdown = (e: any) => {
         if (dropdownRef?.current?.contains(e.target)) {
             return
@@ -67,45 +159,100 @@ function IndexNavbar() {
             document.removeEventListener('mousedown', handleClickOutsideDropdown)
         }
     }, [menuOpen])
-    return (
-        <>
-            <header ref={dropdownRef} className="h-16 container mx-auto flex justify-between items-center">
-                <a href="/">
-                    <LogoIcon className="w-32 h-12 text-white" hover="hover:text-gray-200" />
-                </a>
-                <ul className="hidden md:flex space-x-6 text-white">
-                    <li tabIndex={0}>Contact</li>
-                    <li tabIndex={0}>Pricing</li>
-                    <li tabIndex={0}>Documentation</li>
-                </ul>
-                <div className="hidden md:flex md:items-center">
-                    <a className="mr-6 text-white" href="">
-                        Sign in
-                    </a>
-                    <button className="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:shadow">
-                        Join now
-                    </button>
-                </div>
-                <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-                    <BurgerMenuIcon className="h-8 w-8 text-white" />
-                </button>
-            </header>
-            {menuOpen && (
-                <div className="mt-4 flex flex-col container mx-auto space-y-6">
-                    <ul className="flex flex-col space-y-2 text-white">
-                        <li tabIndex={0}>Contact</li>
-                        <li tabIndex={0}>Pricing</li>
-                        <li tabIndex={0}>Documentation</li>
-                    </ul>
 
-                    <a className="mr-6 text-white" href="">
-                        Sign in
-                    </a>
-                    <button className="block bg-blue-500 text-white font-medium px-4 py-2 rounded shadow-md">
-                        Join now
-                    </button>
+    return (
+        <nav ref={dropdownRef}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    <div className="flex items-center">
+                        <div className="flex-shrink-0">
+                            <a href="/">
+                                <LogoIcon className="w-32 h-12 text-white" hover="hover:text-gray-200" />
+                            </a>
+                        </div>
+                    </div>
+                    <ul className="hidden md:flex space-x-12 text-white">
+                        <li>Pricing</li>
+                        <li>Community</li>
+                        <li>Docs</li>
+                    </ul>
+                    <div className="hidden md:block">
+                        <Link href="/account/sign-in">
+                            <a className="mr-6 text-white" href="/account/sign-in">
+                                Sign in
+                            </a>
+                        </Link>
+                        <Link href="/accounts/sign-up">
+                            <a
+                                className="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:shadow"
+                                href="/accounts/sign-up"
+                            >
+                                Join now
+                            </a>
+                        </Link>
+                    </div>
+
+                    {/* Burger menu, toggled to an X when open */}
+                    <div className="-mr-2 flex md:hidden">
+                        <button
+                            onClick={() => setMenuOpen(!menuOpen)}
+                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700"
+                        >
+                            <svg
+                                className={`${menuOpen ? 'hidden' : 'block'} h-7 w-7 text-white`}
+                                stroke="currentColor"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M4 6h16M4 12h16M4 18h16"
+                                />
+                            </svg>
+                            <svg
+                                className={`${menuOpen ? 'block' : 'hidden'} h-7 w-7 text-white`}
+                                stroke="currentColor"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-            )}
-        </>
+            </div>
+
+            {/* Dropdown menu */}
+            <div className={`${menuOpen ? 'block' : 'hidden'} px-6 text-white`}>
+                <ul className="space-y-2">
+                    <li>Pricing</li>
+                    <li>Community</li>
+                    <li>Documentation</li>
+                </ul>
+
+                <div className="mt-6 flex flex-col">
+                    <Link href="/account/sign-in">
+                        <a className="mr-6 text-white" href="/account/sign-in">
+                            Sign in
+                        </a>
+                    </Link>
+                    <Link href="/accounts/sign-up">
+                        <a
+                            className="mt-2 bg-blue-500 text-white font-medium px-4 py-2 rounded shadow-md"
+                            href="/accounts/sign-up"
+                        >
+                            Join now
+                        </a>
+                    </Link>
+                </div>
+            </div>
+        </nav>
     )
 }
