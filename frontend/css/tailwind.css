@@ -26,6 +26,24 @@ html {
     }
 } */
 
+/* .btn {
+    @apply bg-blue-600 text-white font-medium px-4 py-2 rounded hover:shadow hover:bg-blue-500
+} */
 
+.marker {
+    position: relative;
+}
+.marker::after {
+    position: absolute;
+    top: 5px;
+    bottom: 0;
+    left: auto;
+    right: auto;
+    display: block;
+    width: 2px;
+    height: 100px;
+    content: "";
+    background-color: green;
+}
 @tailwind components;
 @tailwind utilities;

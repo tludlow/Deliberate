@@ -4,7 +4,6 @@ import { BurgerMenuIcon } from '../components/icons/BurgerMenu'
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import useOnClickOutside from '../hooks/useOnClickOutside'
 
 export default function Index() {
     return (
@@ -50,6 +49,11 @@ export default function Index() {
             </section>
             <section className="mt-12 container mx-auto">
                 <h3 className="font-bold text-3xl text-cool-gray-800 text-center">How it works</h3>
+                <div className="flex justify-between flex-wrap">
+                    <button className="bg-blue-600 text-white font-medium px-4 py-2 rounded hover:shadow hover:bg-blue-500">
+                        Random Text
+                    </button>
+                </div>
             </section>
         </Layout>
     )
@@ -99,7 +103,7 @@ export function IndexNavbar() {
                         </Link>
                         <Link href="/accounts/sign-up">
                             <a
-                                className="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:shadow"
+                                className="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:shadow hover:bg-blue-600"
                                 href="/accounts/sign-up"
                             >
                                 Join now
