@@ -1,4 +1,4 @@
-import Layout from '@/components/layout'
+import Layout from '@/components/Layout'
 import { LogoIcon } from '@/components/icons/Logo'
 import { BurgerMenuIcon } from '../components/icons/BurgerMenu'
 
@@ -101,7 +101,7 @@ export function IndexNavbar() {
                                 Sign in
                             </a>
                         </Link>
-                        <Link href="/accounts/sign-up">
+                        <Link href="/account/sign-up">
                             <a
                                 className="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:shadow hover:bg-blue-600"
                                 href="/accounts/sign-up"
@@ -162,7 +162,7 @@ export function IndexNavbar() {
                             Sign in
                         </a>
                     </Link>
-                    <Link href="/accounts/sign-up">
+                    <Link href="/account/sign-up">
                         <a
                             className="mt-2 bg-blue-500 text-white font-medium px-4 py-2 rounded shadow-md"
                             href="/accounts/sign-up"

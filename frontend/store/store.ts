@@ -8,7 +8,11 @@ import reducer from '../reducers/indexReducer'
 let store: any
 
 //The structure of the store with its default values included
-const exampleInitialState = {}
+const exampleInitialState = {
+    user: {
+        username: '',
+    },
+}
 
 //JSON Object of the keys we want to store in the local storage, add additional ones to the whitelist
 //Storage is localStorage of the user browser

@@ -4,7 +4,11 @@ import { LogoIcon } from '../icons/Logo'
 import Link from 'next/link'
 import Search from './Search'
 
-export default function Navbar() {
+type NavbarProps = {
+    showSearch?: boolean,
+}
+
+export default function Navbar({ showSearch }: NavbarProps) {
     //prettier-ignore
     const dropdownRef = useRef<HTMLDivElement>(null)
     const [menuOpen, setMenuOpen] = useState(false)
@@ -26,7 +30,7 @@ export default function Navbar() {
 
     return (
         <nav ref={dropdownRef} className="bg-brand">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-4 xl:px-0">
                 <div className="flex items-center justify-between h-16 md:h-13">
                     <div className="flex flex-1 items-center">
                         <div className="flex-shrink-0">
@@ -35,7 +39,7 @@ export default function Navbar() {
                             </a>
                         </div>
                     </div>
-                    <Search />
+                    {showSearch && <Search />}
                     <div className="hidden md:flex flex-1 justify-end">
                         <div className="flex items-center">
                             <img
