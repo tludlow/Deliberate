@@ -29,7 +29,7 @@ export default function Navbar({ showSearch }: NavbarProps) {
     }, [menuOpen])
 
     return (
-        <nav ref={dropdownRef} className="bg-brand">
+        <nav ref={dropdownRef} className="bg-brand shadow">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-4 xl:px-0">
                 <div className="flex items-center justify-between h-16 md:h-13">
                     <div className="flex flex-1 items-center">
@@ -55,7 +55,7 @@ export default function Navbar({ showSearch }: NavbarProps) {
                     <div className="-mr-2 flex flex-1 justify-end md:hidden">
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700"
+                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white"
                         >
                             <svg
                                 className={`${menuOpen ? 'hidden' : 'block'} h-7 w-7 text-white`}

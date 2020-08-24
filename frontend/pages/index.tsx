@@ -12,12 +12,9 @@ export default function Index() {
             <section className="w-full px-3 xl:px-0 bg-brand index-hero shadow-lg">
                 <IndexNavbar />
                 <h2 className="mt-6 text-center text-white text-3xl md:text-4xl font-bold md:font-extrabold">
-                    An{' '}
-                    <span className="md:underline p-0.5 shadow-sm" style={{ backgroundColor: '#316bbc' }}>
-                        automated
-                    </span>{' '}
+                    An <span className="md:underline p-1 rounded shadow-sm bg-blue-500 bg-opacity-25">automated</span>{' '}
                     approach to{' '}
-                    <span className="md:underline p-0.5 shadow-sm" style={{ backgroundColor: '#316bbc' }}>
+                    <span className="md:underline p-1 rounded shadow-sm bg-blue-500 bg-opacity-25">
                         small team project management
                     </span>
                 </h2>
@@ -115,7 +112,7 @@ export function IndexNavbar() {
                     <div className="-mr-2 flex md:hidden">
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700"
+                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white"
                         >
                             <svg
                                 className={`${menuOpen ? 'hidden' : 'block'} h-7 w-7 text-white`}

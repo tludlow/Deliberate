@@ -25,6 +25,10 @@ module.exports = {
     },
     variants: {
         animation: ['responsive', 'group-hover', 'hover'],
+        backgroundColor: ['responsive', 'hover', 'focus', 'checked'],
     },
     plugins: [require('@tailwindcss/ui')],
+    experimental: {
+        applyComplexClasses: true,
+    },
 }
