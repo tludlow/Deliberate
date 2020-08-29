@@ -2,30 +2,40 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log"
 
-	"github.com/tludlow/deliberate/backend/internal/database"
+	"github.com/sethvargo/go-signalcontext"
 )
 
-type Server struct {
-	DB *database.DB
-}
-
 func main() {
-	fmt.Println("hello")
-	//Connect to the database
-	dsnString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		"localhost",
-		5432,
-		"deliberate",
-		"testpassword",
-		"deliberate",
-	)
-	db, err := database.Connect(context.Background(), dsnString)
+	log.Println("Starting deliberate backend")
+	ctx, done := signalcontext.OnInterrupt()
+
+	err := realMain(ctx)
+	done()
+
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
 	}
 
-	srv := &Server{DB: db}
-	srv.DB.Close()
+	log.Println("successful shutdown of deliberate backend")
+
+	//Connect to the database
+	// dsnString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+	// 	"localhost",
+	// 	5432,
+	// 	"deliberate",
+	// 	"testpassword",
+	// 	"deliberate",
+	// )
+
+}
+
+func realMain(ctx context.Context) error {
+	//Setup the server environment
+
+	//Setup API
+
+	//Run HTTP server
+	return nil
 }

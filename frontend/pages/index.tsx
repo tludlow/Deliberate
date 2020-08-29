@@ -1,9 +1,9 @@
+import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
+
 import Layout from '@/components/Layout'
 import { LogoIcon } from '@/components/icons/Logo'
 import { BurgerMenuIcon } from '../components/icons/BurgerMenu'
-
-import { useState, useRef, useEffect } from 'react'
-import Link from 'next/link'
 
 export default function Index() {
     return (
@@ -11,18 +11,18 @@ export default function Index() {
             {/* Hero section */}
             <section className="w-full px-3 xl:px-0 bg-brand index-hero shadow-lg">
                 <IndexNavbar />
-                <h2 className="mt-6 text-center text-white text-3xl md:text-4xl font-bold md:font-extrabold">
+                <h2 className="mt-10 text-center text-white text-3xl md:text-4xl font-bold md:font-extrabold">
                     An <span className="md:underline p-1 rounded shadow-sm bg-blue-500 bg-opacity-25">automated</span>{' '}
                     approach to{' '}
                     <span className="md:underline p-1 rounded shadow-sm bg-blue-500 bg-opacity-25">
                         small team project management
                     </span>
                 </h2>
-                <h5 className="mt-3 w-10/12 lg:w-7/12 xl:w-5/12 mx-auto text-center md:text-lg text-gray-200">
+                <h5 className="mt-5 w-full lg:w-7/12 xl:w-5/12 mx-auto text-center md:text-lg text-gray-200">
                     Stop using the tools which are complicated, contribute nothing to your productivity and are more
                     hassle than they are worth
                 </h5>
-                <div className="mt-8 pb-8 flex justify-center">
+                <div className="mt-8 md:mt-12 pb-10 flex justify-center">
                     <button
                         className="flex items-center p-2 border-2 border-blue-500 rounded cursor-pointer group"
                         style={{ backgroundColor: '#316bbc' }}
@@ -44,14 +44,6 @@ export default function Index() {
                     </button>
                 </div>
             </section>
-            <section className="mt-12 container mx-auto">
-                <h3 className="font-bold text-3xl text-cool-gray-800 text-center">How it works</h3>
-                <div className="flex justify-between flex-wrap">
-                    <button className="bg-blue-600 text-white font-medium px-4 py-2 rounded hover:shadow hover:bg-blue-500">
-                        Random Text
-                    </button>
-                </div>
-            </section>
         </Layout>
     )
 }
@@ -60,6 +52,9 @@ export function IndexNavbar() {
     //prettier-ignore
     const dropdownRef = useRef<HTMLDivElement>(null)
     const [menuOpen, setMenuOpen] = useState(false)
+
+    //Middle links popovers
+    const [pricingMenuOpen, setPricingMenuOpen] = useState(false)
 
     const handleClickOutsideDropdown = (e: any) => {
         if (dropdownRef?.current?.contains(e.target)) {
@@ -88,7 +83,20 @@ export function IndexNavbar() {
                         </div>
                     </div>
                     <ul className="hidden md:flex space-x-12 text-white">
-                        <li>Pricing</li>
+                        <li
+                            className="relative cursor-pointer"
+                            onMouseEnter={() => setPricingMenuOpen(true)}
+                            onMouseLeave={() => setPricingMenuOpen(false)}
+                        >
+                            Pricing
+                            <div
+                                className={`${
+                                    pricingMenuOpen ? 'flex' : 'hidden'
+                                } absolute w-48 h-32 p-6 top-10 left-1/2 transform -translate-x-1/2 bg-white rounded shadow`}
+                            >
+                                testing
+                            </div>
+                        </li>
                         <li>Community</li>
                         <li>Docs</li>
                     </ul>
