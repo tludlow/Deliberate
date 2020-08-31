@@ -1,6 +1,6 @@
 export default function Search() {
     return (
-        <div className="relative">
+        <div className="hidden md:block relative">
             <div className="absolute left-2 inset-y-0 flex items-center">
                 <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                     <path
@@ -10,7 +10,7 @@ export default function Search() {
                 </svg>
             </div>
             <input
-                className="w-64 px-8 py-1 rounded-lg"
+                className="w-80 px-8 py-1 rounded-lg"
                 type="text"
                 name="search"
                 id="search"

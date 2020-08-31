@@ -21,6 +21,12 @@ module.exports = {
             backgroundColor: (theme) => ({
                 brand: '#3356BC',
             }),
+            height: {
+                within: 'calc(100vh - 52px)',
+            },
+            maxHeight: {
+                within: 'calc(100vh - 52px)',
+            },
         },
     },
     variants: {

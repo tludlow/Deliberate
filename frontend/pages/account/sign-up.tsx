@@ -7,7 +7,7 @@ export default function SignUp() {
         <Layout title="Sign up - Deliberate" contained>
             {/* Cool background dots to fill the blank space, need the grid section to be position:relative so we can force the dots behind it */}
             <div className="hidden xl:block fixed right-0 top-13 h-96 w-56 bg-center z-0 bg-with-dots"></div>
-            <div className="mt-10 h-full w-full grid grid-cols-1 md:grid-cols-10 gap-x-4 relative z-10">
+            <div className="mt-6 h-full w-full grid grid-cols-1 md:grid-cols-10 gap-x-4 relative z-10">
                 <div className="hidden md:flex pt-4 w-full md:col-span-5 lg:col-span-6 flex-col justify-between">
                     <AutomationInformation />
                     <ToolYouWantInformation />

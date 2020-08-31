@@ -4,7 +4,7 @@ import Link from 'next/link'
 export default function SignIn() {
     return (
         <Layout title="Sign In" contained>
-            <div className="mt-10 flex flex-col items-center">
+            <div className="mt-6 flex flex-col items-center">
                 <h3 className="font-bold text-2xl md:text-3xl">Sign in</h3>
                 <p className="text-gray-600">
                     Don't have an account?{' '}
