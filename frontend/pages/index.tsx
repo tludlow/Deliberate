@@ -3,7 +3,6 @@ import Link from 'next/link'
 
 import Layout from '@/components/Layout'
 import { LogoIcon } from '@/components/icons/Logo'
-import { BurgerMenuIcon } from '../components/icons/BurgerMenu'
 
 export default function Index() {
     return (
