@@ -2,12 +2,13 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-func HandleTest(ctx context.Context) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, `{"status": "ok"}`)
-	})
+func HandleTest(ctx context.Context) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": []string{"wow", "cool", "amazing"}})
+	}
 }

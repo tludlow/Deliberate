@@ -24,6 +24,6 @@ func Connect(ctx context.Context, conStr string) (*DB, error) {
 
 //Close - Closes the connection to the database safely
 func (db *DB) Close() {
-	log.Println("Closing database connection")
+	log.Println("closing database connection")
 	db.Pool.Close()
 }

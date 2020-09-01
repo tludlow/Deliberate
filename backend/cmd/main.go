@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"log"
-	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sethvargo/go-signalcontext"
 	"github.com/tludlow/deliberate/backend/internal/server"
@@ -38,8 +38,8 @@ func realMain(ctx context.Context) error {
 	defer env.Close()
 
 	//Setup API
-	mux := http.NewServeMux()
-	mux.Handle("/test", server.HandleTest(ctx))
+	r := gin.Default()
+	r.GET("/test", server.HandleTest(ctx))
 
 	srv, err := server.New("5000")
 	if err != nil {
@@ -47,5 +47,5 @@ func realMain(ctx context.Context) error {
 	}
 
 	//Run HTTP server
-	return srv.ServeHTTPHandler(ctx, mux)
+	return srv.ServeHTTPHandler(ctx, r)
 }
