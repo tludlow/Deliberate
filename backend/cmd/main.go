@@ -39,7 +39,7 @@ func realMain(ctx context.Context) error {
 
 	//Setup API
 	r := gin.Default()
-	r.GET("/test", server.HandleTest(ctx))
+	r.GET("/test", server.HandleTest(ctx, env.Database))
 
 	srv, err := server.New("5000")
 	if err != nil {

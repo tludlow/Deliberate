@@ -3,7 +3,6 @@ package setup
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/tludlow/deliberate/backend/internal/database"
@@ -16,14 +15,7 @@ type ServerEnv struct {
 func New(ctx context.Context) (*ServerEnv, error) {
 	s := &ServerEnv{}
 	//Setup database connection
-	dsnString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		"localhost",
-		5432,
-		"deliberate",
-		"testpassword",
-		"deliberate",
-	)
-	db, err := database.Connect(ctx, dsnString)
+	db, err := database.Connect(ctx)
 	if err != nil {
 		return nil, err
 	}
