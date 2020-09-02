@@ -8,7 +8,9 @@ require (
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
 	github.com/jackc/pgproto3/v2 v2.0.4 // indirect
+	github.com/jackc/pgx v3.6.2+incompatible // indirect
 	github.com/jackc/pgx/v4 v4.8.1
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect

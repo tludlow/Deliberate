@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 type DB struct {
-	DB *gorm.DB
+	Pool *pgxpool.Pool
 }
 
 //Connect - Connects to the database using the provided dsn string and returns the DB type
@@ -32,18 +31,16 @@ func Connect(ctx context.Context) (*DB, error) {
 		"testpassword",
 		"deliberate",
 	)
-	db, err := gorm.Open(postgres.Open(dsnString), &gorm.Config{})
+	pool, err := pgxpool.Connect(ctx, dsnString)
 	if err != nil {
 		return nil, errors.Wrap(err, "creating connection to database")
 	}
 
-	db.AutoMigrate(&User{})
-
-	return &DB{DB: db}, nil
+	return &DB{Pool: pool}, nil
 }
 
 //Close - Closes the connection to the database safely
 func (db *DB) Close() {
 	log.Println("closing database connection")
-	//Gorm, the ORM doesnt use a close method, baked in by itself so we dont need to pass it here
+	db.Pool.Close()
 }
