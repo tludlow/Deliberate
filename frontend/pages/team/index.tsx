@@ -6,22 +6,22 @@ export default function Team() {
         <Layout title="Team Page" showSearch>
             <div className="grid grid-cols-12">
                 {/* Col 1 */}
-                <div className="hidden md:block col-span-2 h-within thin-scrollbar bg-white"></div>
+                <div className="hidden md:block col-span-2 h-within thin-scrollbar bg-white">
+                    <h3>Something</h3>
+                </div>
                 {/* Col 2 */}
                 <div className="hidden md:block relative col-span-2 h-within thin-scrollbar bg-gray-100">
                     <div className="h-16 absolute inset-x-0 top-0 bg-gradient-to-b from-gray-50 to-transparent"></div>
-                    <p className="py-4">wow</p>
-                    <p className="py-4">wow</p>
-                    <p className="py-4">wow</p>
-                    <p className="py-4">wow</p>
-                    <p className="py-4">wow</p>
-                    <p className="py-4">wow</p>
+                    <h3>Action options and list of actions</h3>
                     <div className="h-16 absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-50 to-transparent"></div>
                 </div>
                 {/* Col 3 */}
-                <div className="col-span-12 md:col-span-6 h-within thin-scrollbar bg-white"></div>
+                <div className="col-span-12 md:col-span-6 h-within thin-scrollbar bg-white">
+                    <h3>Big activities boy</h3>
+                </div>
                 {/* Col 4 - Calendar / Time tracking */}
                 <div className="hidden md:block col-span-2 p-2 h-within thin-scrollbar bg-gray-100">
+                    <h3>Team management and calendar</h3>
                     <div className="h-32 w-full relative pl-5 py-2 bg-white overflow-hidden rounded">
                         <div className="h-full w-2 absolute inset-y-0 left-0 bg-purple-600"></div>
                         <h4 className="font-semibold">Daily Scrum</h4>
