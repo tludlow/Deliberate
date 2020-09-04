@@ -67,7 +67,8 @@ export default function SignUp() {
                                 setFormError(err.response.data.message)
                             }
                         }}
-                        render={({ errors, status, touched }) => (
+                    >
+                        {({ errors, status, touched }) => (
                             <Form className="mt-4 lg:mt-10 w-full p-4 flex flex-col bg-white border border-gray-100 rounded shadow">
                                 <label className="font-medium" htmlFor="firstName">
                                     First name
@@ -147,7 +148,7 @@ export default function SignUp() {
                                 />
                             </Form>
                         )}
-                    />
+                    </Formik>
                 </div>
             </div>
         </Layout>
