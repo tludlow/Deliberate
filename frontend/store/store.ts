@@ -19,7 +19,7 @@ const exampleInitialState = {
 const persistConfig = {
     key: 'deliberate',
     storage,
-    whitelist: [], // place to select which state you want to persist
+    whitelist: ['user'], // place to select which state you want to persist
 }
 
 //A reducer which is stored locally for persisting state between closing the app and opening again
