@@ -25,8 +25,8 @@ const persistConfig = {
 //A reducer which is stored locally for persisting state between closing the app and opening again
 const persistedReducer = persistReducer(persistConfig, reducer)
 
-function makeStore(initialState = exampleInitialState) {
-    return createStore(persistedReducer, initialState, composeWithDevTools(applyMiddleware()))
+function makeStore(initialState: any) {
+    return createStore(persistedReducer, composeWithDevTools(applyMiddleware()))
 }
 
 export const initializeStore = (preloadedState: any) => {
