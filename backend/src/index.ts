@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import path from 'path'
 
 //Load environment variables
@@ -17,6 +18,7 @@ import * as authController from './controllers/auth'
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
+app.use(cors())
 
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 

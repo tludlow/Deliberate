@@ -92,5 +92,11 @@ html {
     @apply bg-gray-600 transform -translate-x-1/2;
 }
 
+
+
+.form-error {
+    @apply text-sm text-red-500
+}
+
 @tailwind components;
 @tailwind utilities;
