@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 /**
- * Ping route to check api is working
+ * Authentication route to log in a user
  * @route POST /auth/login
  */
 export const Login = async (req: Request, res: Response) => {
@@ -68,6 +68,91 @@ export const Login = async (req: Request, res: Response) => {
     res.status(200).json({
         email,
         name: checkResult.rows[0].first_name + ' ' + checkResult.rows[0].last_name,
+        refreshToken,
+        accessToken,
+    })
+}
+
+/**
+ * Authentication route to sign up a user
+ * @route POST /auth/signup
+ */
+
+export const Signup = async (req: Request, res: Response) => {
+    const { firstName, lastName, email, password, confirmPassword } = req.body
+    //Check if the passwords provided match
+    if (password !== confirmPassword) {
+        res.status(500).json({
+            message: 'Your passwords do not match',
+        })
+        return
+    }
+
+    //Check if the email provided is of a correct format for an email
+    var re = /\S+@\S+\.\S+/
+    if (!re.test(email)) {
+        res.status(500).json({
+            message: 'Your email is not valid',
+        })
+        return
+    }
+
+    //See if the email provided is unique in the system
+    let uniqueEmailResponse = await query('SELECT COUNT(*) as isUnique FROM USERS WHERE EMAIL = $1', [email])
+
+    if (uniqueEmailResponse.rows[0].isunique > 0) {
+        //500 Response - This email already is in use
+        res.status(500).json({
+            message: 'This email is already registered to an account',
+        })
+        return
+    }
+
+    //Hash the password provided
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    //Store the user details
+    let userInsertResponse = await query(
+        'INSERT INTO users(first_name, last_name, email, password) VALUES($1, $2, $3, $4)',
+        [firstName, lastName, email, hashedPassword]
+    )
+
+    //Generate the user a set of access and refresh tokens because they have been authenticated
+    //Refresh token, long lived (3 months) and used to generate new access tokens
+    const refreshToken = jwt.sign(
+        {
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 3,
+            issuer: 'deliberate',
+            subject: 'refreshtoken',
+            data: { email: email },
+        },
+        'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
+    )
+
+    //Access token, short lived (1 hour) and used to authenticate against the api
+    const accessToken = jwt.sign(
+        {
+            exp: Math.floor(Date.now() / 1000) + 60 * 60,
+            issuer: 'deliberate',
+            subject: 'accesstoken',
+            data: { email: email },
+        },
+        'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
+    )
+
+    //Set the cookies for the user
+    res.cookie('refresh_token', refreshToken, {
+        expires: new Date(Date.now() / 1000 + 60 * 60 * 24 * 30 * 3),
+        httpOnly: true,
+    })
+    res.cookie('access_token', refreshToken, {
+        expires: new Date(Date.now() / 100 + 60 * 60),
+        httpOnly: true,
+    })
+
+    res.status(200).json({
+        name: firstName + ' ' + lastName,
+        email,
         refreshToken,
         accessToken,
     })
