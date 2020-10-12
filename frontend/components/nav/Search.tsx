@@ -10,7 +10,7 @@ export default function Search() {
                 </svg>
             </div>
             <input
-                className="w-80 px-8 py-1 rounded-lg"
+                className="w-80 px-8 py-1 rounded-md"
                 type="text"
                 name="search"
                 id="search"

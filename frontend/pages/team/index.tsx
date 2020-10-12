@@ -1,12 +1,13 @@
 import Layout from '../../components/Layout'
 import { RightArrowIcon, MapIcon } from '../../components/icons/index'
+import { useState } from 'react'
 
 export default function Team() {
     return (
         <Layout title="Team Page" showSearch>
             <div className="grid grid-cols-12">
                 {/* Col 1 */}
-                <div className="hidden md:block col-span-2 h-within thin-scrollbar bg-white">
+                <div className="hidden md:flex p-3 flex-col items-center col-span-2 h-within thin-scrollbar bg-white">
                     <h3>Something</h3>
                 </div>
                 {/* Col 2 */}

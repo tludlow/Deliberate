@@ -2,6 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import helmet from 'helmet'
 import path from 'path'
 
 //Load environment variables
@@ -13,8 +14,10 @@ const app = express()
 //Import controllers
 import * as apiController from './controllers/api'
 import * as authController from './controllers/auth'
+import * as teamManagementController from './controllers/teamManagement'
 
 //Setup api middlewares
+app.use(helmet())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
@@ -24,9 +27,16 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 
 //Mount routes to the api
 app.get('/ping', apiController.Ping)
+
+//Auth
 app.post('/auth/login', authController.Login)
 app.post('/auth/signup', authController.Signup)
 
+//Teams
+app.post('/team/create', teamManagementController.CreateTeam)
+app.get('/team/:teamID/info', teamManagementController.GetTeamInfo)
+
+//Catch all 404
 app.get('/*', apiController.FourOFour)
 
 export default app
