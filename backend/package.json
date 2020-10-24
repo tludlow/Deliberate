@@ -4,7 +4,7 @@
     "description": "An automated small-team management solution for agile software engineering teams",
     "main": "src/server.ts",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "mocha -r ts-node/register test/**.ts",
         "watch-ts": "tsc -w",
         "start-server": "tsc && node dist/server.js",
         "start": "nodemon -e ts -w ./ -x npm run start-server"
@@ -23,22 +23,27 @@
     "dependencies": {
         "bcrypt": "^5.0.0",
         "body-parser": "^1.19.0",
+        "chai": "^4.2.0",
         "cookie-parser": "^1.4.5",
         "cors": "^2.8.5",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
+        "global": "^4.4.0",
         "helmet": "^4.1.0",
         "jsonwebtoken": "^8.5.1",
+        "mocha": "^8.2.0",
         "pg": "^8.3.3"
     },
     "devDependencies": {
         "@types/bcrypt": "^3.0.0",
         "@types/body-parser": "^1.19.0",
+        "@types/chai": "^4.2.14",
         "@types/cookie-parser": "^1.4.2",
         "@types/cors": "^2.8.7",
         "@types/dotenv": "^8.2.0",
         "@types/express": "^4.17.8",
         "@types/jsonwebtoken": "^8.5.0",
+        "@types/mocha": "^8.0.3",
         "@types/node": "^14.6.3",
         "@types/pg": "^7.14.4",
         "ts-node": "^9.0.0",

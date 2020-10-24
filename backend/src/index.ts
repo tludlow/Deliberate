@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -29,8 +29,8 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 app.get('/ping', apiController.Ping)
 
 //Auth
-app.post('/auth/login', authController.Login)
-app.post('/auth/signup', authController.Signup)
+app.post('/user/login', authController.Login)
+app.post('/user/register', authController.Signup)
 
 //Teams
 app.post('/team/create', teamManagementController.CreateTeam)

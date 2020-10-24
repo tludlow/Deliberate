@@ -8,20 +8,20 @@ export default function Index() {
     return (
         <Layout title="Deliberate - Team management made easy" hideNav>
             {/* Hero section */}
-            <section className="w-full px-3 xl:px-0 bg-brand index-hero shadow-lg">
+            <section className="w-full px-3 shadow-lg xl:px-0 bg-brand index-hero">
                 <IndexNavbar />
-                <h2 className="mt-10 text-center text-white text-3xl md:text-4xl font-bold md:font-extrabold">
-                    An <span className="md:underline p-1 rounded shadow-sm bg-blue-500 bg-opacity-25">automated</span>{' '}
+                <h2 className="mt-10 text-3xl font-bold text-center text-white md:text-4xl md:font-extrabold">
+                    An <span className="p-1 bg-blue-500 bg-opacity-25 rounded shadow-sm md:underline">automated</span>{' '}
                     approach to{' '}
-                    <span className="md:underline p-1 rounded shadow-sm bg-blue-500 bg-opacity-25">
+                    <span className="p-1 bg-blue-500 bg-opacity-25 rounded shadow-sm md:underline">
                         small team project management
                     </span>
                 </h2>
-                <h5 className="mt-5 w-full lg:w-7/12 xl:w-5/12 mx-auto text-center md:text-lg text-gray-200">
+                <h5 className="w-full mx-auto mt-5 text-center text-gray-200 lg:w-7/12 xl:w-5/12 md:text-lg">
                     Stop using the tools which are complicated, contribute nothing to your productivity and are more
                     hassle than they are worth
                 </h5>
-                <div className="mt-8 md:mt-12 pb-10 flex justify-center">
+                <div className="flex justify-center pb-10 mt-8 md:mt-12">
                     <button
                         className="flex items-center p-2 border-2 border-blue-500 rounded cursor-pointer group"
                         style={{ backgroundColor: '#316bbc' }}
@@ -29,7 +29,7 @@ export default function Index() {
                         <svg
                             viewBox="0 0 20 20"
                             fill="currentColor"
-                            className="h-8 w-8 text-gray-100 group-hover:animate-pulse"
+                            className="w-8 h-8 text-gray-100 group-hover:animate-pulse"
                         >
                             <path
                                 fillRule="evenodd"
@@ -42,6 +42,10 @@ export default function Index() {
                         </p>
                     </button>
                 </div>
+            </section>
+
+            <section className="container mx-auto">
+                <h3 className="mt-8 text-2xl font-bold">Integrate with your existing tools</h3>
             </section>
         </Layout>
     )
@@ -72,16 +76,16 @@ export function IndexNavbar() {
 
     return (
         <nav ref={dropdownRef}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
                         <div className="flex-shrink-0">
                             <a href="/">
-                                <LogoIcon className="-mt-1 w-32 h-12 text-white" hover="hover:text-gray-200" />
+                                <LogoIcon className="w-32 h-12 -mt-1 text-white" hover="hover:text-gray-200" />
                             </a>
                         </div>
                     </div>
-                    <ul className="hidden md:flex space-x-12 text-white">
+                    <ul className="hidden space-x-12 text-white md:flex">
                         <li
                             className="relative cursor-pointer"
                             onMouseEnter={() => setPricingMenuOpen(true)}
@@ -107,7 +111,7 @@ export function IndexNavbar() {
                         </Link>
                         <Link href="/account/sign-up">
                             <a
-                                className="bg-blue-500 text-white font-medium px-4 py-2 rounded hover:shadow hover:bg-blue-600"
+                                className="px-4 py-2 font-medium text-white bg-blue-500 rounded hover:shadow hover:bg-blue-600"
                                 href="/accounts/sign-up"
                             >
                                 Join now
@@ -116,10 +120,10 @@ export function IndexNavbar() {
                     </div>
 
                     {/* Burger menu, toggled to an X when open */}
-                    <div className="-mr-2 flex md:hidden">
+                    <div className="flex -mr-2 md:hidden">
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white"
+                            className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white"
                         >
                             <svg
                                 className={`${menuOpen ? 'hidden' : 'block'} h-7 w-7 text-white`}
@@ -160,7 +164,7 @@ export function IndexNavbar() {
                     <li>Documentation</li>
                 </ul>
 
-                <div className="mt-6 flex flex-col">
+                <div className="flex flex-col mt-6">
                     <Link href="/account/sign-in">
                         <a className="mr-6 text-white" href="/account/sign-in">
                             Sign in
@@ -168,7 +172,7 @@ export function IndexNavbar() {
                     </Link>
                     <Link href="/account/sign-up">
                         <a
-                            className="mt-2 bg-blue-500 text-white font-medium px-4 py-2 rounded shadow-md"
+                            className="px-4 py-2 mt-2 font-medium text-white bg-blue-500 rounded shadow-md"
                             href="/accounts/sign-up"
                         >
                             Join now

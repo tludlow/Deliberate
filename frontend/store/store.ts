@@ -1,18 +1,19 @@
 import { useMemo } from 'react'
-import { createStore, applyMiddleware, Store } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import reducer from '../reducers/indexReducer'
+import thunkMiddleware from 'redux-thunk'
 
 let store: any
 
 //The structure of the store with its default values included
-const exampleInitialState = {
-    user: {
-        username: '',
-    },
-}
+// const exampleInitialState = {
+//     user: {
+//         username: '',
+//     },
+// }
 
 //JSON Object of the keys we want to store in the local storage, add additional ones to the whitelist
 //Storage is localStorage of the user browser
@@ -22,11 +23,18 @@ const persistConfig = {
     whitelist: ['user'], // place to select which state you want to persist
 }
 
+const bindMiddleware = (middleware: any) => {
+    if (process.env.NODE_ENV !== 'production') {
+        return composeWithDevTools(applyMiddleware(...middleware))
+    }
+    return applyMiddleware(...middleware)
+}
+
 //A reducer which is stored locally for persisting state between closing the app and opening again
 const persistedReducer = persistReducer(persistConfig, reducer)
 
 function makeStore(initialState: any) {
-    return createStore(persistedReducer, composeWithDevTools(applyMiddleware()))
+    return createStore(persistedReducer, bindMiddleware([thunkMiddleware]))
 }
 
 export const initializeStore = (preloadedState: any) => {

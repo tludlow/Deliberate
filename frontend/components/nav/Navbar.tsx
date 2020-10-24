@@ -1,14 +1,18 @@
 import { useEffect, useState, useRef } from 'react'
 
 import { LogoIcon } from '../icons/Logo'
-import Link from 'next/link'
 import Search from './Search'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from 'reducers/indexReducer'
 
 type NavbarProps = {
     showSearch?: boolean,
 }
 
 export default function Navbar({ showSearch }: NavbarProps) {
+    // const user = useSelector((state: RootState) => state.user)
+    // const dispatch = useDispatch()
+
     //prettier-ignore
     const dropdownRef = useRef<HTMLDivElement>(null)
     const [menuOpen, setMenuOpen] = useState(false)
@@ -29,33 +33,33 @@ export default function Navbar({ showSearch }: NavbarProps) {
     }, [menuOpen])
 
     return (
-        <nav ref={dropdownRef} className="bg-brand shadow">
-            <div className="px-4 sm:px-6 md:px-4">
+        <nav ref={dropdownRef} className="shadow bg-brand">
+            <div className="container mx-auto">
                 <div className="flex items-center justify-between h-16 md:h-13">
-                    <div className="flex flex-1 items-center">
+                    <div className="flex items-center flex-1">
                         <div className="flex-shrink-0">
                             <a href="/">
-                                <LogoIcon className="-mt-1 w-32 h-12 text-white" hover="hover:text-gray-200" />
+                                <LogoIcon className="w-32 h-12 -mt-1 text-white" hover="hover:text-gray-200" />
                             </a>
                         </div>
                     </div>
                     {showSearch && <Search />}
-                    <div className="hidden md:flex flex-1 justify-end">
+                    <div className="justify-end flex-1 hidden md:flex">
                         <div className="flex items-center">
                             <img
-                                className="h-8 w-8 rounded-full"
+                                className="w-8 h-8 rounded-full"
                                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                                 alt="James Dean"
                             />
-                            <span className="ml-2 text-white">James Dean</span>
+                            <span className="ml-2 text-white">Testing User</span>
                         </div>
                     </div>
 
                     {/* Burger menu, toggled to an X when open */}
-                    <div className="-mr-2 flex flex-1 justify-end md:hidden">
+                    <div className="flex justify-end flex-1 -mr-2 md:hidden">
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white"
+                            className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white"
                         >
                             <svg
                                 className={`${menuOpen ? 'hidden' : 'block'} h-7 w-7 text-white`}
@@ -91,7 +95,7 @@ export default function Navbar({ showSearch }: NavbarProps) {
             {/* Dropdown menu */}
             <div className={`${menuOpen ? 'block' : 'hidden'} px-6 py-3 text-white`}>
                 <img
-                    className="h-8 w-8 rounded-full"
+                    className="w-8 h-8 rounded-full"
                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                     alt="James Dean"
                 />

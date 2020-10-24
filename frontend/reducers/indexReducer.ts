@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
 import userReducer from './userReducer'
 
-const reducers = {
+const reducers = combineReducers({
     user: userReducer,
-}
+})
 
-export default combineReducers(reducers)
+export type RootState = ReturnType<typeof reducers>
+export default reducers
