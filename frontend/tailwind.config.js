@@ -32,6 +32,7 @@ module.exports = {
     variants: {
         animation: ['responsive', 'group-hover', 'hover'],
         backgroundColor: ['responsive', 'hover', 'focus', 'checked'],
+        textColor: ["responsive", "hover", "focus", "group-hover"],
     },
     plugins: [require('@tailwindcss/ui')],
     experimental: {

@@ -1,4 +1,10 @@
-import { USER_LOGIN_FAILURE, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS } from '../actions/actionTypes'
+import {
+    USER_LOGIN_ERROR_CLEAR,
+    USER_LOGIN_FAILURE,
+    USER_LOGIN_REQUEST,
+    USER_LOGIN_SUCCESS,
+    USER_LOGOUT,
+} from '../actions/actionTypes'
 
 interface UserState {
     loading: boolean;
@@ -33,8 +39,19 @@ const userReducer = (state = initialState, action: any) => {
                 refreshToken: action.payload.refreshToken,
             }
         case USER_LOGIN_FAILURE:
-            console.log(action)
             return { ...state, loading: false, error: action.payload.error }
+        case USER_LOGIN_ERROR_CLEAR:
+            return { ...state, error: null }
+        case USER_LOGOUT:
+            return {
+                ...state,
+                loading: false,
+                loggedIn: false,
+                error: null,
+                username: '',
+                accessToken: '',
+                refreshToken: '',
+            }
         default:
             return state
     }

@@ -3,9 +3,14 @@ import Link from 'next/link'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'reducers/indexReducer'
-import { loginUser } from '../../actions/auth/userActions'
+import { clearLoginErrors, loginUser } from '../../actions/auth/userActions'
+import { useEffect } from 'react'
 
 export default function SignIn() {
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(clearLoginErrors())
+    })
     return (
         <Layout title="Sign In" contained>
             <div className="flex flex-col items-center mt-6">
