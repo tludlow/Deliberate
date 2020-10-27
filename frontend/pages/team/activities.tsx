@@ -1,10 +1,8 @@
 import Layout from '../../components/Layout'
 import moment from 'moment'
 import { useEffect, useRef, useState } from 'react'
-import { MouseSafeArea } from '@/components/MouseSafeArea'
 
 export default function TeamActivity() {
-
     const calculateMonthsBetweenDates = () => {
         var startDate = moment().subtract(2, 'years')
         var endDate = moment().add(2, 'years')
@@ -33,28 +31,28 @@ export default function TeamActivity() {
     })
     return (
         <Layout title="Team Activities">
-            {/* <div className="mt-12 px-6 py-2 bg-gray-200">
+            {/* <div className="px-6 py-2 mt-12 bg-gray-200">
                 <li className="flex justify-between activity-times">
-                    <ul className="font-medium text-sm">7AM</ul>
-                    <ul className="font-medium text-sm">8AM</ul>
-                    <ul className="font-medium text-sm">9AM</ul>
-                    <ul className="font-medium text-sm">10AM</ul>
-                    <ul className="font-medium text-sm">11AM</ul>
-                    <ul className="font-medium text-sm">12PM</ul>
-                    <ul className="font-medium text-sm">1PM</ul>
-                    <ul className="font-medium text-sm">2PM</ul>
-                    <ul className="font-medium text-sm">3PM</ul>
-                    <ul className="font-medium text-sm">4PM</ul>
-                    <ul className="font-medium text-sm">5PM</ul>
-                    <ul className="font-medium text-sm">6PM</ul>
-                    <ul className="font-medium text-sm">7PM</ul>
+                    <ul className="text-sm font-medium">7AM</ul>
+                    <ul className="text-sm font-medium">8AM</ul>
+                    <ul className="text-sm font-medium">9AM</ul>
+                    <ul className="text-sm font-medium">10AM</ul>
+                    <ul className="text-sm font-medium">11AM</ul>
+                    <ul className="text-sm font-medium">12PM</ul>
+                    <ul className="text-sm font-medium">1PM</ul>
+                    <ul className="text-sm font-medium">2PM</ul>
+                    <ul className="text-sm font-medium">3PM</ul>
+                    <ul className="text-sm font-medium">4PM</ul>
+                    <ul className="text-sm font-medium">5PM</ul>
+                    <ul className="text-sm font-medium">6PM</ul>
+                    <ul className="text-sm font-medium">7PM</ul>
                 </li>
             </div> */}
 
-            <section className="mt-12 ml-12 h-96 flex border border-gray-300 rounded">
-                <div className="w-96 flex-shrink-0 bg-red-200"></div>
+            <section className="flex mt-12 ml-12 border border-gray-300 rounded h-96">
+                <div className="flex-shrink-0 bg-red-200 w-96"></div>
                 <div
-                    className="bg-red-300 min-w-screen flex overflow-x-scroll thin-scrollbar"
+                    className="flex overflow-x-scroll bg-red-300 min-w-screen thin-scrollbar"
                     style={{ width: `${monthsToDisplay.length * 200}px` }}
                 >
                     {monthsToDisplay.map((month, idx) => (
@@ -71,8 +69,6 @@ export default function TeamActivity() {
                     ))}
                 </div>
             </section>
-
-            
         </Layout>
     )
 }
