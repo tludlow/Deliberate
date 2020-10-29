@@ -19,8 +19,18 @@ export const loginUser = (email: string, password: string) => async (dispatch: a
     dispatch({ type: USER_LOGIN_REQUEST })
     api.post('/user/login', { email, password })
         .then((response: AxiosResponse) => {
-            console.log('response: ', response)
-            dispatch({ type: USER_LOGIN_SUCCESS, payload: {} })
+            dispatch({
+                type: USER_LOGIN_SUCCESS,
+                payload: {
+                    loading: false,
+                    error: null,
+                    username: response.data.name,
+                    loggedIn: true,
+                    accessToken: response.data.accessToken,
+                    refreshToken: response.data.refreshToken,
+                },
+            })
+            router.push('/')
         })
         .catch((error: AxiosError) => {
             console.log('error: ', error.response?.data)

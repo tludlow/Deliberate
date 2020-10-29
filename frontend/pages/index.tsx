@@ -56,9 +56,6 @@ export function IndexNavbar() {
     const dropdownRef = useRef<HTMLDivElement>(null)
     const [menuOpen, setMenuOpen] = useState(false)
 
-    //Middle links popovers
-    const [pricingMenuOpen, setPricingMenuOpen] = useState(false)
-
     const handleClickOutsideDropdown = (e: any) => {
         if (dropdownRef?.current?.contains(e.target)) {
             return
@@ -85,24 +82,7 @@ export function IndexNavbar() {
                             </a>
                         </div>
                     </div>
-                    <ul className="hidden space-x-12 text-white md:flex">
-                        <li
-                            className="relative cursor-pointer"
-                            onMouseEnter={() => setPricingMenuOpen(true)}
-                            onMouseLeave={() => setPricingMenuOpen(false)}
-                        >
-                            Pricing
-                            <div
-                                className={`${
-                                    pricingMenuOpen ? 'flex' : 'hidden'
-                                } absolute w-48 h-32 p-6 top-10 left-1/2 transform -translate-x-1/2 bg-white rounded shadow`}
-                            >
-                                testing
-                            </div>
-                        </li>
-                        <li>Community</li>
-                        <li>Docs</li>
-                    </ul>
+
                     <div className="hidden md:block">
                         <Link href="/account/sign-in">
                             <a className="mr-6 text-white" href="/account/sign-in">
