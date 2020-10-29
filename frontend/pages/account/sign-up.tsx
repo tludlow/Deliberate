@@ -2,13 +2,14 @@ import Link from 'next/link'
 import Layout from '@/components/Layout'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-
-import api from 'lib/api'
-import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { signUpUser } from 'actions/auth/userActions'
 
 //Design inspiration: https://dribbble.com/shots/9712645-StartGlobal-Onboarding
 export default function SignUp() {
-    const [formError, setFormError] = useState('')
+    const user = useSelector((state: RootState) => state.user)
+    const dispatch = useDispatch()
+
     return (
         <Layout title="Sign up - Deliberate" contained>
             {/* Cool background dots to fill the blank space, need the grid section to be position:relative so we can force the dots behind it */}
@@ -56,16 +57,18 @@ export default function SignUp() {
                                 .oneOf([Yup.ref('password')], 'Passwords must match')
                                 .required('Confirm password is required'),
                         })}
-                        onSubmit={async (fields) => {
-                            setFormError('')
-                            // console.log('SUCCESS!! :-)\n\n' + JSON.stringify(fields, null, 4))
-                            try {
-                                const res = await api.post('/auth/signup', fields)
-                                //Send user to the index page for whatever is defined
-                            } catch (err) {
-                                console.log(err.response.data.message)
-                                setFormError(err.response.data.message)
-                            }
+                        onSubmit={async (values, { setSubmitting }) => {
+                            setSubmitting(true)
+                            dispatch(
+                                signUpUser(
+                                    values.firstName,
+                                    values.lastName,
+                                    values.email,
+                                    values.password,
+                                    values.confirmPassword
+                                )
+                            )
+                            setSubmitting(false)
                         }}
                     >
                         {({ errors, status, touched }) => (
@@ -139,7 +142,7 @@ export default function SignUp() {
                                     placeholder="•••••••••••••••••••"
                                 />
 
-                                {formError.length > 0 ? <p className="form-error">{formError}</p> : ''}
+                                {user.error && <p className="form-error">{user.error}</p>}
 
                                 <input
                                     className="w-full h-12 mt-4 font-medium text-white rounded cursor-pointer bg-brand hover:bg-blue-500"
@@ -171,7 +174,7 @@ function AutomationInformation() {
                 <h5 className="text-lg font-semibold">Useful automations</h5>
                 <p className="leading-snug text-gray-600 text-md lg:w-8/12">
                     Many team management tasks are mundane, yet important to project success. Let deliberate do these
-                    for you with our powerful, in-built automation tools
+                    for you with our powerful, in-built automation features.
                 </p>
             </div>
         </div>

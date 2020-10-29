@@ -188,37 +188,45 @@ export default function Navbar({ showSearch }: NavbarProps) {
 
             {/* Dropdown menu */}
             <div className={`${menuOpen ? 'block' : 'hidden'} px-2 py-3 text-white`}>
-                <div className="flex items-center">
-                    <Image
-                        className="w-8 h-8 border rounded-full group-hover:border-gray-100 group-hover:shadow"
-                        src="/defaultimage.webp"
-                        alt="James Dean"
-                        width={32}
-                        height={32}
-                    />
-                    <span className="ml-2 text-white group-hover:text-gray-200">{user.username}</span>
-                </div>
-
-                <div className="my-4 border border-gray-600"></div>
-                <div className="mb-4 space-y-4">
-                    <button onClick={() => dispatch(logoutUser())} className="flex items-center hover:bg-gray-100">
-                        <svg
-                            className="w-5 h-5 mr-2 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                {user.loggedIn ? (
+                    <div>
+                        <div className="flex items-center">
+                            <Image
+                                className="w-8 h-8 border rounded-full group-hover:border-gray-100 group-hover:shadow"
+                                src="/defaultimage.webp"
+                                alt="James Dean"
+                                width={32}
+                                height={32}
                             />
-                        </svg>
-                        Logout
-                    </button>
-                </div>
+                            <span className="ml-2 text-white group-hover:text-gray-200">{user.username}</span>
+                        </div>
+                        <div className="my-4 border border-gray-600"></div>
+                        <div className="mb-4 space-y-4">
+                            <button
+                                onClick={() => dispatch(logoutUser())}
+                                className="flex items-center hover:bg-gray-100"
+                            >
+                                <svg
+                                    className="w-5 h-5 mr-2 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                                    />
+                                </svg>
+                                Logout
+                            </button>
+                        </div>{' '}
+                    </div>
+                ) : (
+                    <p>Log in please</p>
+                )}
             </div>
         </nav>
     )

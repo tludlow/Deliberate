@@ -4,6 +4,10 @@ import {
     USER_LOGIN_REQUEST,
     USER_LOGIN_SUCCESS,
     USER_LOGOUT,
+    USER_REGISTER_ERROR_CLEAR,
+    USER_REGISTER_FAILURE,
+    USER_REGISTER_REQUEST,
+    USER_REGISTER_SUCCESS,
 } from '../actionTypes'
 import api from 'lib/api'
 import { AxiosError, AxiosResponse } from 'axios'
@@ -36,7 +40,6 @@ export const loginUser = (email: string, password: string) => async (dispatch: a
             console.log('error: ', error.response?.data)
             dispatch({ type: USER_LOGIN_FAILURE, payload: { error: error.response?.data.message } })
         })
-    dispatch({ type: USER_LOGIN_ERROR_CLEAR })
 }
 
 /**
@@ -44,6 +47,44 @@ export const loginUser = (email: string, password: string) => async (dispatch: a
  */
 export const clearLoginErrors = () => {
     return { type: USER_LOGIN_ERROR_CLEAR }
+}
+export const clearRegisterErrors = () => {
+    return { type: USER_REGISTER_ERROR_CLEAR }
+}
+export const signUpUser = (
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+) => async (dispatch: any) => {
+    dispatch({ type: USER_REGISTER_REQUEST })
+    api.post('/user/register', {
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmPassword,
+    })
+        .then((response: AxiosResponse) => {
+            console.log('response', response)
+            dispatch({
+                type: USER_REGISTER_SUCCESS,
+                payload: {
+                    loading: false,
+                    error: null,
+                    username: response.data.name,
+                    loggedIn: true,
+                    accessToken: response.data.accessToken,
+                    refreshToken: response.data.refreshToken,
+                },
+            })
+            router.push('/')
+        })
+        .catch((error: AxiosError) => {
+            console.log('error registering', error.response?.data)
+            dispatch({ type: USER_REGISTER_FAILURE, payload: { error: error.response?.data.message } })
+        })
 }
 
 export const logoutUser = () => {

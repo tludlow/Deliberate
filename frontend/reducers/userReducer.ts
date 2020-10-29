@@ -4,6 +4,9 @@ import {
     USER_LOGIN_REQUEST,
     USER_LOGIN_SUCCESS,
     USER_LOGOUT,
+    USER_REGISTER_FAILURE,
+    USER_REGISTER_REQUEST,
+    USER_REGISTER_SUCCESS,
 } from '../actions/actionTypes'
 
 interface UserState {
@@ -42,6 +45,20 @@ const userReducer = (state = initialState, action: any) => {
             return { ...state, loading: false, error: action.payload.error }
         case USER_LOGIN_ERROR_CLEAR:
             return { ...state, error: null }
+        case USER_REGISTER_REQUEST:
+            return { ...state, loading: false, error: null }
+        case USER_REGISTER_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                loggedIn: true,
+                username: action.payload.username,
+                accessToken: action.payload.accessToken,
+                refreshToken: action.payload.refreshToken,
+            }
+        case USER_REGISTER_FAILURE:
+            return { ...state, loading: false, error: action.payload.error }
         case USER_LOGOUT:
             return {
                 ...state,
