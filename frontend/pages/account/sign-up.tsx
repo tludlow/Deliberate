@@ -4,6 +4,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { signUpUser } from 'actions/auth/userActions'
+import { RootState } from 'reducers/indexReducer'
 
 //Design inspiration: https://dribbble.com/shots/9712645-StartGlobal-Onboarding
 export default function SignUp() {
