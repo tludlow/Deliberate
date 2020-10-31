@@ -27,6 +27,9 @@ module.exports = {
             maxHeight: {
                 within: 'calc(100vh - 52px)',
             },
+            inset: {
+                '-3': '-0.75rem',
+            },
         },
     },
     variants: {

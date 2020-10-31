@@ -45,7 +45,40 @@ export default function Index() {
             </section>
 
             <section className="container mx-auto">
-                <h3 className="mt-8 text-2xl font-bold">Integrate with your existing tools</h3>
+                <h3 className="mt-8 text-2xl font-bold">Integrate with your existing tools and workflows</h3>
+                <div className="flex items-center space-x-3">
+                    <div className="p-5 border-2 border-gray-800"></div>
+                    <svg
+                        className="w-8 h-8 p-2 text-white rounded-full bg-brand"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 5l7 7-7 7M5 5l7 7-7 7"
+                        />
+                    </svg>
+                    <div className="p-5 border-2 border-gray-800"></div>
+                    <svg
+                        className="w-8 h-8 p-2 text-white rounded-full bg-brand"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 5l7 7-7 7M5 5l7 7-7 7"
+                        />
+                    </svg>
+                    <div className="p-5 border-2 border-gray-800"></div>
+                </div>
             </section>
         </Layout>
     )
