@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from 'reducers/indexReducer'
 import { logoutUser } from 'actions/auth/userActions'
 import Link from 'next/link'
+import { BellIcon } from '../icons/index'
 
 type NavbarProps = {
     showSearch?: boolean,
@@ -92,39 +93,62 @@ export default function Navbar({ showSearch }: NavbarProps) {
                         )}
                         {/* user logged in */}
                         {user.loggedIn && (
-                            <div
-                                className="flex items-center cursor-pointer group"
-                                onClick={() => setPopoverMenuOpen(!popoverMenuOpen)}
-                                ref={popoverRef}
-                                id="popover-toggle"
-                            >
-                                <Image
-                                    className="w-8 h-8 border rounded-full group-hover:border-gray-100 group-hover:shadow"
-                                    src="/defaultimage.webp"
-                                    alt="James Dean"
-                                    width={32}
-                                    height={32}
-                                />
-                                <span className="ml-2 text-white group-hover:text-gray-200">{user.username}</span>
-                                <svg
-                                    className="h-4 w-4 ml-2 text-white pt-0.5 group-hover:text-gray-200"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg"
+                            <div className="flex items-center space-x-8">
+                                <BellIcon className="w-6 h-6 text-white cursor-pointer hover:text-gray-200 hover:shadow" />
+                                <div
+                                    className="flex items-center cursor-pointer group"
+                                    onClick={() => setPopoverMenuOpen(!popoverMenuOpen)}
+                                    ref={popoverRef}
+                                    id="popover-toggle"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M19 9l-7 7-7-7"
+                                    <Image
+                                        className="w-8 h-8 border rounded-full group-hover:border-gray-100 group-hover:shadow"
+                                        src="/defaultimage.webp"
+                                        alt="James Dean"
+                                        width={32}
+                                        height={32}
                                     />
-                                </svg>
+                                    <span className="ml-2 text-white group-hover:text-gray-200">{user.username}</span>
+                                    <svg
+                                        className="h-4 w-4 ml-2 text-white pt-0.5 group-hover:text-gray-200"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M19 9l-7 7-7-7"
+                                        />
+                                    </svg>
 
-                                {popoverMenuOpen && (
-                                    <div className="absolute right-0 z-20 flex flex-col w-48 bg-white rounded shadow top-9">
-                                        <Link href="/calendar">
-                                            <a className="flex items-center px-3 py-2 hover:bg-gray-100">
+                                    {popoverMenuOpen && (
+                                        <div className="absolute right-0 z-20 flex flex-col w-48 bg-white rounded shadow top-9">
+                                            <Link href="/calendar">
+                                                <a className="flex items-center px-3 py-2 hover:bg-gray-100">
+                                                    <svg
+                                                        className="w-5 h-5 mr-2 text-brand"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                        />
+                                                    </svg>
+                                                    My Calendar
+                                                </a>
+                                            </Link>
+                                            <button
+                                                onClick={() => dispatch(logoutUser())}
+                                                className="flex items-center px-3 py-2 hover:bg-gray-100"
+                                            >
                                                 <svg
                                                     className="w-5 h-5 mr-2 text-brand"
                                                     fill="none"
@@ -136,34 +160,14 @@ export default function Navbar({ showSearch }: NavbarProps) {
                                                         strokeLinecap="round"
                                                         strokeLinejoin="round"
                                                         strokeWidth={2}
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                                                     />
                                                 </svg>
-                                                My Calendar
-                                            </a>
-                                        </Link>
-                                        <button
-                                            onClick={() => dispatch(logoutUser())}
-                                            className="flex items-center px-3 py-2 hover:bg-gray-100"
-                                        >
-                                            <svg
-                                                className="w-5 h-5 mr-2 text-brand"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                                                />
-                                            </svg>
-                                            Logout
-                                        </button>
-                                    </div>
-                                )}
+                                                Logout
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )}
                     </div>

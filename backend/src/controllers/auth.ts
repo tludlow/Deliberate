@@ -135,7 +135,7 @@ export const Signup = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60,
             issuer: 'deliberate',
             subject: 'accesstoken',
-            data: { email: email },
+            data: { email },
         },
         'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
     )

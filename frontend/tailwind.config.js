@@ -17,6 +17,7 @@ module.exports = {
             },
             colors: {
                 brand: '#3356BC',
+                'brand-light': '#3d64d4',
             },
             backgroundColor: (theme) => ({
                 brand: '#3356BC',

@@ -22,7 +22,7 @@ const initialState: UserState = {
     loading: false,
     loggedIn: false,
     error: null,
-    username: 'Saranyan Kugapiragasam',
+    username: '',
     accessToken: '',
     refreshToken: '',
 }

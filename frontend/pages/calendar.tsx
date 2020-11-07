@@ -16,13 +16,13 @@ export default function Calendar() {
     }, [])
 
     const scrollCalendarToToday = () => {
-        let today = document.getElementById(now.format('d-MMMM').toLowerCase())
+        let today = document.getElementById(now.format('D-MMMM-YYYY').toLowerCase())
         today?.scrollIntoView({ inline: 'center', behavior: 'smooth' })
     }
 
     return (
         <Layout title="My Calendar" showSearch>
-            <section className="flex flex-shrink-0 w-full space-x-1 overflow-auto h-within thin-scrollbar">
+            <section className="flex flex-shrink-0 w-full pt-2 space-x-1 overflow-auto h-within thin-scrollbar">
                 <div className="fixed left-0 w-32 bg-gradient-to-r from-gray-50 to-transparent h-within"></div>
                 <div className="fixed right-0 w-32 bg-gradient-to-l from-gray-50 to-transparent h-within"></div>
                 <div
@@ -40,10 +40,19 @@ export default function Calendar() {
 }
 
 const Day: React.FC<{ day: dayjs.Dayjs }> = ({ day }) => {
+    let now = dayjs()
+    useEffect(() => {
+        console.log(now.format('D-MMMM-YYYY').toLowerCase())
+        console.log('=', day.format('D-MMMM-YYYY').toLowerCase())
+    }, [])
     return (
         <div
-            id={day.format('d-MMMM').toLowerCase()}
-            className="flex flex-col items-center flex-shrink-0 h-full p-2 border border-gray-200 w-96"
+            id={day.format('D-MMMM-YYYY').toLowerCase()}
+            className={`flex flex-col items-center flex-shrink-0 h-full p-2 border ${
+                day.format('D-MMMM-YYYY').toLowerCase() === now.format('D-MMMM-YYYY').toLowerCase()
+                    ? 'border-brand'
+                    : 'border-gray-200'
+            } w-96`}
         >
             <span className="font-bold">{day.format('D MMMM')}</span>
         </div>

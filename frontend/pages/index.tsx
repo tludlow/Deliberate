@@ -3,6 +3,8 @@ import Link from 'next/link'
 
 import Layout from '@/components/Layout'
 import { LogoIcon } from '@/components/icons/Logo'
+import { RootState } from 'reducers/indexReducer'
+import { useSelector } from 'react-redux'
 
 export default function Index() {
     return (
@@ -85,6 +87,8 @@ export default function Index() {
 }
 
 export function IndexNavbar() {
+    const user = useSelector((state: RootState) => state.user)
+
     //prettier-ignore
     const dropdownRef = useRef<HTMLDivElement>(null)
     const [menuOpen, setMenuOpen] = useState(false)
@@ -117,19 +121,31 @@ export function IndexNavbar() {
                     </div>
 
                     <div className="hidden md:block">
-                        <Link href="/account/sign-in">
-                            <a className="mr-6 text-white" href="/account/sign-in">
-                                Sign in
-                            </a>
-                        </Link>
-                        <Link href="/account/sign-up">
-                            <a
-                                className="px-4 py-2 font-medium text-white bg-blue-500 rounded hover:shadow hover:bg-blue-600"
-                                href="/accounts/sign-up"
-                            >
-                                Join now
-                            </a>
-                        </Link>
+                        {user.loggedIn ? (
+                            <div className="flex items-center space-x-5 text-white">
+                                <Link href="/dashboard">
+                                    <a className="p-2 bg-blue-600 rounded hover:shadow">Dashboard</a>
+                                </Link>
+                                <p className="font-bold">{user.username}</p>
+                            </div>
+                        ) : (
+                            <div>
+                                {' '}
+                                <Link href="/account/sign-in">
+                                    <a className="mr-6 text-white" href="/account/sign-in">
+                                        Sign in
+                                    </a>
+                                </Link>
+                                <Link href="/account/sign-up">
+                                    <a
+                                        className="px-4 py-2 font-medium text-white bg-blue-500 rounded hover:shadow hover:bg-blue-600"
+                                        href="/accounts/sign-up"
+                                    >
+                                        Join now
+                                    </a>
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     {/* Burger menu, toggled to an X when open */}
