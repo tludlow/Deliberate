@@ -7,7 +7,7 @@ describe('API Tests', () => {
     it('should be able to ping the web server', (done) => {
         request(app).get('/ping').expect(200, done)
     })
-    it('should create a task', function (done) {
+    it('should throw a 404 error because this endpoint doesnt exist', function (done) {
         request(app)
             .get('/hellothisisarandomendpointthatwontexist')
             .end(function (err, res) {
