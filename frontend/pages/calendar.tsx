@@ -14,10 +14,16 @@ export default function Calendar() {
         days.push(now.add(i, 'day'))
     }
 
-    //prettier-ignore
-    const calendar = useRef<HTMLElement>()
+    // prettier-ignore
+    const calendar = useRef<HTMLElement>(null)
     const scrollHorizontally = (e: any) => {
-        e.deltaY > 0 ? (calendar.current!.scrollLeft += 100) : (calendar.current!.scrollLeft -= 100)
+        if (e.deltaY > 0) {
+            // @ts-expect-error
+            calendar.current.scrollLeft += 100
+        } else {
+            // @ts-expect-error
+            calendar.current.scrollLeft -= 100
+        }
     }
 
     useEffect(() => {
