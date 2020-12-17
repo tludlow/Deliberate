@@ -31,6 +31,10 @@ module.exports = {
             inset: {
                 '-3': '-0.75rem',
             },
+            boxShadow: {
+                xs: '0 0 0 1px rgba(0, 0, 0, 0.05)',
+                outline: '0 0 0 3px rgba(66, 153, 225, 0.5)',
+              },
         },
     },
     variants: {
@@ -38,8 +42,5 @@ module.exports = {
         backgroundColor: ['responsive', 'hover', 'focus', 'checked'],
         textColor: ["responsive", "hover", "focus", "group-hover"],
     },
-    plugins: [require('@tailwindcss/ui')],
-    experimental: {
-        applyComplexClasses: true,
-    },
+    plugins: [require('@tailwindcss/forms'), require('@tailwindcss/ui')],
 }

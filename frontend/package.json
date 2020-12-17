@@ -13,13 +13,16 @@
     "author": "Thomas Ludlow",
     "license": "ISC",
     "dependencies": {
+        "@headlessui/react": "^0.2.0",
+        "@tailwindcss/forms": "^0.2.1",
         "@tailwindcss/ui": "^0.3.0",
-        "autoprefixer": "^9.8.0",
+        "autoprefixer": "^10.0.2",
         "axios": "^0.19.2",
         "dayjs": "^1.9.4",
         "formik": "^2.1.4",
         "next": "^10.0.0",
         "nodemon": "^2.0.4",
+        "postcss": "^8.1.9",
         "postcss-nesting": "^7.0.1",
         "react": "^17.0.1",
         "react-beautiful-dnd": "^13.0.0",
@@ -29,7 +32,7 @@
         "redux-devtools-extension": "^2.13.8",
         "redux-persist": "^6.0.0",
         "redux-thunk": "^2.3.0",
-        "tailwindcss": "^1.7.2",
+        "tailwindcss": "^2.0.1",
         "yup": "^0.29.3"
     },
     "devDependencies": {

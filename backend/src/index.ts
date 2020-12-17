@@ -15,6 +15,7 @@ const app = express()
 import * as apiController from './controllers/api'
 import * as authController from './controllers/auth'
 import * as teamManagementController from './controllers/teamManagement'
+import * as ssoController from './controllers/sso'
 
 //Setup api middlewares
 app.use(helmet())
@@ -31,6 +32,9 @@ app.get('/ping', apiController.Ping)
 //Auth
 app.post('/user/login', authController.Login)
 app.post('/user/register', authController.Signup)
+
+//SSO
+app.get('/auth/github', ssoController.GithubSSO)
 
 //Teams
 app.post('/team/create', teamManagementController.CreateTeam)

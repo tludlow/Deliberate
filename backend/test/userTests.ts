@@ -126,4 +126,7 @@ describe('User Authentication', () => {
                 done()
             })
     })
+    after('Clear the user from the database we just created', async () => {
+        let res = await query('DELETE FROM users WHERE email=$1', ['wowthisisacoolemailfortesting123@testing.com'])
+    })
 })
