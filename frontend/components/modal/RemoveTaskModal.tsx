@@ -53,13 +53,13 @@ const RemoveTaskModal: React.FC<{ isOpen: boolean, id: number, closeModal: () =>
                                 </svg>
                             </div>
                             <div className="mt-3 text-center sm:mt-5">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900" id="modal-headline">
+                                <h3 className="text-xl font-medium leading-6 text-gray-900" id="modal-headline">
                                     Remove task <span className="font-bold">{id}</span>
                                 </h3>
                                 <div className="mt-2">
-                                    <p className="text-sm leading-5 text-gray-500">
+                                    <p className="leading-5 text-gray-500 ">
                                         Are you sure you want to remove this task from your calendar? Once it's removed
-                                        you can't get it backed!
+                                        <span className="font-medium"> you can't get it backed!</span>
                                     </p>
                                 </div>
                             </div>
