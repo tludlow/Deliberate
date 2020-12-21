@@ -1,3 +1,8 @@
+/* 
+    TailwindCSS + Next takes a while to compile, this is one way of speeding it up if it becomeds troublesome: 
+    https://github.com/vercel/next.js/issues/13488
+*/
+
 @tailwind base;
 
 html {
@@ -39,7 +44,7 @@ html {
     @apply text-gray-400 hover:text-gray-500;
 } 
 .radio-team[type=radio]:checked + label {
-    @apply text-brand font-medium border-brand transform scale-105;
+    @apply font-medium transform scale-105 text-brand border-brand;
 }
 
 /* Custom scrollbar on the teams page*/
@@ -80,7 +85,7 @@ html {
     position: absolute;
     top: -7px;
     left: 50%;
-    @apply bg-gray-600 transform -translate-x-1/2;
+    @apply transform -translate-x-1/2 bg-gray-600;
 }
 .activity-times > *::after {
     content: "";
@@ -89,7 +94,7 @@ html {
     position: absolute;
     bottom: -7px;
     left: 50%;
-    @apply bg-gray-600 transform -translate-x-1/2;
+    @apply transform -translate-x-1/2 bg-gray-600;
 }
 
 
@@ -100,3 +105,15 @@ html {
 
 @tailwind components;
 @tailwind utilities;
+
+
+@layer utilities {
+    @variants responsive {
+        .w-1\/4vw {
+            width: 25vw;
+        }
+        .w-3\/10vw {
+            width: 30vw;
+        }
+    }
+}

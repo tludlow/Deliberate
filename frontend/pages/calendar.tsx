@@ -6,11 +6,12 @@ import { CalendarIcon } from '@/components/icons'
 import { createPortal } from 'react-dom'
 
 import RemoveTaskModal from '@/components/modal/RemoveTaskModal'
+import Task from '@/components/calendar/Task'
 
 export default function Calendar() {
     let now = dayjs()
     let days: dayjs.Dayjs[] = []
-    for (let i = -6; i < 6; i++) {
+    for (let i = -6; i <= 6; i++) {
         days.push(now.add(i, 'day'))
     }
 
@@ -110,7 +111,8 @@ const Day: React.FC<{ day: dayjs.Dayjs }> = ({ day }) => {
                 day.format('D-MMMM-YYYY').toLowerCase() === now.format('D-MMMM-YYYY').toLowerCase()
                     ? 'border-brand'
                     : 'border-gray-200'
-            } w-96`}
+            } `}
+            style={{ width: '30vw' }}
         >
             <span className="font-bold">{day.format('D MMMM')}</span>
 
@@ -127,6 +129,8 @@ const Day: React.FC<{ day: dayjs.Dayjs }> = ({ day }) => {
                     />,
                     document.body
                 )}
+
+            <Task />
         </div>
     )
 }
