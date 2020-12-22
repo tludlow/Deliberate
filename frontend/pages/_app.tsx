@@ -1,4 +1,6 @@
 import '@/css/tailwind.css'
+import '@/css/components.css'
+import '@/css/utilities.css'
 
 import Head from 'next/head'
 import { AppProps } from 'next/app'

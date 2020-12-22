@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from 'reducers/indexReducer'
 import { logoutUser } from 'actions/auth/userActions'
 import Link from 'next/link'
-import { BellIcon } from '../icons/index'
+import Notifications from './Notifications'
 
 type NavbarProps = {
     showSearch?: boolean,
@@ -94,12 +94,7 @@ export default function Navbar({ showSearch }: NavbarProps) {
                         {/* user logged in */}
                         {user.loggedIn && (
                             <div className="flex items-center space-x-8">
-                                <div className="relative cursor-pointer">
-                                    <BellIcon className="text-white w-7 h-7 hover:text-gray-200 hover:shadow" />
-                                    <div className="absolute bottom-0 right-0 flex items-center justify-center w-4 h-4 bg-red-500 rounded-full">
-                                        <span className="text-sm text-white">1</span>
-                                    </div>
-                                </div>
+                                <Notifications />
                                 <div
                                     className="flex items-center cursor-pointer group"
                                     onClick={() => setPopoverMenuOpen(!popoverMenuOpen)}

@@ -3,7 +3,7 @@ export function RecentActivity() {
         <li className="flex items-center col-span-1 bg-white border border-gray-200 rounded-md shadow-sm">
             <div className="pl-2">
                 <svg
-                    className="w-8 h-8 text-green-800"
+                    className="w-8 h-8 text-green-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -20,7 +20,8 @@ export function RecentActivity() {
             <div className="flex-1 px-4 py-2 text-">
                 <p className="font-medium leading-5 text-gray-900">New Issue</p>
                 <p className="flex-wrap mt-1 text-sm text-gray-500">
-                    You have been assigned an issue from <span className="font-medium">Deliberate</span>
+                    You have been assigned an issue from{' '}
+                    <span className="font-medium cursor-pointer hover:text-gray-700">Deliberate</span>
                 </p>
             </div>
         </li>

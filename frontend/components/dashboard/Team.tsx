@@ -13,7 +13,7 @@ export default function Team({ initials, name, memberCount }: TeamType) {
     return (
         <li className="relative flex items-center col-span-1 bg-white border border-gray-200 rounded-md shadow-sm">
             <div
-                className={`flex items-center justify-center flex-shrink-0 w-16 h-16 text-sm font-medium leading-5 text-center text-white ${chosenColour}`}
+                className={`flex items-center justify-center flex-shrink-0 w-16 h-16 text-sm font-medium leading-5 text-center text-white rounded-md rounded-r-none ${chosenColour}`}
             >
                 {initials}
             </div>

@@ -21,7 +21,7 @@ export function Dashboard() {
                     <RecentActivity />
                 </ul>
             </section>
-            <section className="w-full mt-8">
+            <section className="w-full mt-15">
                 <h3 className="flex items-center space-x-2 text-xl font-bold gap-x-3">
                     <TeamIcon className="w-7 h-7 text-brand" /> <span>My Teams</span>
                 </h3>
