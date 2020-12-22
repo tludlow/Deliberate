@@ -3,6 +3,7 @@ import {
     USER_LOGIN_FAILURE,
     USER_LOGIN_REQUEST,
     USER_LOGIN_SUCCESS,
+    USER_LOGIN_SSO,
     USER_LOGOUT,
     USER_REGISTER_ERROR_CLEAR,
     USER_REGISTER_FAILURE,
@@ -85,6 +86,14 @@ export const signUpUser = (
             console.log('error registering', error.response?.data)
             dispatch({ type: USER_REGISTER_FAILURE, payload: { error: error.response?.data.message } })
         })
+}
+
+export const loginUserSSO = (
+    name: string | string[],
+    refreshToken: string | string[],
+    accessToken: string | string[]
+) => {
+    return { type: USER_LOGIN_SSO, payload: { name, refreshToken, accessToken } }
 }
 
 export const logoutUser = () => {

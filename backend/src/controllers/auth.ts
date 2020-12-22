@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { query } from '../db'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { access } from 'fs/promises'
 
 /**
  * Authentication route to log in a user
@@ -59,7 +60,7 @@ export const Login = async (req: Request, res: Response) => {
         expires: new Date(Date.now() / 1000 + 60 * 60 * 24 * 30 * 3),
         httpOnly: true,
     })
-    res.cookie('access_token', refreshToken, {
+    res.cookie('access_token', accessToken, {
         expires: new Date(Date.now() / 100 + 60 * 60),
         httpOnly: true,
     })
@@ -145,7 +146,7 @@ export const Signup = async (req: Request, res: Response) => {
         expires: new Date(Date.now() / 1000 + 60 * 60 * 24 * 30 * 3),
         httpOnly: true,
     })
-    res.cookie('access_token', refreshToken, {
+    res.cookie('access_token', accessToken, {
         expires: new Date(Date.now() / 100 + 60 * 60),
         httpOnly: true,
     })

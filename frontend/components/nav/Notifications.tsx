@@ -58,7 +58,8 @@ export default function Notifications() {
                                                 <div className="flex-1 px-2">
                                                     <h4 className="text-lg font-bold leading-none">Jessi Stevens</h4>
                                                     <p className="mt-1 leading-tight text-gray-400">
-                                                        Marked the task <span className="text-brand">bug fixing</span>
+                                                        Marked the task <span className="text-brand">bug fixing</span>{' '}
+                                                        as done
                                                     </p>
                                                 </div>
                                                 <div className="flex-none">
