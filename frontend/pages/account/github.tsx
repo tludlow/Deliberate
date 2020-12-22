@@ -15,6 +15,7 @@ export default function SSOFallback() {
         console.log(router.query)
         //If there is a query with a name and tokens then we can log the user in for redux purposes
         if (name && refreshToken && accessToken && user.loggedIn === false) {
+            console.log('Logging the user in with SSO')
             dispatch(loginUserSSO(name, refreshToken, accessToken))
         }
     }, [router.query])

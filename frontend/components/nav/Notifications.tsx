@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 export default function Notifications() {
     return (
-        <div className="relative">
+        <div className="relative" tabIndex={0}>
             <Menu>
                 {({ open }) => (
                     <>
@@ -13,7 +13,7 @@ export default function Notifications() {
                                 <div className="relative cursor-pointer">
                                     <BellIcon className="text-white w-7 h-7 hover:text-gray-200 hover:shadow" />
                                     <div className="absolute bottom-0 right-0 flex items-center justify-center w-4 h-4 bg-red-500 rounded-full">
-                                        <span className="text-sm text-white">1</span>
+                                        <span className="text-sm text-white select-none">1</span>
                                     </div>
                                 </div>
                             </Menu.Button>
@@ -38,7 +38,39 @@ export default function Notifications() {
                                         Mark all as read
                                     </button>
                                 </div>
-                                <div className="py-1">
+                                <div className="py-1 overflow-auto max-h-64">
+                                    <Menu.Item>
+                                        {({ active }) => (
+                                            <a
+                                                href="#account-settings"
+                                                className={`${
+                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                                                } flex justify-between w-full px-4 py-2 text-medium text-sm leading-5 text-left`}
+                                            >
+                                                <div className="flex-none">
+                                                    <Image
+                                                        className="border border-gray-600 rounded-full shadow"
+                                                        src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                                        width={50}
+                                                        height={50}
+                                                    />
+                                                </div>
+                                                <div className="flex-1 px-2">
+                                                    <h4 className="text-lg font-bold leading-none">Jessi Stevens</h4>
+                                                    <p className="mt-1 leading-tight text-gray-400">
+                                                        Marked the task <span className="text-brand">bug fixing</span>{' '}
+                                                        as done
+                                                    </p>
+                                                </div>
+                                                <div className="flex-none">
+                                                    <p className="text-xs text-gray-400 tracking-tightest">
+                                                        15 min ago
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        )}
+                                    </Menu.Item>
+
                                     <Menu.Item>
                                         {({ active }) => (
                                             <a

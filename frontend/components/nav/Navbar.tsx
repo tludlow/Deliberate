@@ -63,7 +63,7 @@ export default function Navbar({ showSearch }: NavbarProps) {
                 <div className="flex items-center justify-between h-14 md:h-13">
                     <div className="flex items-center flex-1">
                         <div className="flex-shrink-0">
-                            <a href="/">
+                            <a href="/" tabIndex={0}>
                                 <LogoIcon
                                     className="w-32 h-12 ml-2 -mt-1 text-white md:ml-0"
                                     hover="hover:text-gray-200"
@@ -100,6 +100,7 @@ export default function Navbar({ showSearch }: NavbarProps) {
                                     onClick={() => setPopoverMenuOpen(!popoverMenuOpen)}
                                     ref={popoverRef}
                                     id="popover-toggle"
+                                    tabIndex={0}
                                 >
                                     <Image
                                         className="w-8 h-8 border rounded-full group-hover:border-gray-100 group-hover:shadow"
