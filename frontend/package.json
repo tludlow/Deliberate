@@ -23,6 +23,7 @@
         "next": "^10.0.4",
         "nodemon": "^2.0.4",
         "postcss": "^8.1.9",
+        "postcss-import": "^14.0.0",
         "postcss-nesting": "^7.0.1",
         "react": "^17.0.1",
         "react-beautiful-dnd": "^13.0.0",
@@ -32,6 +33,7 @@
         "redux-devtools-extension": "^2.13.8",
         "redux-persist": "^6.0.0",
         "redux-thunk": "^2.3.0",
+        "swr": "^0.3.11",
         "tailwindcss": "^2.0.1",
         "yup": "^0.29.3"
     },
