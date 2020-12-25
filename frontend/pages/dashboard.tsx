@@ -30,7 +30,12 @@ export function Dashboard() {
                     <h3 className="flex items-center space-x-2 text-xl font-bold gap-x-3">
                         <TeamIcon className="w-7 h-7 text-brand" /> <span>My Teams</span>
                     </h3>
-                    <CreateTeamButton />
+                    <Link href="/team/create">
+                        <span className="flex items-center px-3 py-2 space-x-3 text-white rounded cursor-pointer bg-brand hover:bg-brand-light ring-0">
+                            <PlusIcon className="w-6 h-6" />
+                            <span>Create Team</span>
+                        </span>
+                    </Link>
                 </div>
 
                 <div>
@@ -46,67 +51,3 @@ export function Dashboard() {
 }
 
 export default withAuthentication(Dashboard)
-
-import { Menu, Transition } from '@headlessui/react'
-
-function CreateTeamButton() {
-    return (
-        <div className="relative">
-            <Menu>
-                {({ open }) => (
-                    <>
-                        <Menu.Button as="span">
-                            <button className="flex items-center px-3 py-2 text-sm font-medium text-white border rounded bg-brand border-brand-light hover:shadow hover:bg-brand-light">
-                                <svg
-                                    className="w-6 h-6"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                    />
-                                </svg>
-                                <span className="pl-2">Create Calendar</span>
-                            </button>
-                        </Menu.Button>
-
-                        <Transition
-                            show={open}
-                            enter="transition ease-out duration-100"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
-                        >
-                            <Menu.Items
-                                static
-                                className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
-                            >
-                                <div className="py-1">
-                                    <Menu.Item>
-                                        {({ active }) => (
-                                            <a
-                                                href="#account-settings"
-                                                className={`${
-                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                                } flex  justify-between w-full px-4 py-2 text-medium text-sm leading-5 text-left`}
-                                            >
-                                                Team calendar
-                                            </a>
-                                        )}
-                                    </Menu.Item>
-                                </div>
-                            </Menu.Items>
-                        </Transition>
-                    </>
-                )}
-            </Menu>
-        </div>
-    )
-}

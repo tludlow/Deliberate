@@ -14,8 +14,11 @@ const app = express()
 //Import controllers
 import * as apiController from './controllers/api'
 import * as authController from './controllers/auth'
-import * as teamManagementController from './controllers/teamManagement'
 import * as ssoController from './controllers/sso'
+import * as teamController from './controllers/team'
+
+//Midleware
+import { AuthTokenMiddleware } from './middleware/authMiddleware'
 
 //Setup api middlewares
 app.use(helmet())
@@ -37,8 +40,7 @@ app.post('/user/register', authController.Signup)
 app.get('/auth/github', ssoController.GithubSSO)
 
 //Teams
-app.post('/team/create', teamManagementController.CreateTeam)
-app.get('/team/:teamID/info', teamManagementController.GetTeamInfo)
+app.post('/team/create', AuthTokenMiddleware, teamController.Create)
 
 //Catch all 404
 app.get('/*', apiController.FourOFour)
