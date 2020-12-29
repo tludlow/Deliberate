@@ -1,12 +1,8 @@
 import dayjs from 'dayjs'
 import Layout from '../components/Layout'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { CalendarIcon } from '@/components/icons'
-
-import { createPortal } from 'react-dom'
-
-import RemoveTaskModal from '@/components/modal/RemoveTaskModal'
-import Task from '@/components/calendar/Task'
+import Day from '../components/calendar/Day'
 
 export default function Calendar() {
     let now = dayjs()
@@ -76,13 +72,16 @@ export default function Calendar() {
         <Layout title="My Calendar" showSearch>
             <section
                 ref={calendar}
-                className="flex flex-shrink-0 w-full space-x-1 overflow-auto h-within thin-scrollbar"
+                className="flex flex-shrink-0 w-full overflow-auto divide-x-0 divide-gray-400 h-within thin-scrollbar"
             >
+                {/* Left occlusion */}
                 <div className="fixed left-0 w-32 bg-gradient-to-r from-gray-50 to-transparent h-within"></div>
+                {/* Right occlusion */}
                 <div className="fixed right-0 w-32 bg-gradient-to-l from-gray-50 to-transparent h-within"></div>
+
                 <div
                     onClick={() => scrollCalendarToToday()}
-                    className="fixed flex items-center justify-center w-12 h-12 rounded-full cursor-pointer bg-brand right-8 bottom-8 hover:shadow"
+                    className="fixed flex items-center justify-center w-12 h-12 pt-1 rounded-full cursor-pointer bg-brand right-8 bottom-8 hover:shadow"
                 >
                     <CalendarIcon className="w-6 h-6 text-white" />
                 </div>
@@ -91,46 +90,5 @@ export default function Calendar() {
                 ))}
             </section>
         </Layout>
-    )
-}
-
-const Day: React.FC<{ day: dayjs.Dayjs }> = ({ day }) => {
-    const [isRemoveOpen, setIsRemoveOpen] = useState(false)
-    const closeModal = () => {
-        setIsRemoveOpen(false)
-    }
-
-    let now = dayjs()
-    useEffect(() => {
-        console.log(now.format('D-MMMM-YYYY').toLowerCase())
-    }, [])
-    return (
-        <div
-            id={day.format('D-MMMM-YYYY').toLowerCase()}
-            className={`flex flex-col items-center flex-shrink-0 h-full p-2 border ${
-                day.format('D-MMMM-YYYY').toLowerCase() === now.format('D-MMMM-YYYY').toLowerCase()
-                    ? 'border-brand'
-                    : 'border-gray-200'
-            } `}
-            style={{ width: '30vw' }}
-        >
-            <span className="font-bold">{day.format('D MMMM')}</span>
-
-            <button onClick={() => setIsRemoveOpen(!isRemoveOpen)} className="p-2 mt-6 border rounded border-brand">
-                Open modal
-            </button>
-
-            {isRemoveOpen &&
-                createPortal(
-                    <RemoveTaskModal
-                        isOpen={isRemoveOpen}
-                        closeModal={closeModal}
-                        id={Number(day.format('D-MMMM-YYYY').toLowerCase().split('-')[0])}
-                    />,
-                    document.body
-                )}
-
-            <Task />
-        </div>
     )
 }
