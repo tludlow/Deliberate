@@ -44,8 +44,7 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
     return (
         <div
             id={day.format('D-MMMM-YYYY').toLowerCase()}
-            className="flex flex-col items-center flex-shrink-0 h-full p-2"
-            style={{ width: '25%' }}
+            className="flex flex-col items-center flex-shrink-0 w-10/12 h-full p-2 sm:w-8/12 md:w-6/12 lg:w-4/12 xl:w-3/12"
         >
             {/* Day header */}
             <div className="flex items-center justify-between w-full p-3 border border-gray-200 just-self-start">
@@ -183,9 +182,9 @@ function TimeLine({ now, hourHeight, startHour }: TimeLineProps) {
             style={{
                 top: mapMinutesPastHourToRem(hourHeight),
             }}
-            className="absolute z-30 flex items-center w-full -mt-1 -ml-3"
+            className="absolute flex items-center w-full -mt-1 -ml-3"
         >
-            <span className="flex-shrink-0 px-3 py-1 text-sm text-white rounded-full bg-brand-light">
+            <span className="z-30 flex-shrink-0 px-3 py-1 text-sm text-white rounded-full bg-brand-light">
                 {now.format('h:mm A')}
             </span>
             <div className="w-full h-px bg-brand-light"></div>

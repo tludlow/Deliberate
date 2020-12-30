@@ -1,10 +1,6 @@
 import { Transition } from '@headlessui/react'
 
-const RemoveTaskModal: React.FC<{ isOpen: boolean; id: number; closeModal: () => void }> = ({
-    isOpen,
-    id,
-    closeModal,
-}) => {
+const TaskModal: React.FC<{ isOpen: boolean; id: number; closeModal: () => void }> = ({ isOpen, id, closeModal }) => {
     return (
         <Transition show={isOpen}>
             <div className="fixed inset-x-0 bottom-0 z-40 px-4 pb-6 sm:inset-0 sm:p-0 sm:flex sm:items-center sm:justify-center">
@@ -30,7 +26,7 @@ const RemoveTaskModal: React.FC<{ isOpen: boolean; id: number; closeModal: () =>
                     leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
                     <div
-                        className="px-4 pt-5 pb-4 overflow-hidden transition-all transform bg-white rounded-lg shadow-xl sm:max-w-lg sm:w-full sm:p-6"
+                        className="px-4 pt-5 pb-4 overflow-hidden transition-all transform bg-white rounded-lg shadow-xl sm:max-w-lg sm:w-full md:max-w-xl lg:max-w-3xl xl:max-w-6xl sm:p-6"
                         role="dialog"
                         aria-modal="true"
                         aria-labelledby="modal-headline"
@@ -89,4 +85,4 @@ const RemoveTaskModal: React.FC<{ isOpen: boolean; id: number; closeModal: () =>
         </Transition>
     )
 }
-export default RemoveTaskModal
+export default TaskModal
