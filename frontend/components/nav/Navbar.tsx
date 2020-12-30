@@ -57,7 +57,7 @@ export default function Navbar({ showSearch }: NavbarProps) {
     }, [menuOpen, popoverMenuOpen])
 
     return (
-        <nav ref={dropdownRef} className="shadow bg-brand">
+        <nav ref={dropdownRef} className="flex-shrink-0 shadow bg-brand">
             <div className="container mx-auto">
                 <div className="flex items-center justify-between h-14 md:h-13">
                     <div className="flex items-center flex-1">

@@ -77,9 +77,9 @@ export default function Calendar() {
                 className="flex flex-shrink-0 w-full overflow-x-scroll divide-x-0 divide-gray-400 h-within thin-scrollbar"
             >
                 {/* Left occlusion */}
-                <div className="fixed left-0 w-32 bg-gradient-to-r from-gray-50 to-transparent h-within"></div>
+                <div className="left-0 hidden w-32 md:fixed bg-gradient-to-r from-gray-50 to-transparent h-within"></div>
                 {/* Right occlusion */}
-                <div className="fixed right-0 w-32 bg-gradient-to-l from-gray-50 to-transparent h-within"></div>
+                <div className="right-0 hidden w-32 md:fixed bg-gradient-to-l from-gray-50 to-transparent h-within"></div>
 
                 <div
                     onClick={() => scrollCalendarToToday()}
