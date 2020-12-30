@@ -16,5 +16,5 @@ module.exports = {
     trailingComma: 'es5',
     useTabs: false,
     vueIndentScriptAndStyle: false,
-    parser: 'babel',
+    parser: 'typescript',
 }

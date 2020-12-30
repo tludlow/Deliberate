@@ -11,7 +11,6 @@ export default function Calendar() {
         days.push(now.add(i, 'day'))
     }
 
-    // prettier-ignore
     const calendar = useRef<HTMLElement>(null)
     const scrollHorizontally = (e: any) => {
         if (e.deltaY > 0) {

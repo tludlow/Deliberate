@@ -4,10 +4,10 @@ import { Menu, Transition } from '@headlessui/react'
 import { useEffect, useRef } from 'react'
 
 type DayProps = {
-    day: dayjs.Dayjs,
-    now: dayjs.Dayjs,
-    startHour: number,
-    endHour: number,
+    day: dayjs.Dayjs
+    now: dayjs.Dayjs
+    startHour: number
+    endHour: number
 }
 
 const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
@@ -34,21 +34,12 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
         now.isBefore(dayjs().hour(endHour).minute(0).second(0)) &&
         now.isAfter(dayjs().hour(startHour).minute(0).second(0))
 
-    // prettier-ignore
     const timeline = useRef<HTMLDivElement>(null)
 
     //Calculate the height of the hour block inside the day timeline, used to scale the timeline top offsets
     let hourBlock = timeline.current?.childNodes[1] as HTMLElement
     let hourBlockHeightRem = hourBlock?.getBoundingClientRect().height / 16
 
-    useEffect(() => {
-        if (
-            now.isBefore(dayjs().hour(endHour).minute(0).second(0)) &&
-            now.isAfter(dayjs().hour(startHour).minute(0).second(0))
-        ) {
-            console.log('WOW!')
-        }
-    }, [])
     return (
         <div
             id={day.format('D-MMMM-YYYY').toLowerCase()}
@@ -165,9 +156,9 @@ function DayOptionsDropdown() {
 }
 
 type TimeLineProps = {
-    now: dayjs.Dayjs,
-    hourHeight: number,
-    startHour: number,
+    now: dayjs.Dayjs
+    hourHeight: number
+    startHour: number
 }
 function TimeLine({ now, hourHeight, startHour }: TimeLineProps) {
     //Maps aka quater past the hour to 1/4 of them rem of the hour block container

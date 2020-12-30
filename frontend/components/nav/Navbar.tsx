@@ -10,29 +10,28 @@ import Link from 'next/link'
 import Notifications from './Notifications'
 
 type NavbarProps = {
-    showSearch?: boolean,
+    showSearch?: boolean
 }
 
 export default function Navbar({ showSearch }: NavbarProps) {
     const user = useSelector((state: RootState) => state.user)
     const dispatch = useDispatch()
 
-    //prettier-ignore
     const dropdownRef = useRef<HTMLDivElement>(null)
-    //prettier-ignore
     const popoverRef = useRef<HTMLDivElement>(null)
+
     const [menuOpen, setMenuOpen] = useState(false)
     const [popoverMenuOpen, setPopoverMenuOpen] = useState(false)
 
     const handleClickOutsideDropdown = (e: any) => {
-        if (dropdownRef?.current?.contains(e.target)) {
+        if (dropdownRef.current?.contains(e.target)) {
             return
         }
         setMenuOpen(false)
     }
 
     const handleClickOutsidePopover = (e: any) => {
-        if (popoverRef?.current?.contains(e.target)) {
+        if (popoverRef.current?.contains(e.target)) {
             return
         }
         setPopoverMenuOpen(false)

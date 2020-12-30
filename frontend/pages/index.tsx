@@ -223,7 +223,6 @@ export default function Index() {
 export function IndexNavbar() {
     const user = useSelector((state: RootState) => state.user)
 
-    //prettier-ignore
     const dropdownRef = useRef<HTMLDivElement>(null)
     const [menuOpen, setMenuOpen] = useState(false)
 
