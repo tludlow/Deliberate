@@ -89,7 +89,7 @@ export default function Calendar() {
                 </div>
 
                 {days.map((day, i) => (
-                    <Day key={i} day={day} now={now} startHour={9} endHour={18} />
+                    <Day key={i} day={day} now={now.hour(12).minute(30)} startHour={9} endHour={18} />
                 ))}
             </section>
         </Layout>

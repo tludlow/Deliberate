@@ -1,7 +1,7 @@
 /* Icons used in this project found mainly from Heroicons, other sources listed below */
 
 type IconType = {
-    className: string,
+    className: string
 }
 
 export function WarningIcon({ className }: IconType) {

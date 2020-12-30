@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 
 import { Menu, Transition } from '@headlessui/react'
 import { useEffect, useRef } from 'react'
+import Task from './Task'
 
 type DayProps = {
     day: dayjs.Dayjs
@@ -32,7 +33,7 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
     //Is the current hour of the day within the day's schedule events?
     const workDayActive =
         now.isBefore(dayjs().hour(endHour).minute(0).second(0)) &&
-        now.isAfter(dayjs().hour(startHour).minute(0).second(0))
+        now.isAfter(dayjs().hour(startHour).minute(59).second(59))
 
     const timeline = useRef<HTMLDivElement>(null)
 
@@ -62,10 +63,13 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
                     workDayActive && <TimeLine now={now} hourHeight={hourBlockHeightRem} startHour={startHour} />}
 
                 {dayHours.map((hour, i) => (
-                    <div key={i} className="h-24">
-                        <div className="flex items-center space-x-2">
+                    <div key={i} className="relative h-24">
+                        <div className="absolute inset-x-0 flex items-center space-x-2">
                             <span className="flex-shrink-0 text-sm text-gray-400">{hour}</span>
                             <div className="w-full h-px bg-gray-300"></div>
+                        </div>
+                        <div className="w-full h-full pt-5 pl-11">
+                            <Task />
                         </div>
                     </div>
                 ))}
