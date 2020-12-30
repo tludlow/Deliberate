@@ -31,8 +31,8 @@ html {
 .thin-scrollbar {
     @apply overflow-hidden
 }
-.thin-scrollbar:hover {
-    @apply overflow-auto
+.thin-scrollbar {
+    @apply overflow-x-scroll
 }
 .thin-scrollbar::-webkit-scrollbar {
     width: 5px;               /* width of the entire scrollbar */

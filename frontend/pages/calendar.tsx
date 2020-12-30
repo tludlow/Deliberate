@@ -27,11 +27,14 @@ export default function Calendar() {
         //Find the calendar for today and scroll it into the center of the view port
         scrollCalendarToToday()
 
+        //Make the scrolling be horizontal on this page
         document.documentElement.style.overflowY = 'hidden'
 
         window.addEventListener('wheel', scrollHorizontally)
+        window.addEventListener('resize', scrollCalendarToToday)
         return () => {
             window.removeEventListener('wheel', scrollHorizontally)
+            window.removeEventListener('resize', scrollCalendarToToday)
         }
     }, [])
 
@@ -72,7 +75,7 @@ export default function Calendar() {
         <Layout title="My Calendar" showSearch>
             <section
                 ref={calendar}
-                className="flex flex-shrink-0 w-full overflow-auto divide-x-0 divide-gray-400 h-within thin-scrollbar"
+                className="flex flex-shrink-0 w-full overflow-x-scroll divide-x-0 divide-gray-400 h-within thin-scrollbar"
             >
                 {/* Left occlusion */}
                 <div className="fixed left-0 w-32 bg-gradient-to-r from-gray-50 to-transparent h-within"></div>
@@ -81,12 +84,13 @@ export default function Calendar() {
 
                 <div
                     onClick={() => scrollCalendarToToday()}
-                    className="fixed flex items-center justify-center w-12 h-12 pt-1 rounded-full cursor-pointer bg-brand right-8 bottom-8 hover:shadow"
+                    className="fixed z-40 p-4 rounded-full cursor-pointer bg-brand right-6 bottom-6"
                 >
                     <CalendarIcon className="w-6 h-6 text-white" />
                 </div>
+
                 {days.map((day, i) => (
-                    <Day key={i} day={day} />
+                    <Day key={i} day={day} now={now} startHour={9} endHour={18} />
                 ))}
             </section>
         </Layout>
