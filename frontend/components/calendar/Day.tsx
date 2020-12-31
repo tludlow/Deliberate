@@ -119,7 +119,7 @@ function DayOptionsDropdown() {
                         >
                             <Menu.Items
                                 static
-                                className="absolute right-0 z-10 mt-2 origin-top-right border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none bg-gray-50 w-96"
+                                className="absolute right-0 z-10 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none w-72 md:w-96"
                             >
                                 <Menu.Item>
                                     {({ active }) => (
@@ -133,7 +133,7 @@ function DayOptionsDropdown() {
                                                 <span className="text-sm text-gray-500">Reschedule today's events</span>
                                             </span>
                                             <svg
-                                                className="w-7 h-7"
+                                                className="text-red-500 w-7 h-7"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
