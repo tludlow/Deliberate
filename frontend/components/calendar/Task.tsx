@@ -36,10 +36,10 @@ export default function Task() {
                         </svg>
                     </div>
                 </div>
-                <div className="flex-grow h-full p-4">
+                <div className="flex-grow h-full p-3 pl-4">
                     <h5 className="text-sm font-semibold">Coffee with Chloe</h5>
                     <p className="flex items-center text-xs font-medium text-gray-500">
-                        12 PM <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> 1 PM
+                        12:30 PM <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> 1 PM
                     </p>
                 </div>
             </div>

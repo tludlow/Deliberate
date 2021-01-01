@@ -13,12 +13,19 @@ export default function Calendar() {
 
     const calendar = useRef<HTMLElement>(null)
     const scrollHorizontally = (e: any) => {
-        if (e.deltaY > 0) {
-            // @ts-expect-error
-            calendar.current.scrollLeft += 100
-        } else {
-            // @ts-expect-error
-            calendar.current.scrollLeft -= 100
+        let x = e.clientX
+        let y = e.clientY
+        let elementMouseIsOver = document.elementFromPoint(x, y)
+        let nearestArticleParent = elementMouseIsOver?.closest('article')
+
+        if (!nearestArticleParent) {
+            if (e.deltaY > 0) {
+                // @ts-expect-error
+                calendar.current.scrollLeft += 100
+            } else {
+                // @ts-expect-error
+                calendar.current.scrollLeft -= 100
+            }
         }
     }
 
@@ -31,6 +38,7 @@ export default function Calendar() {
 
         window.addEventListener('wheel', scrollHorizontally)
         window.addEventListener('resize', scrollCalendarToToday)
+
         return () => {
             window.removeEventListener('wheel', scrollHorizontally)
             window.removeEventListener('resize', scrollCalendarToToday)
@@ -70,16 +78,20 @@ export default function Calendar() {
     //     }
     // }
 
+    // Attach the handler
+
     return (
         <Layout title="My Calendar" showSearch>
             <section
+                id="calendar-container"
                 ref={calendar}
-                className="flex flex-shrink-0 w-full overflow-x-scroll divide-x-0 divide-gray-400 h-within thin-scrollbar"
+                style={{ minHeight: '-webkit-fill-available' }}
+                className="flex w-full overflow-x-scroll cursor-move select-none h-within thin-scrollbar"
             >
                 {/* Left occlusion */}
-                <div className="left-0 hidden w-32 md:fixed bg-gradient-to-r from-gray-50 to-transparent h-within"></div>
+                {/* <div className="left-0 hidden w-32 md:fixed bg-gradient-to-r from-gray-50 to-transparent h-within"></div> */}
                 {/* Right occlusion */}
-                <div className="right-0 hidden w-32 md:fixed bg-gradient-to-l from-gray-50 to-transparent h-within"></div>
+                {/* <div className="right-0 hidden w-32 md:fixed bg-gradient-to-l from-gray-50 to-transparent h-within"></div> */}
 
                 <div
                     onClick={() => scrollCalendarToToday()}
@@ -88,9 +100,11 @@ export default function Calendar() {
                     <CalendarIcon className="w-6 h-6 text-white" />
                 </div>
 
-                {days.map((day, i) => (
-                    <Day key={i} day={day} now={now.hour(12).minute(59)} startHour={9} endHour={18} />
-                ))}
+                <div className="flex w-full h-full">
+                    {days.map((day, i) => (
+                        <Day key={i} day={day} now={now.hour(12).minute(30)} startHour={9} endHour={16} />
+                    ))}
+                </div>
             </section>
         </Layout>
     )

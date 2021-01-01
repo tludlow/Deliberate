@@ -49,6 +49,27 @@ html {
     background-color: #757575;    /* color of the scroll thumb */
 }
 
+.ultra-thin-scrollbar {
+    @apply overflow-hidden
+}
+.ultra-thin-scrollbar {
+    @apply overflow-y-auto
+}
+.ultra-thin-scrollbar::-webkit-scrollbar {
+    width: 3px;               /* width of the entire scrollbar */
+}
+.ultra-thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent;        /* color of the tracking area */
+}
+.ultra-thin-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(133, 133, 133, 0.4);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: 1px solid transparent;  /* creates padding around scroll thumb */
+}
+.ultra-thin-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #757575;    /* color of the scroll thumb */
+}
+
 .bg-with-dots {
     background-color: #f9fafb;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='69' height='69' viewBox='0 0 90 90'%3E%3Ccircle fill-opacity='0.1' fill='%23000000' cx='45' cy='45' r='5'/%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='0' cy='90' r='6'/%3E%3Ccircle cx='90' cy='90' r='6'/%3E%3Ccircle cx='90' cy='0' r='6'/%3E%3Ccircle cx='0' cy='0' r='6'/%3E%3C/g%3E%3C/svg%3E");

@@ -44,10 +44,10 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
     return (
         <div
             id={day.format('D-MMMM-YYYY').toLowerCase()}
-            className="flex flex-col items-center flex-shrink-0 w-10/12 h-full p-2 sm:w-8/12 md:w-6/12 lg:w-4/12 xl:w-3/12"
+            className="flex flex-col items-center flex-shrink-0 w-10/12 max-h-full p-2 cursor-default sm:w-8/12 md:w-6/12 lg:w-4/12 xl:w-3/12"
         >
             {/* Day header */}
-            <div className="flex items-center justify-between w-full p-3 border border-gray-200 just-self-start">
+            <div className="flex items-center justify-between flex-shrink-0 w-full p-3 border border-gray-200 just-self-start">
                 <div>
                     <h4 className="font-semibold">{day.format('dddd D MMMM')}</h4>
                 </div>
@@ -56,23 +56,29 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
             </div>
 
             {/* Timeline */}
-            <div ref={timeline} className="relative flex-col w-full h-full p-3 border border-gray-200 sm:flex">
+            <article
+                ref={timeline}
+                id="day-timeline"
+                className="relative flex flex-col flex-grow w-full p-3 pt-4 pb-2 overflow-y-auto border border-gray-200 ultra-thin-scrollbar"
+            >
                 {/* Current time tracker, only display for the current day and if the calendar dates are within the current time range */}
                 {now.format('D-MMMM-YYYY').toLowerCase() === day.format('D-MMMM-YYYY').toLowerCase() &&
                     workDayActive && <TimeLine now={now} hourHeight={hourBlockHeightRem} startHour={startHour} />}
 
                 {dayHours.map((hour, i) => (
-                    <div key={i} className="relative h-24">
-                        <div className="absolute inset-x-0 flex items-center space-x-2">
-                            <span className="flex-shrink-0 text-sm text-gray-400">{hour}</span>
-                            <div className="w-full h-px bg-gray-300"></div>
+                    <div key={i} className="flex-1 h-24">
+                        <div className="absolute inset-x-0 flex items-center pr-3 -mt-3 space-x-2">
+                            <span className="flex-shrink-0 text-sm text-right text-gray-400" style={{ width: '42px' }}>
+                                {hour}
+                            </span>
+                            <div className="w-full h-px bg-gray-400"></div>
                         </div>
-                        <div className="w-full h-full pt-5 pl-11">
+                        <div className="h-full pt-1 pb-2 pl-11">
                             <Task />
                         </div>
                     </div>
                 ))}
-            </div>
+            </article>
         </div>
     )
 }
@@ -166,7 +172,6 @@ type TimeLineProps = {
 function TimeLine({ now, hourHeight, startHour }: TimeLineProps) {
     //Maps aka quater past the hour to 1/4 of them rem of the hour block container
     const mapMinutesPastHourToRem = (container: number) => {
-        //Starts at 9am and each hour block is 6rem tall, plus the beginning padding which is 0.75 rem
         const hourToStart = dayjs().hour(startHour)
         const currentHour = dayjs().hour(Number(now.format('HH')))
 
@@ -182,7 +187,7 @@ function TimeLine({ now, hourHeight, startHour }: TimeLineProps) {
             style={{
                 top: mapMinutesPastHourToRem(hourHeight),
             }}
-            className="absolute flex items-center w-full -mt-1 -ml-3"
+            className="absolute flex items-center w-full -mt-3 -ml-3"
         >
             <span className="z-30 flex-shrink-0 px-3 py-1 text-sm text-white rounded-full bg-brand-light">
                 {now.format('h:mm A')}
