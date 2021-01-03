@@ -23,6 +23,7 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
             hours.push(intermediaryTime.format('h A'))
             intermediaryTime = intermediaryTime.add(1, 'hour')
         }
+        hours.push(intermediaryTime.format('h A'))
 
         return hours
     }
@@ -73,9 +74,13 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
                             </span>
                             <div className="w-full h-px bg-gray-400"></div>
                         </div>
-                        <div className="h-full pt-1 pb-2 pl-11">
-                            <Task />
-                        </div>
+                        {i !== dayHours.length-1 ? (
+                            <div className="h-full pt-1 pb-2 pl-11">
+                                <Task />
+                            </div>
+                        ) : (
+                            ''
+                        )}
                     </div>
                 ))}
             </article>
@@ -187,7 +192,7 @@ function TimeLine({ now, hourHeight, startHour }: TimeLineProps) {
             style={{
                 top: mapMinutesPastHourToRem(hourHeight),
             }}
-            className="absolute flex items-center w-full -mt-3 -ml-3"
+            className="absolute flex items-center w-full -mt-3 -ml-3 pointer-events-none"
         >
             <span className="z-30 flex-shrink-0 px-3 py-1 text-sm text-white rounded-full bg-brand-light">
                 {now.format('h:mm A')}

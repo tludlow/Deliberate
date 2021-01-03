@@ -9,7 +9,7 @@ export default function TeamPage() {
     //design: https://dribbble.com/shots/11831844-Taskee-to-do-list
     return (
         <Layout title={`${teamName}`} contained>
-            <p>hi</p>
+            <p>hi {teamName}</p>
         </Layout>
     )
 }

@@ -18,7 +18,14 @@ export default function Calendar() {
         let elementMouseIsOver = document.elementFromPoint(x, y)
         let nearestArticleParent = elementMouseIsOver?.closest('article')
 
-        if (!nearestArticleParent) {
+        //Does a double check, if the cursor is over a day with a scrollbar and if the day actually exists...
+        let dayHasScroll = false
+        if (nearestArticleParent) {
+            dayHasScroll = nearestArticleParent.scrollHeight > nearestArticleParent.clientHeight
+        }
+
+        //Only scroll if we ARENT over a day with a scrollbar
+        if (!dayHasScroll) {
             if (e.deltaY > 0) {
                 // @ts-expect-error
                 calendar.current.scrollLeft += 100
@@ -102,7 +109,7 @@ export default function Calendar() {
 
                 <div className="flex w-full h-full">
                     {days.map((day, i) => (
-                        <Day key={i} day={day} now={now.hour(12).minute(30)} startHour={9} endHour={16} />
+                        <Day key={i} day={day} now={now.hour(12).minute(30)} startHour={9} endHour={17} />
                     ))}
                 </div>
             </section>

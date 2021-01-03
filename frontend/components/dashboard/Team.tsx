@@ -1,9 +1,10 @@
 import { Menu, Transition } from '@headlessui/react'
+import Link from 'next/link'
 
 type TeamType = {
-    initials: string,
-    name: string,
-    memberCount: number,
+    initials: string
+    name: string
+    memberCount: number
 }
 
 export default function Team({ initials, name, memberCount }: TeamType) {
@@ -75,14 +76,16 @@ export default function Team({ initials, name, memberCount }: TeamType) {
                                     </Menu.Item>
                                     <Menu.Item>
                                         {({ active }) => (
-                                            <a
-                                                href="#account-settings"
-                                                className={`${
-                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                                } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
-                                            >
-                                                Team information
-                                            </a>
+                                            <Link href={`/team/${name}`}>
+                                                <a
+                                                    href={`/team/${name}`}
+                                                    className={`${
+                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                                                    } hover:bg-gray-100 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                                                >
+                                                    Team information
+                                                </a>
+                                            </Link>
                                         )}
                                     </Menu.Item>
                                 </div>
