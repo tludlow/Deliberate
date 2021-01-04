@@ -1,4 +1,5 @@
 import { Pool } from 'pg'
+import pg from 'pg'
 
 //Connect to the postgres database in a pool format so we dont need to handshake on each request
 // const pool = new Pool({

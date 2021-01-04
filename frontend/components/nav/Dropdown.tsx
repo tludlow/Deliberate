@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { logoutUser } from 'actions/auth/userActions'
 import { useDispatch } from 'react-redux'
-import { CalendarIcon } from '../icons'
+import { CalendarIcon, DashboardIcon, SettingsIcon, LogoutIcon } from '../icons'
 
 type DropdownProps = {
     username: string
@@ -73,14 +73,31 @@ export default function Dropdown({ username }: DropdownProps) {
                                 </Menu.Item>
                                 <Menu.Item>
                                     {({ active }) => (
+                                        <Link href="/dashboard">
+                                            <a
+                                                href="/dashboard"
+                                                className={`${
+                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                                                } hover:bg-gray-100 flex items-center space-x-2 w-full px-4 py-2 text-sm leading-5 text-left`}
+                                            >
+                                                <DashboardIcon className="w-5 h-5" />
+                                                <span>Dashboard</span>
+                                            </a>
+                                        </Link>
+                                    )}
+                                </Menu.Item>
+                                <div className="w-full h-px bg-gray-300"></div>
+                                <Menu.Item>
+                                    {({ active }) => (
                                         <Link href="/settings">
                                             <a
                                                 href="/settings"
                                                 className={`${
                                                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                                } hover:bg-gray-100 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                                                } hover:bg-gray-100 flex items-center space-x-2 w-full px-4 py-2 text-sm leading-5 text-left`}
                                             >
-                                                Settings
+                                                <SettingsIcon className="w-5 h-5" />
+                                                <span>Settings</span>
                                             </a>
                                         </Link>
                                     )}
@@ -91,9 +108,10 @@ export default function Dropdown({ username }: DropdownProps) {
                                             onClick={() => dispatch(logoutUser())}
                                             className={`${
                                                 active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                            } hover:bg-gray-100 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left font-medium`}
+                                            } hover:bg-gray-100 flex items-center space-x-2 w-full px-4 py-2 text-sm leading-5 text-left font-medium`}
                                         >
-                                            Logout
+                                            <LogoutIcon className="w-5 h-5" />
+                                            <span>Logout</span>
                                         </button>
                                     )}
                                 </Menu.Item>

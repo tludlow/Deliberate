@@ -3,10 +3,16 @@ import Layout from '@/components/Layout'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import api from 'lib/api'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 export default function CreateTeam() {
     //Custom radio button:
     //https://codepen.io/ig_design/pen/dLNKgM
+
+    const router = useRouter()
+
+    const [formSubmitError, setFormSubmitError] = useState('')
     return (
         <Layout title="Create A Team" contained>
             <section className="flex flex-col items-center w-1/2 p-5 mx-auto my-6 bg-white border border-gray-200 rounded shadow">
@@ -27,8 +33,15 @@ export default function CreateTeam() {
                         teamType: Yup.string().required('You must select a team type'),
                     })}
                     onSubmit={async (fields) => {
-                        console.log(fields)
-                        const res = await api.post('/team/create', fields)
+                        setFormSubmitError('')
+                        let teamType = fields.teamType.split('-')[2]
+                        try {
+                            const res = await api.post('/team/create', { name: fields.name, teamType })
+                            console.log('res', res)
+                            router.push(`/team/${res.data.name}`)
+                        } catch (error) {
+                            setFormSubmitError(error.response.data.message)
+                        }
                     }}
                 >
                     {({ errors, status, touched }) => (
@@ -38,12 +51,11 @@ export default function CreateTeam() {
                                 <label className="mt-6 text-xl font-medium" htmlFor="name">
                                     Team name
                                 </label>
-                                <span className="text-gray-600">How do you want people to know your team?</span>
+                                <span className="mb-2 text-gray-600">How do you want people to know your team?</span>
                                 <ErrorMessage name="name" component="div" className="form-error" />
                                 <Field
                                     className={
-                                        'mt-2 form-input w-8/12' +
-                                        (errors.name && touched.name ? ' border-red-300' : '')
+                                        'form-input w-8/12' + (errors.name && touched.name ? ' border-red-300' : '')
                                     }
                                     type="text"
                                     name="name"
@@ -58,7 +70,7 @@ export default function CreateTeam() {
                             <div
                                 role="group"
                                 aria-labelledby="team-type-radio"
-                                className="flex items-center mt-2 space-x-5"
+                                className="flex items-center mt-2 mb-6 space-x-5"
                             >
                                 <div>
                                     <Field
@@ -110,8 +122,9 @@ export default function CreateTeam() {
                                     </label>
                                 </div>
                             </div>
+                            {formSubmitError.length > 0 ? <p className="form-error">{formSubmitError}</p> : ''}
                             <input
-                                className="h-12 mt-6 font-medium text-white rounded cursor-pointer bg-brand hover:bg-blue-500"
+                                className="h-12 mt-1 font-medium text-white rounded cursor-pointer bg-brand hover:bg-blue-500"
                                 type="submit"
                                 value="Create Team"
                             />
