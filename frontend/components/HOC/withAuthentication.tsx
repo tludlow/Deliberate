@@ -15,13 +15,14 @@ const withAuthentication = (WrappedComponent: any) => {
             // if a there isn't a logged in user and their role has been set to "guest"
             // then redirect them to "/signin"
 
-            //Dont do anything when the state hasnt loaded from localstorage, this is the default user state template, probably a better way to do this
+            //Default user redux state means user probably not logged in
             if (user.loading === false && user.loggedIn === false && user.error === null && user.username === '') {
-                return
+                Router.push('/account/sign-in')
             }
 
-            console.log(user)
-            if (!user.loggedIn) Router.push('/account/sign-in')
+            // console.log(user)
+
+            // if (!user?.loggedIn) Router.push('/account/sign-in')
         }, [user])
 
         // if there's a loggedInUser, show the wrapped page, otherwise show a loading indicator

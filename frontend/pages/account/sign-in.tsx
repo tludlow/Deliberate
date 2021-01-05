@@ -13,7 +13,6 @@ export default function SignIn() {
 
     useEffect(() => {
         dispatch(clearLoginErrors())
-        console.log(router)
     }, [])
 
     return (

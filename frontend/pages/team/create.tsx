@@ -5,8 +5,9 @@ import * as Yup from 'yup'
 import api from 'lib/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import withAuthentication from '@/components/HOC/withAuthentication'
 
-export default function CreateTeam() {
+function CreateTeam() {
     //Custom radio button:
     //https://codepen.io/ig_design/pen/dLNKgM
 
@@ -139,3 +140,4 @@ export default function CreateTeam() {
         </Layout>
     )
 }
+export default withAuthentication(CreateTeam)
