@@ -6,7 +6,7 @@ import storage from 'redux-persist/lib/storage'
 import reducer from '../reducers/indexReducer'
 import thunkMiddleware from 'redux-thunk'
 
-let store: any
+export let store: any
 
 //The structure of the store with its default values included
 // const exampleInitialState = {

@@ -37,9 +37,12 @@ export default function CreateTeam() {
                         let teamType = fields.teamType.split('-')[2]
                         try {
                             const res = await api.post('/team/create', { name: fields.name, teamType })
-                            console.log('res', res)
-                            router.push(`/team/${res.data.name}`)
+                            if (res.status === 200) {
+                                console.log('res', res)
+                                router.push(`/team/${res.data.name}`)
+                            }
                         } catch (error) {
+                            console.log(error)
                             setFormSubmitError(error.response.data.message)
                         }
                     }}

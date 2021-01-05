@@ -6,7 +6,7 @@ export const AuthTokenMiddleware = async (req: Request, res: Response, next: Nex
 
     //No token provided, send the user to the login page
     if (!token) {
-        res.send(401)
+        res.sendStatus(401)
         return
     }
 
@@ -22,7 +22,7 @@ export const AuthTokenMiddleware = async (req: Request, res: Response, next: Nex
                     break
 
                 default:
-                    res.send(401)
+                    res.sendStatus(401)
             }
 
             return
