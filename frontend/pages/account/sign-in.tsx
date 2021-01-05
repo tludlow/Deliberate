@@ -5,12 +5,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'reducers/indexReducer'
 import { clearLoginErrors, loginUser } from '../../actions/auth/userActions'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 export default function SignIn() {
     const dispatch = useDispatch()
+    const router = useRouter()
+
     useEffect(() => {
         dispatch(clearLoginErrors())
-    })
+        console.log(router)
+    }, [])
+
     return (
         <Layout title="Sign In" contained>
             <div className="flex flex-col items-center mt-6">
@@ -21,6 +26,12 @@ export default function SignIn() {
                         <a className="text-blue-500">Sign up</a>
                     </Link>
                 </p>
+
+                {router.query.auth === '401' && (
+                    <p className="mt-4 text-red-500">
+                        You must be signed in to an account to perform that action, log in now
+                    </p>
+                )}
 
                 <div className="w-full p-4 mt-6 bg-white border border-gray-200 rounded shadow md:w-8/12 lg:w-6/12 xl:w-4/12">
                     <LogInForm />

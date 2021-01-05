@@ -29,6 +29,7 @@ export default function CreateTeam() {
                     validationSchema={Yup.object().shape({
                         name: Yup.string()
                             .max(50, 'Your team name must be 50 charcters or less')
+                            .min(5, 'A team name must be at least than 5 characters')
                             .required('A team name is required'),
                         teamType: Yup.string().required('You must select a team type'),
                     })}

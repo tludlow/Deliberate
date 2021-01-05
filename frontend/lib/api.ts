@@ -1,7 +1,6 @@
 import axios from 'axios'
-import router from 'next/router'
 import { store } from '../store/store'
-import { access } from 'fs/promises'
+import { refreshUserUnauth } from 'actions/auth/userActions'
 
 //The URL for the API which is the standard part, all endpoints are additions to this API
 //const LOCAL_TESTING = "http://localhost:6789"
@@ -39,7 +38,7 @@ instance.interceptors.response.use(
         //Unauthorized
         if (error?.response?.status == 401) {
             console.log('Invalid auth token')
-            router.push('/account/sign-in')
+            store.dispatch(refreshUserUnauth())
         } else {
             return Promise.reject(error)
         }

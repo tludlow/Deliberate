@@ -98,6 +98,11 @@ export const loginUserSSO = (
 
 export const logoutUser = () => {
     //Redirect the user
-    router.push('/')
+    router.push('/account/sign-in')
+    return { type: USER_LOGOUT }
+}
+
+export const refreshUserUnauth = () => {
+    router.push({ pathname: '/account/sign-in', query: { auth: '401' } })
     return { type: USER_LOGOUT }
 }
