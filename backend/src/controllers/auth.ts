@@ -39,7 +39,7 @@ export const Login = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 3,
             issuer: 'deliberate',
             subject: 'refreshtoken',
-            data: { email: email },
+            data: { email: email, id: checkResult.rows[0].id },
         },
         'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
     )
@@ -50,7 +50,7 @@ export const Login = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60,
             issuer: 'deliberate',
             subject: 'accesstoken',
-            data: { email: email },
+            data: { email: email, id: checkResult.rows[0].id },
         },
         'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
     )
@@ -118,6 +118,11 @@ export const Signup = async (req: Request, res: Response) => {
         [firstName, lastName, email, hashedPassword]
     )
 
+    //Get the users id to be put into the token
+    let getNewUserId = await query('SELECT id FROM users WHERE email=$1 LIMIT 1', [email])
+
+    let newUserId = getNewUserId.rows[0].id
+
     //Generate the user a set of access and refresh tokens because they have been authenticated
     //Refresh token, long lived (3 months) and used to generate new access tokens
     const refreshToken = jwt.sign(
@@ -125,7 +130,7 @@ export const Signup = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 3,
             issuer: 'deliberate',
             subject: 'refreshtoken',
-            data: { email: email },
+            data: { email: email, id: newUserId },
         },
         'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
     )
@@ -136,7 +141,7 @@ export const Signup = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60,
             issuer: 'deliberate',
             subject: 'accesstoken',
-            data: { email },
+            data: { email, id: newUserId },
         },
         'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
     )
