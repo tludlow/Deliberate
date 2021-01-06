@@ -25,7 +25,6 @@ export const AuthTokenMiddleware = async (req: Request, res: Response, next: Nex
                     default:
                         res.sendStatus(401)
                 }
-                return res.sendStatus(401)
             }
 
             //User is authenticated, add their token to the request locals so it can possibly be used later

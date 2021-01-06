@@ -58,7 +58,7 @@ export function Dashboard() {
                             <LoadingSpinner className="w-7 h-7 text-brand" />
                         ) : (
                             data.data.teams.map((team: any, i: number) => (
-                                <Team key={i} initials="DL" name={team.name} memberCount={team.member_count} />
+                                <Team key={i} initials="DL" name={team.name} memberCount={Number(team.member_count)} />
                             ))
                         )}
                     </ul>

@@ -1,14 +1,28 @@
 import Layout from '@/components/Layout'
+import InviteTeamMember from '@/components/modal/InviteTeamMember'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { UserAddIcon } from '../../components/icons/index'
 
 export default function TeamPage() {
     const router = useRouter()
     let teamName = router.query.name
 
+    const [open, setOpen] = useState(false)
+
+    const closeModal = () => {
+        setOpen(false)
+    }
+
     //design: https://dribbble.com/shots/11831844-Taskee-to-do-list
     return (
         <Layout title={`${teamName}`} contained>
+            {open &&
+                createPortal(
+                    <InviteTeamMember isOpen={open} closeModal={closeModal} team={teamName as string} />,
+                    document.body
+                )}
             <div className="mt-4">
                 <div className="space-y-2">
                     <h2 className="text-2xl font-bold">{teamName}</h2>
@@ -40,7 +54,10 @@ export default function TeamPage() {
                                 <span className="text-sm font-medium text-gray-600">12</span>
                             </div>
                         </div>
-                        <button className="flex items-center px-3 py-1 space-x-1 text-sm border rounded-full border-brand hover:shadow hover:bg-white">
+                        <button
+                            onClick={() => setOpen(true)}
+                            className="flex items-center px-3 py-1 space-x-1 text-sm border rounded-full border-brand hover:shadow hover:bg-white"
+                        >
                             <UserAddIcon className="w-5 h-5" />
                             <span>Invite members</span>
                         </button>

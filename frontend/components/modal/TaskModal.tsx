@@ -7,7 +7,7 @@ dayjs.extend(relativeTime)
 
 const TaskModal: React.FC<{ isOpen: boolean; id: number; closeModal: () => void }> = ({ isOpen, id, closeModal }) => {
     return (
-        <ModalHOC isOpen={isOpen} closeModal={closeModal}>
+        <ModalHOC isOpen={isOpen} closeModal={closeModal} modalWidth="w-full">
             <div className="absolute inset-x-0 flex justify-center -mt-12">
                 <div className="flex items-center justify-center w-12 h-12 bg-green-500 border-2 border-white rounded-full">
                     <svg
