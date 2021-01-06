@@ -8,7 +8,7 @@ export const Dashboard = async (req: Request, res: Response) => {
     try {
         //Select all teams which the user is a part off and the aggregate the team member counts
         let userTeams = await query(
-            'SELECT name, COUNT(team_id) as member_count FROM teams JOIN team_members tm ON teams.id = tm.team_id WHERE id IN (SELECT id FROM teams JOIN team_members tm on teams.id = tm.team_id WHERE tm.user_id=$1) GROUP BY id',
+            'SELECT name, COUNT(team_id) as member_count FROM teams JOIN team_members tm ON teams.id = tm.team_id WHERE id IN (SELECT id FROM teams JOIN team_members tm ON teams.id = tm.team_id WHERE tm.user_id=$1) GROUP BY id',
             [user_id]
         )
         res.status(200).send({ user_id, teams: userTeams.rows })
