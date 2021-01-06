@@ -24,7 +24,10 @@ instance.interceptors.request.use((config) => {
     let state = store.getState()
     let { accessToken } = state.user
 
-    config.headers['Authorization'] = `Bearer ${accessToken}`
+    if (state.user.loggedIn) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`
+    }
+
     return config
 })
 

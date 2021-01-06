@@ -31,7 +31,9 @@ export const AuthTokenMiddleware = async (req: Request, res: Response, next: Nex
         }
 
         //User is authenticated, add their token to the request locals so it can possibly be used later
-        res.locals.user_id = decodedToken?.data.id
+        if (!error) {
+            res.locals.user_id = decodedToken?.data.id
+        }
     })
 
     //Passed the checks, go to the next middleware/route

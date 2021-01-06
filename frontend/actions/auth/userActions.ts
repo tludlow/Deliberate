@@ -35,7 +35,7 @@ export const loginUser = (email: string, password: string) => async (dispatch: a
                     refreshToken: response.data.refreshToken,
                 },
             })
-            router.push('/')
+            router.push('/dashboard')
         })
         .catch((error: AxiosError) => {
             console.log('error: ', error.response?.data)

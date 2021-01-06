@@ -16,6 +16,7 @@ import * as apiController from './controllers/api'
 import * as authController from './controllers/auth'
 import * as ssoController from './controllers/sso'
 import * as teamController from './controllers/team'
+import * as userController from './controllers/user'
 
 //Midleware
 import { AuthTokenMiddleware } from './middleware/authMiddleware'
@@ -41,6 +42,9 @@ app.get('/auth/github', ssoController.GithubSSO)
 
 //Teams
 app.post('/team/create', AuthTokenMiddleware, teamController.Create)
+
+//User
+app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)
 
 //Catch all 404
 app.get('/*', apiController.FourOFour)

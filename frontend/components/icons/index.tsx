@@ -173,24 +173,18 @@ export function CloseIcon({ className }: IconType) {
 export function DashboardIcon({ className }: IconType) {
     return (
         <svg
-            xmlns="http://www.w3.org/2000/svg"
             className={`${className}`}
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
             fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
         >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <line x1="4" y1="6" x2="9.5" y2="6" />
-            <line x1="4" y1="10" x2="9.5" y2="10" />
-            <line x1="4" y1="14" x2="9.5" y2="14" />
-            <line x1="4" y1="18" x2="9.5" y2="18" />
-            <line x1="14.5" y1="6" x2="20" y2="6" />
-            <line x1="14.5" y1="10" x2="20" y2="10" />
-            <line x1="14.5" y1="14" x2="20" y2="14" />
-            <line x1="14.5" y1="18" x2="20" y2="18" />
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
         </svg>
     )
 }

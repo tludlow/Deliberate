@@ -7,9 +7,23 @@ import { PlusIcon } from '../components/icons/index'
 import withAuthentication from '../components/HOC/withAuthentication'
 import Team from '../components/dashboard/Team'
 import { RecentActivity } from '../components/dashboard/RecentActivity'
+import api from 'lib/api'
+import useSWR from 'swr'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 export function Dashboard() {
     const user = useSelector((state: RootState) => state.user)
+
+    const fetchUserDashboard = (url: string) => api.get(url)
+    const { data, error } = useSWR(`/user/dashboard`, fetchUserDashboard)
+
+    if (error) {
+        return (
+            <Layout title={user.username} contained>
+                <p>Error loading dashboard data</p>
+            </Layout>
+        )
+    }
     return (
         <Layout title={user.username} contained>
             <section className="mt-4">
@@ -40,9 +54,13 @@ export function Dashboard() {
 
                 <div>
                     <ul className="grid grid-cols-1 gap-5 mt-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-                        <Team initials="DL" name="Deliberate" memberCount={1} />
-                        <Team initials="CS" name="Chicken Shop" memberCount={2} />
-                        <Team initials="UP" name="University Project" memberCount={5} />
+                        {!data ? (
+                            <LoadingSpinner className="w-7 h-7 text-brand" />
+                        ) : (
+                            data.data.teams.map((team: any, i: number) => (
+                                <Team key={i} initials="DL" name={team.name} memberCount={team.member_count} />
+                            ))
+                        )}
                     </ul>
                 </div>
             </section>
