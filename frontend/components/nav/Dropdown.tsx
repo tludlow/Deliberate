@@ -56,7 +56,7 @@ export default function Dropdown({ username }: DropdownProps) {
                         >
                             <Menu.Items
                                 static
-                                className="absolute right-0 z-10 w-64 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none"
+                                className="absolute right-0 z-40 w-64 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none"
                             >
                                 <Menu.Item>
                                     {({ active }) => (

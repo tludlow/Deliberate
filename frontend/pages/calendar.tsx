@@ -109,7 +109,7 @@ export default function Calendar() {
 
                 <div className="flex w-full h-full">
                     {days.map((day, i) => (
-                        <Day key={i} day={day} now={now.hour(12).minute(30)} startHour={9} endHour={17} />
+                        <Day key={i} day={day} now={now.hour(9).minute(0)} startHour={9} endHour={17} />
                     ))}
                 </div>
             </section>

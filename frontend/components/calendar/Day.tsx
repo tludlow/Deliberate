@@ -33,8 +33,8 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
 
     //Is the current hour of the day within the day's schedule events?
     const workDayActive =
-        now.isBefore(dayjs().hour(endHour).minute(0).second(0)) &&
-        now.isAfter(dayjs().hour(startHour).minute(59).second(59))
+        now.isBefore(dayjs().hour(endHour).minute(59).second(59)) &&
+        now.isAfter(dayjs().hour(startHour).minute(0).second(0))
 
     const timeline = useRef<HTMLDivElement>(null)
 
@@ -72,9 +72,10 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
                             <span className="flex-shrink-0 text-sm text-right text-gray-400" style={{ width: '42px' }}>
                                 {hour}
                             </span>
-                            <div className="w-full h-px bg-gray-400"></div>
+
+                            <div className="w-full h-px bg-gray-300 "></div>
                         </div>
-                        {i !== dayHours.length-1 ? (
+                        {i !== dayHours.length - 1 ? (
                             <div className="h-full pt-1 pb-2 pl-11">
                                 <Task />
                             </div>
@@ -192,9 +193,9 @@ function TimeLine({ now, hourHeight, startHour }: TimeLineProps) {
             style={{
                 top: mapMinutesPastHourToRem(hourHeight),
             }}
-            className="absolute flex items-center w-full -mt-3 -ml-3 pointer-events-none"
+            className="absolute z-20 flex items-center w-full -mt-3 -ml-3 pointer-events-none"
         >
-            <span className="z-30 flex-shrink-0 px-3 py-1 text-sm text-white rounded-full bg-brand-light">
+            <span className="flex-shrink-0 px-3 py-1 text-sm text-white rounded-full bg-brand-light">
                 {now.format('h:mm A')}
             </span>
             <div className="w-full h-px bg-brand-light"></div>

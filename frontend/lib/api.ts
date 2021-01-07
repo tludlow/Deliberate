@@ -24,7 +24,6 @@ instance.interceptors.request.use((config) => {
     let state = store.getState()
     let { accessToken } = state.user
 
-    console.log(state)
 
     if (state.user.loggedIn) {
         config.headers['Authorization'] = `Bearer ${accessToken}`

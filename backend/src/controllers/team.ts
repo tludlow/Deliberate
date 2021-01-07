@@ -36,7 +36,6 @@ export const Create = async (req: Request, res: Response) => {
 }
 
 export const TeamInformation = async (req: Request, res: Response) => {
-    console.log(req)
     let { team_id } = res.locals
 
     try {

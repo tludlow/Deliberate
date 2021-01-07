@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { UserAddIcon } from '../../components/icons/index'
 import api from 'lib/api'
 import useSWR from 'swr'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 interface TeamPageProps {
     teamName: string
@@ -19,6 +20,18 @@ export default function TeamPage({ teamName }: TeamPageProps) {
 
     const fetchTeamInformation = (url: string) => api.get(url)
     const { data, error } = useSWR(`/team/${teamName}`, fetchTeamInformation)
+
+    if (error) {
+        ;<Layout title={`${teamName}`} contained>
+            <div className="mt-4">
+                <div className="space-y-2">
+                    <h2 className="text-2xl font-bold">{teamName}</h2>
+
+                    <p className="text-lg font-bold text-red-500">Error loading team data...</p>
+                </div>
+            </div>
+        </Layout>
+    }
 
     useEffect(() => {
         console.log(data)
@@ -71,6 +84,20 @@ export default function TeamPage({ teamName }: TeamPageProps) {
                             <span>Invite members</span>
                         </button>
                     </div>
+                    <div>
+                        <h5 className="mt-8 text-lg font-medium">Members</h5>
+                        {!data ? (
+                            <LoadingSpinner className="w-5 h-5 text-brand" />
+                        ) : (
+                            <ul>
+                                {data?.data.members.map((member: any) => (
+                                    <li key={member.id}>
+                                        {member.id} - {member.first_name} {member.last_name} - {member.email}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
                 </div>
             </div>
         </Layout>
@@ -78,6 +105,5 @@ export default function TeamPage({ teamName }: TeamPageProps) {
 }
 
 TeamPage.getInitialProps = async (ctx: any) => {
-    console.log(ctx)
     return { teamName: ctx.query.name }
 }
