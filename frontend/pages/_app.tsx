@@ -10,6 +10,7 @@ import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import { useStore } from '../store/store'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 export default function App({ Component, pageProps }: AppProps) {
     const store = useStore(pageProps.initialReduxState)
@@ -36,7 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
             </Head>
 
             <Provider store={store}>
-                <PersistGate loading={<Component {...pageProps} />} persistor={persistor}>
+                <PersistGate loading={<LoadingSpinner className="w-12 h-12 text-brand" />} persistor={persistor}>
                     <Component {...pageProps} />
                 </PersistGate>
             </Provider>

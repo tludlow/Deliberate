@@ -34,3 +34,18 @@ export const Create = async (req: Request, res: Response) => {
 
     res.status(200).send(req.body)
 }
+
+export const TeamInformation = async (req: Request, res: Response) => {
+    console.log(req)
+    let { team_id } = res.locals
+
+    try {
+        let allTeamMembers = await query(
+            'SELECT id, first_name, last_name, email FROM team_members JOIN users ON team_members.user_id = users.id WHERE team_members.team_id=$1',
+            [team_id]
+        )
+        res.status(200).send({ team_id, members: allTeamMembers.rows })
+    } catch (error) {
+        res.sendStatus(500)
+    }
+}

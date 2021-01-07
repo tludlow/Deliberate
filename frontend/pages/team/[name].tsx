@@ -1,19 +1,28 @@
 import Layout from '@/components/Layout'
 import InviteTeamMember from '@/components/modal/InviteTeamMember'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { UserAddIcon } from '../../components/icons/index'
+import api from 'lib/api'
+import useSWR from 'swr'
 
-export default function TeamPage() {
-    const router = useRouter()
-    let teamName = router.query.name
+interface TeamPageProps {
+    teamName: string
+}
 
+export default function TeamPage({ teamName }: TeamPageProps) {
     const [open, setOpen] = useState(false)
 
     const closeModal = () => {
         setOpen(false)
     }
+
+    const fetchTeamInformation = (url: string) => api.get(url)
+    const { data, error } = useSWR(`/team/${teamName}`, fetchTeamInformation)
+
+    useEffect(() => {
+        console.log(data)
+    }, [data])
 
     //design: https://dribbble.com/shots/11831844-Taskee-to-do-list
     return (
@@ -66,4 +75,9 @@ export default function TeamPage() {
             </div>
         </Layout>
     )
+}
+
+TeamPage.getInitialProps = async (ctx: any) => {
+    console.log(ctx)
+    return { teamName: ctx.query.name }
 }

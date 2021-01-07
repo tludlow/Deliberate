@@ -20,6 +20,7 @@ import * as userController from './controllers/user'
 
 //Midleware
 import { AuthTokenMiddleware } from './middleware/authMiddleware'
+import { IsTeamMember } from './middleware/teamPermissionsMiddleware'
 
 //Setup api middlewares
 app.use(helmet())
@@ -42,6 +43,7 @@ app.get('/auth/github', ssoController.GithubSSO)
 
 //Teams
 app.post('/team/create', AuthTokenMiddleware, teamController.Create)
+app.get('/team/:teamName', [AuthTokenMiddleware, IsTeamMember], teamController.TeamInformation)
 
 //User
 app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)

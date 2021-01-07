@@ -16,7 +16,11 @@ const InviteTeamMember: React.FC<{ isOpen: boolean; team: string; closeModal: ()
             </div>
             <div className="mt-3">
                 <h3 className="text-lg font-medium text-center text-gray-600">Invite member to</h3>
-                <h3 className="font-bold text-center text-black">{team}</h3>
+                <div className="flex justify-center">
+                    <span className="p-2 mt-1 italic font-bold text-center text-black border rounded border-brand">
+                        {team}
+                    </span>
+                </div>
 
                 <form className="flex flex-col items-center mt-8">
                     <div className="flex flex-col w-9/12">

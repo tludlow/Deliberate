@@ -150,10 +150,12 @@ export const Signup = async (req: Request, res: Response) => {
     res.cookie('refresh_token', refreshToken, {
         expires: new Date(Date.now() / 1000 + 60 * 60 * 24 * 30 * 3),
         httpOnly: true,
+        sameSite: true,
     })
     res.cookie('access_token', accessToken, {
         expires: new Date(Date.now() / 100 + 60 * 60),
         httpOnly: true,
+        sameSite: true,
     })
 
     res.status(200).json({
