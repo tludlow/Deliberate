@@ -36,15 +36,22 @@ export const Create = async (req: Request, res: Response) => {
 }
 
 export const TeamInformation = async (req: Request, res: Response) => {
-    let { team_id } = res.locals
+    let { team_id, team_permission } = res.locals
 
     try {
         let allTeamMembers = await query(
-            'SELECT id, first_name, last_name, email FROM team_members JOIN users ON team_members.user_id = users.id WHERE team_members.team_id=$1',
+            'SELECT id, first_name, last_name, email, joined_at, permission FROM team_members JOIN users ON team_members.user_id = users.id WHERE team_members.team_id=$1 ORDER BY permission DESC',
             [team_id]
         )
-        res.status(200).send({ team_id, members: allTeamMembers.rows })
+        let teamInformation = await query('SELECT created_at FROM teams WHERE id=$1', [team_id])
+        res.status(200).send({
+            team_id,
+            created_at: teamInformation.rows[0].created_at,
+            team_permission,
+            members: allTeamMembers.rows,
+        })
     } catch (error) {
+        console.log(error)
         res.sendStatus(500)
     }
 }

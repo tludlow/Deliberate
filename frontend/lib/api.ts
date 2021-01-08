@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { store } from '../store/store'
 import { refreshUserUnauth } from 'actions/auth/userActions'
+import Router from 'next/router'
 
 //The URL for the API which is the standard part, all endpoints are additions to this API
 //const LOCAL_TESTING = "http://localhost:6789"
@@ -24,7 +25,6 @@ instance.interceptors.request.use((config) => {
     let state = store.getState()
     let { accessToken } = state.user
 
-
     if (state.user.loggedIn) {
         config.headers['Authorization'] = `Bearer ${accessToken}`
     }
@@ -43,6 +43,9 @@ instance.interceptors.response.use(
         if (error?.response?.status == 401) {
             console.log('Invalid auth token')
             store.dispatch(refreshUserUnauth())
+        } else if (error?.response?.status == 403) {
+            console.log(error.response)
+            Router.push(`/error?msg=${error.response.data.message}`)
         } else {
             return Promise.reject(error)
         }

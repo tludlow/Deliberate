@@ -26,6 +26,8 @@ export default function App({ Component, pageProps }: AppProps) {
                 />
                 <link rel="icon" href="/favicon.ico" />
 
+                <title>Deliberate</title>
+
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
                 <meta charSet="utf-8" />
                 <meta name="description" content="An automated solution to small team project management" />
@@ -41,7 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <PersistGate
                     loading={
                         <Layout>
-                            <div className="flex justify-center mt-6">
+                            <div className="flex justify-center w-full mt-6">
                                 <LoadingSpinner className="w-12 h-12 text-brand" />
                             </div>
                         </Layout>

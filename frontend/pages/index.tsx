@@ -5,6 +5,7 @@ import Layout from '@/components/Layout'
 import { LogoIcon } from '@/components/icons/Logo'
 import { RootState } from 'reducers/indexReducer'
 import { useSelector } from 'react-redux'
+import Dropdown from '@/components/nav/Dropdown'
 
 export default function Index() {
     return (
@@ -259,7 +260,7 @@ export function IndexNavbar() {
                                 <Link href="/dashboard">
                                     <a className="p-2 bg-blue-600 rounded hover:shadow">Dashboard</a>
                                 </Link>
-                                <p className="font-bold">{user.username}</p>
+                                <Dropdown username={user.username} />
                             </div>
                         ) : (
                             <div>

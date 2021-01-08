@@ -2,6 +2,8 @@ import Router from 'next/router'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from 'reducers/indexReducer'
+import Layout from '@/components/Layout'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 //HOC wrapping authenticated routes/pages so that only logged in users can have acces
 //Found here - https://github.com/vercel/next.js/discussions/14945
@@ -11,7 +13,7 @@ const withAuthentication = (WrappedComponent: any) => {
         // get user role from redux state
         const user = useSelector((state: RootState) => state.user)
 
-    useEffect(() => {
+        useEffect(() => {
             // if a there isn't a logged in user and their role has been set to "guest"
             // then redirect them to "/signin"
 
@@ -27,7 +29,11 @@ const withAuthentication = (WrappedComponent: any) => {
         return user && user.loggedIn ? (
             <WrappedComponent {...props} />
         ) : (
-            <div className="text-3xl font-bold text-brand">Loading...</div>
+            <Layout>
+                <div className="flex justify-center w-full mt-6">
+                    <LoadingSpinner className="w-12 h-12 text-brand" />
+                </div>
+            </Layout>
         )
     }
 

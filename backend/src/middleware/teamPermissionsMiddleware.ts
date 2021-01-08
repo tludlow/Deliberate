@@ -19,9 +19,40 @@ export const IsTeamMember = async (req: Request, res: Response, next: NextFuncti
             next()
         } else {
             //Is not team member
-            res.sendStatus(403)
+            res.status(403).send({ message: "You aren't a member of this team" })
         }
     } catch (error) {
-        res.sendStatus(403)
+        console.log(error)
+        res.status(403).send({ message: 'Server error' })
+    }
+}
+
+enum Permissions {
+    REGULAR = 'regular',
+    ADMIN = 'admin',
+}
+export type PermissionString = keyof typeof Permissions
+
+export const HasPermission = (permissionLevel: PermissionString) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            let permissionLevelForUser = await query(
+                'SELECT permission FROM team_members WHERE team_id=$1 AND user_id=$2',
+                [res.locals.team_id, res.locals.user_id]
+            )
+            const { permission } = permissionLevelForUser.rows[0]
+
+            if (permission === 'regular' && permissionLevel === 'ADMIN') {
+                res.status(403).send({
+                    message: `Your permission level ${permission} cannot do an action that requires: ${permissionLevel}`,
+                })
+                return
+            }
+            res.locals.team_permission = permission
+            next()
+        } catch (error) {
+            console.log(error)
+            res.sendStatus(500)
+        }
     }
 }
