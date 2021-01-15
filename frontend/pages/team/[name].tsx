@@ -9,7 +9,7 @@ import { createPortal } from 'react-dom'
 import api from 'lib/api'
 import useSWR from 'swr'
 import Image from 'next/image'
-import { UserAddIcon, CaretDownIcon } from '../../components/icons/index'
+import { UserAddIcon } from '../../components/icons/index'
 import { GetServerSideProps } from 'next'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -77,10 +77,12 @@ export default function TeamPage({ teamName }: TeamPageProps) {
                         {data?.data.members.map((member: any, i) => (
                             <TeamMember
                                 key={i}
+                                member_id={member.id}
                                 name={`${member.first_name} ${member.last_name}`}
                                 role={member.permission}
                                 added_at={dayjs(member.joined_at).from()}
                                 user_permission={data?.data.team_permission}
+                                team_name={data?.data.team_name}
                             />
                         ))}
                     </div>
@@ -90,7 +92,7 @@ export default function TeamPage({ teamName }: TeamPageProps) {
     )
 }
 
-function TeamMember({ name, role, added_at, user_permission }) {
+function TeamMember({ name, role, added_at, user_permission, team_name, member_id }) {
     return (
         <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -105,12 +107,31 @@ function TeamMember({ name, role, added_at, user_permission }) {
                     <p className="-ml-px text-gray-400">{added_at}</p>
                 </div>
             </div>
-            <MemberPermissionSelect role={role} user_permission={user_permission} />
+            <MemberPermissionSelect
+                role={role}
+                user_permission={user_permission}
+                team_name={team_name}
+                member_id={member_id}
+            />
         </div>
     )
 }
 
-export function MemberPermissionSelect({ role, user_permission }) {
+export function MemberPermissionSelect({ role, user_permission, team_name, member_id }) {
+    const [memberRole, setMemberRole] = useState(role)
+
+    const onSelectChange = async (e: any) => {
+        const { value } = e.target
+        setMemberRole(value)
+        api.post(`/team/${team_name}/permission`, { new_permission: value, updating_id: member_id })
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
     if (user_permission === 'regular') {
         return (
             <p
@@ -123,7 +144,14 @@ export function MemberPermissionSelect({ role, user_permission }) {
         )
     } else {
         return (
-            <select className="text-xs form-select" name="permission" id="permission" value={role}>
+            <select
+                className="text-xs form-select"
+                name="permission"
+                id="permission"
+                onChange={(e) => onSelectChange(e)}
+                defaultValue={memberRole}
+                value={memberRole}
+            >
                 <option value="regular">Regular</option>
                 <option className="text-red-500" value="admin">
                     Admin

@@ -49,6 +49,11 @@ app.get(
     [AuthTokenMiddleware, IsTeamMember, HasPermission('REGULAR')],
     teamController.TeamInformation
 )
+app.post(
+    '/team/:teamName/permission',
+    [AuthTokenMiddleware, IsTeamMember, HasPermission('ADMIN')],
+    teamController.ChangeTeamMemberPermission
+)
 
 //User
 app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)

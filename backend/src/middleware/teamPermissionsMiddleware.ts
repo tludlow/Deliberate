@@ -23,7 +23,7 @@ export const IsTeamMember = async (req: Request, res: Response, next: NextFuncti
         }
     } catch (error) {
         console.log(error)
-        res.status(403).send({ message: 'Server error' })
+        res.status(403).send({ message: 'Server error: checking team membership' })
     }
 }
 

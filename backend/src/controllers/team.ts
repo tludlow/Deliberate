@@ -43,9 +43,10 @@ export const TeamInformation = async (req: Request, res: Response) => {
             'SELECT id, first_name, last_name, email, joined_at, permission FROM team_members JOIN users ON team_members.user_id = users.id WHERE team_members.team_id=$1 ORDER BY permission DESC',
             [team_id]
         )
-        let teamInformation = await query('SELECT created_at FROM teams WHERE id=$1', [team_id])
+        let teamInformation = await query('SELECT name, created_at FROM teams WHERE id=$1', [team_id])
         res.status(200).send({
             team_id,
+            team_name: teamInformation.rows[0].name,
             created_at: teamInformation.rows[0].created_at,
             team_permission,
             members: allTeamMembers.rows,
@@ -53,5 +54,23 @@ export const TeamInformation = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
         res.sendStatus(500)
+    }
+}
+
+export const ChangeTeamMemberPermission = async (req: Request, res: Response) => {
+    const { new_permission, updating_id } = req.body
+    const { user_id, team_id } = res.locals
+
+    console.log(new_permission)
+    try {
+        let updatePermission = await query('UPDATE team_members SET permission=$1 WHERE team_id=$2 AND user_id=$3', [
+            new_permission,
+            team_id,
+            updating_id,
+        ])
+        res.status(200)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: `Error changing user ${user_id} to role: ${new_permission}` })
     }
 }

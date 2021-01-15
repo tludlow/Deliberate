@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
 import { Menu, Transition } from '@headlessui/react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Task from './Task'
 
 type DayProps = {
@@ -40,7 +40,7 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
 
     //Calculate the height of the hour block inside the day timeline, used to scale the timeline top offsets
     let hourBlock = timeline.current?.childNodes[1] as HTMLElement
-    let hourBlockHeightRem = hourBlock?.getBoundingClientRect().height / 16
+    let hourBlockHeightRem = 6 //hourBlock?.getBoundingClientRect().height / 16
 
     return (
         <div
@@ -76,8 +76,8 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
                             <div className="w-full h-px bg-gray-300 "></div>
                         </div>
                         {i !== dayHours.length - 1 ? (
-                            <div className="h-full pt-1 pb-2 pl-11">
-                                <Task />
+                            <div style={{ height: '100%' }} className="relative pt-1 pb-2 pl-11">
+                                <Task title="Testing 123" startTime="12:00 PM" endTime="1:00 PM" />
                             </div>
                         ) : (
                             ''
@@ -177,7 +177,7 @@ type TimeLineProps = {
 }
 function TimeLine({ now, hourHeight, startHour }: TimeLineProps) {
     //Maps aka quater past the hour to 1/4 of them rem of the hour block container
-    const mapMinutesPastHourToRem = (container: number) => {
+    const mapMinutesPastHourToRem = (container = 6) => {
         const hourToStart = dayjs().hour(startHour)
         const currentHour = dayjs().hour(Number(now.format('HH')))
 
@@ -185,13 +185,19 @@ function TimeLine({ now, hourHeight, startHour }: TimeLineProps) {
         const offset = offsetHour * container + 0.75
 
         const percentOfHour = Number(now.format('m')) / 60
+
         return `${percentOfHour * container + offset}rem`
     }
 
+    const [topOffset, setTopOffset] = useState(mapMinutesPastHourToRem(hourHeight))
+
+    useEffect(() => {
+        setTopOffset(mapMinutesPastHourToRem(hourHeight))
+    }, [now])
     return (
         <div
             style={{
-                top: mapMinutesPastHourToRem(hourHeight),
+                top: topOffset,
             }}
             className="absolute z-20 flex items-center w-full -mt-3 -ml-3 pointer-events-none"
         >
