@@ -45,7 +45,7 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
     return (
         <div
             id={day.format('D-MMMM-YYYY').toLowerCase()}
-            className="flex flex-col items-center flex-shrink-0 w-10/12 max-h-full p-2 cursor-default sm:w-8/12 md:w-6/12 lg:w-4/12 xl:w-3/12"
+            className="flex flex-col items-center flex-shrink-0 w-10/12 p-2 cursor-default sm:w-8/12 md:w-6/12 lg:w-4/12 xl:w-3/12"
         >
             {/* Day header */}
             <div className="flex items-center justify-between flex-shrink-0 w-full p-3 border border-gray-200 just-self-start">
@@ -60,30 +60,28 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
             <article
                 ref={timeline}
                 id="day-timeline"
-                className="relative flex flex-col flex-grow w-full p-3 pt-4 pb-2 overflow-y-auto border border-gray-200 ultra-thin-scrollbar"
+                className="relative flex flex-col flex-1 w-full p-3 pb-2 border border-gray-200 ultra-thin-scrollbar"
             >
                 {/* Current time tracker, only display for the current day and if the calendar dates are within the current time range */}
                 {now.format('D-MMMM-YYYY').toLowerCase() === day.format('D-MMMM-YYYY').toLowerCase() &&
                     workDayActive && <TimeLine now={now} hourHeight={hourBlockHeightRem} startHour={startHour} />}
 
                 {dayHours.map((hour, i) => (
-                    <div key={i} className="flex-1 h-24">
-                        <div className="absolute inset-x-0 flex items-center pr-3 -mt-3 space-x-2">
-                            <span className="flex-shrink-0 text-sm text-right text-gray-400" style={{ width: '42px' }}>
-                                {hour}
-                            </span>
+                    <div
+                        key={i}
+                        style={{ top: `${i * 6}rem` }}
+                        className="absolute inset-x-0 z-10 flex items-center pt-4 pr-3 -mt-3 space-x-2"
+                    >
+                        <span className="flex-shrink-0 text-sm text-right text-gray-400" style={{ width: '42px' }}>
+                            {hour}
+                        </span>
 
-                            <div className="w-full h-px bg-gray-300 "></div>
-                        </div>
-                        {i !== dayHours.length - 1 ? (
-                            <div style={{ height: '100%' }} className="relative pt-1 pb-2 pl-11">
-                                <Task title="Testing 123" startTime="12:00 PM" endTime="1:00 PM" />
-                            </div>
-                        ) : (
-                            ''
-                        )}
+                        <div className="w-full h-px bg-gray-300 "></div>
                     </div>
                 ))}
+
+                {/* Task container */}
+                <div style={{ height: '54rem' }} className="absolute inset-x-0 mt-0.5 bg-red-200 right-3 left-11"></div>
             </article>
         </div>
     )
