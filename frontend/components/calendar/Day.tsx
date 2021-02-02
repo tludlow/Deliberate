@@ -9,9 +9,15 @@ type DayProps = {
     now: dayjs.Dayjs
     startHour: number
     endHour: number
+    tasks: TaskProp[]
+}
+interface TaskProp {
+    title: string
+    start: string
+    end: string
 }
 
-const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
+const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
     const calculateHoursBetween = (startHour: number, endHour: number) => {
         const dayHourStart = dayjs().hour(startHour)
         const dayHourEnd = dayjs().hour(endHour)
@@ -29,7 +35,7 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
     }
 
     //Array of all the hours between the start and end time of the day
-    const dayHours = calculateHoursBetween(startHour, endHour)
+    const dayHours = calculateHoursBetween(startHour, endHour - 1)
 
     //Is the current hour of the day within the day's schedule events?
     const workDayActive =
@@ -81,7 +87,11 @@ const Day = ({ day, now, startHour = 9, endHour = 17 }: DayProps) => {
                 ))}
 
                 {/* Task container */}
-                <div style={{ height: '54rem' }} className="absolute inset-x-0 mt-0.5 bg-red-200 right-3 left-11"></div>
+                <div style={{ height: '54.3rem' }} className="absolute inset-x-0 mt-0.5 right-3 left-12 space-y-1">
+                    {tasks.map((task, i) => (
+                        <Task title={task.title} start={task.start} end={task.end} />
+                    ))}
+                </div>
             </article>
         </div>
     )
@@ -129,7 +139,7 @@ function DayOptionsDropdown() {
                         >
                             <Menu.Items
                                 static
-                                className="absolute right-0 z-10 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none w-72 md:w-96"
+                                className="absolute right-0 z-50 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none w-72 md:w-96"
                             >
                                 <Menu.Item>
                                     {({ active }) => (
@@ -197,12 +207,12 @@ function TimeLine({ now, hourHeight, startHour }: TimeLineProps) {
             style={{
                 top: topOffset,
             }}
-            className="absolute z-20 flex items-center w-full -mt-3 -ml-3 pointer-events-none"
+            className="absolute flex items-center w-full -mt-3 -ml-3 pointer-events-none"
         >
-            <span className="flex-shrink-0 px-3 py-1 text-sm text-white rounded-full bg-brand-light">
+            <span className="relative z-40 flex-shrink-0 px-3 py-1 text-sm text-white rounded-full bg-brand-light">
                 {now.format('h:mm A')}
             </span>
-            <div className="w-full h-px bg-brand-light"></div>
+            <div className="relative z-10 w-full h-px bg-brand-light"></div>
         </div>
     )
 }

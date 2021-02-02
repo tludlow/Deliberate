@@ -1,4 +1,7 @@
 import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+dayjs.extend(customParseFormat)
+
 import Layout from '../components/Layout'
 import { useEffect, useRef } from 'react'
 import { CalendarIcon } from '@/components/icons'
@@ -10,6 +13,27 @@ export default function Calendar() {
     for (let i = -6; i <= 6; i++) {
         days.push(now.add(i, 'day'))
     }
+
+    const calendarData = [
+        {
+            day: '02-02-2021',
+            start: 9,
+            end: 18,
+            tasks: [{ title: 'Wake up! 🛏', start: '9:00 AM', end: '9:30 AM' }],
+        },
+        {
+            day: '03-02-2021',
+            start: 9,
+            end: 18,
+            tasks: [{ title: 'Scrum standup', start: '9:30 AM', end: '10:30 AM' }],
+        },
+        {
+            day: '04-02-2021',
+            start: 9,
+            end: 17,
+            tasks: [{ title: 'Prepare dissertation', start: '9:00 AM', end: '11:30 AM' }],
+        },
+    ]
 
     const calendar = useRef<HTMLElement>(null)
     const scrollHorizontally = (e: any) => {
@@ -107,10 +131,20 @@ export default function Calendar() {
                     <CalendarIcon className="w-6 h-6 text-white" />
                 </div>
 
-                <div className="flex w-full h-full">
-                    {days.map((day, i) => (
-                        <Day key={i} day={day} now={now.hour(17).minute(1)} startHour={9} endHour={17} />
+                <div className="flex justify-center w-full h-full">
+                    {calendarData.map((day, i) => (
+                        <Day
+                            key={i}
+                            day={dayjs(day.day, 'DD-MM-YYYY')}
+                            now={now}
+                            startHour={day.start}
+                            endHour={day.end}
+                            tasks={day.tasks}
+                        />
                     ))}
+                    {/* {days.map((day, i) => (
+                        
+                    ))} */}
                 </div>
             </section>
         </Layout>

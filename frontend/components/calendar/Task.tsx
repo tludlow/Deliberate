@@ -1,20 +1,45 @@
-import { useState } from 'react'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+dayjs.extend(customParseFormat)
+
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { RightArrowIcon } from '../icons'
 import TaskModal from '../modal/TaskModal'
 
 type TaskProps = {
     title: string
-    startTime: string
-    endTime: string
+    start: string
+    end: string
 }
 
-export default function Task({ title, startTime, endTime }: TaskProps) {
+export default function Task({ title, start, end }: TaskProps) {
     const [open, setOpen] = useState(false)
 
     const closeModal = () => {
         setOpen(false)
     }
+
+    const calculateHeight = (start: string, end: string) => {
+        //Convert the string start and end into dayjs objects to do date/time manipulation
+        const startTime = dayjs(start, 'h:mm A')
+        const endTime = dayjs(end, 'h:mm A')
+
+        let lengthMins = endTime.diff(startTime, 'minute')
+        return lengthMins / 60
+    }
+
+    const calculateTopOffset = (start: string) => {
+        const startTime = dayjs(start, 'h:mm A')
+        const dayStart = dayjs().hour(9).minute(0).second(0).millisecond(0)
+
+        const difference = startTime.diff(dayStart, 'minute')
+        return difference / 60
+    }
+
+    useEffect(() => {
+        console.log(calculateHeight(start, end))
+    }, [])
 
     return (
         <>
@@ -22,7 +47,8 @@ export default function Task({ title, startTime, endTime }: TaskProps) {
 
             <div
                 onClick={() => setOpen(true)}
-                className={`absolute top-1/2 -mt-1 flex items-center h-1/2 inset-x-0 left-11 bg-white rounded shadow cursor-pointer hover:bg-gray-100 hover:shadow-xs hover:border hover:border-gray-200`}
+                style={{ height: `${6 * calculateHeight(start, end)}rem`, top: `${6 * calculateTopOffset(start)}rem` }}
+                className={`absolute flex items-center inset-x-0 bg-white rounded shadow cursor-pointer hover:bg-gray-100 hover:shadow-xs hover:border hover:border-gray-200 z-30`}
             >
                 <div className="relative flex flex-col items-center justify-center flex-shrink-0 w-4 h-full bg-green-400 rounded-l">
                     <div className="absolute flex items-center justify-center bg-green-500 rounded-full shadow w-7 h-7">
@@ -45,7 +71,7 @@ export default function Task({ title, startTime, endTime }: TaskProps) {
                 <div className="flex-grow h-full p-1 pl-4">
                     <h5 className="text-sm font-semibold">{title}</h5>
                     <p className="flex items-center text-xs font-medium text-gray-500">
-                        12:30 PM <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> 1 PM
+                        {start} <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> {end}
                     </p>
                 </div>
             </div>
