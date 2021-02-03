@@ -41,17 +41,28 @@ export default function Task({ title, start, end }: TaskProps) {
         console.log(calculateHeight(start, end))
     }, [])
 
+    let possibleColours = ['yellow', 'red', 'green', 'blue', 'indigo', 'pink', 'gray']
+    const selectedColour = possibleColours[Math.floor(Math.random() * possibleColours.length)]
+
     return (
         <>
-            {open && createPortal(<TaskModal isOpen={open} closeModal={closeModal} id={1} />, document.body)}
+            {open &&
+                createPortal(
+                    <TaskModal isOpen={open} closeModal={closeModal} id={1} title={title} start={start} end={end} />,
+                    document.body
+                )}
 
             <div
                 onClick={() => setOpen(true)}
                 style={{ height: `${6 * calculateHeight(start, end)}rem`, top: `${6 * calculateTopOffset(start)}rem` }}
                 className={`absolute flex items-center inset-x-0 bg-white rounded shadow cursor-pointer hover:bg-gray-100 hover:shadow-xs hover:border hover:border-gray-200 z-30`}
             >
-                <div className="relative flex flex-col items-center justify-center flex-shrink-0 w-4 h-full bg-green-400 rounded-l">
-                    <div className="absolute flex items-center justify-center bg-green-500 rounded-full shadow w-7 h-7">
+                <div
+                    className={`relative flex flex-col items-center justify-center flex-shrink-0 w-4 h-full bg-${selectedColour}-500 rounded-l`}
+                >
+                    <div
+                        className={`absolute flex items-center justify-center bg-${selectedColour}-400 rounded-full shadow w-7 h-7`}
+                    >
                         <svg
                             className="w-5 h-5 text-white"
                             fill="none"

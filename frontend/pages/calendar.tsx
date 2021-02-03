@@ -16,22 +16,42 @@ export default function Calendar() {
 
     const calendarData = [
         {
-            day: '02-02-2021',
+            day: '01-02-2021',
             start: 9,
             end: 18,
             tasks: [{ title: 'Wake up! 🛏', start: '9:00 AM', end: '9:30 AM' }],
         },
         {
-            day: '03-02-2021',
+            day: '02-02-2021',
             start: 9,
             end: 18,
-            tasks: [{ title: 'Scrum standup', start: '9:30 AM', end: '10:30 AM' }],
+            tasks: [
+                { title: 'Scrum standup', start: '9:30 AM', end: '10:30 AM' },
+                { title: 'Finish homework 📚', start: '12:00 PM', end: '1:00 PM' },
+                { title: 'Have lunch with the bros', start: '1:00 PM', end: '2:15 PM' },
+            ],
+        },
+        {
+            day: '03-02-2021',
+            start: 9,
+            end: 17,
+            tasks: [{ title: 'Prepare dissertation', start: '9:00 AM', end: '11:30 AM' }],
         },
         {
             day: '04-02-2021',
             start: 9,
-            end: 17,
-            tasks: [{ title: 'Prepare dissertation', start: '9:00 AM', end: '11:30 AM' }],
+            end: 18,
+            tasks: [{ title: 'Call with bryan 📲', start: '10:20 AM', end: '11:05 AM' }],
+        },
+        {
+            day: '05-02-2021',
+            start: 9,
+            end: 19,
+            tasks: [
+                { title: 'Scrum standup', start: '9:30 AM', end: '10:30 AM' },
+                { title: 'Finish homework 📚', start: '12:00 PM', end: '1:00 PM' },
+                { title: 'Have lunch with the bros', start: '1:00 PM', end: '2:15 PM' },
+            ],
         },
     ]
 
@@ -131,12 +151,12 @@ export default function Calendar() {
                     <CalendarIcon className="w-6 h-6 text-white" />
                 </div>
 
-                <div className="flex justify-center w-full h-full">
+                <div className="flex w-full h-full px-12">
                     {calendarData.map((day, i) => (
                         <Day
                             key={i}
                             day={dayjs(day.day, 'DD-MM-YYYY')}
-                            now={now}
+                            now={now.hour(14).minute(15)}
                             startHour={day.start}
                             endHour={day.end}
                             tasks={day.tasks}

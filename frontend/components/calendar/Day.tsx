@@ -42,6 +42,8 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
         now.isBefore(dayjs().hour(endHour).minute(59).second(59)) &&
         now.isAfter(dayjs().hour(startHour).minute(0).second(0))
 
+    const isToday = now.format('D-MMMM-YYYY').toLowerCase() === day.format('D-MMMM-YYYY').toLowerCase()
+
     const timeline = useRef<HTMLDivElement>(null)
 
     //Calculate the height of the hour block inside the day timeline, used to scale the timeline top offsets
@@ -51,7 +53,9 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
     return (
         <div
             id={day.format('D-MMMM-YYYY').toLowerCase()}
-            className="flex flex-col items-center flex-shrink-0 w-10/12 p-2 cursor-default sm:w-8/12 md:w-6/12 lg:w-4/12 xl:w-3/12"
+            className={`flex flex-col items-center flex-shrink-0 w-10/12 m-2 overflow-hidden rounded shadow-lg cursor-default sm:w-8/12 md:w-6/12 lg:w-4/12 xl:w-3/12 ${
+                workDayActive && isToday ? 'border border-brand' : 'border border-gray-200'
+            }`}
         >
             {/* Day header */}
             <div className="flex items-center justify-between flex-shrink-0 w-full p-3 border border-gray-200 just-self-start">
@@ -69,8 +73,9 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
                 className="relative flex flex-col flex-1 w-full p-3 pb-2 border border-gray-200 ultra-thin-scrollbar"
             >
                 {/* Current time tracker, only display for the current day and if the calendar dates are within the current time range */}
-                {now.format('D-MMMM-YYYY').toLowerCase() === day.format('D-MMMM-YYYY').toLowerCase() &&
-                    workDayActive && <TimeLine now={now} hourHeight={hourBlockHeightRem} startHour={startHour} />}
+                {isToday && workDayActive && (
+                    <TimeLine now={now} hourHeight={hourBlockHeightRem} startHour={startHour} />
+                )}
 
                 {dayHours.map((hour, i) => (
                     <div
@@ -87,7 +92,7 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
                 ))}
 
                 {/* Task container */}
-                <div style={{ height: '54.3rem' }} className="absolute inset-x-0 mt-0.5 right-3 left-12 space-y-1">
+                <div style={{ height: '54.3rem' }} className="absolute inset-x-0 mt-0.5 right-3 left-14">
                     {tasks.map((task, i) => (
                         <Task title={task.title} start={task.start} end={task.end} />
                     ))}
