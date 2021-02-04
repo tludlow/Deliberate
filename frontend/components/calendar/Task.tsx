@@ -11,9 +11,10 @@ type TaskProps = {
     title: string
     start: string
     end: string
+    type: string
 }
 
-export default function Task({ title, start, end }: TaskProps) {
+export default function Task({ title, start, end, type = 'github' }: TaskProps) {
     const [open, setOpen] = useState(false)
 
     const closeModal = () => {
@@ -41,7 +42,7 @@ export default function Task({ title, start, end }: TaskProps) {
         console.log(calculateHeight(start, end))
     }, [])
 
-    let possibleColours = ['yellow', 'red', 'green', 'blue', 'indigo', 'pink', 'gray']
+    let possibleColours = ['red', 'green', 'blue', 'indigo', 'pink', 'gray']
     const selectedColour = possibleColours[Math.floor(Math.random() * possibleColours.length)]
 
     return (
@@ -55,7 +56,7 @@ export default function Task({ title, start, end }: TaskProps) {
             <div
                 onClick={() => setOpen(true)}
                 style={{ height: `${6 * calculateHeight(start, end)}rem`, top: `${6 * calculateTopOffset(start)}rem` }}
-                className={`absolute flex items-center inset-x-0 bg-white rounded shadow cursor-pointer hover:bg-gray-100 hover:shadow-xs hover:border hover:border-gray-200 z-30`}
+                className={`absolute flex items-center inset-x-0 bg-white rounded shadow cursor-pointer hover:bg-gray-100 hover:shadow-xs hover:border hover:border-gray-200 z-30 border border-gray-100`}
             >
                 <div
                     className={`relative flex flex-col items-center justify-center flex-shrink-0 w-4 h-full bg-${selectedColour}-500 rounded-l`}
@@ -63,24 +64,42 @@ export default function Task({ title, start, end }: TaskProps) {
                     <div
                         className={`absolute flex items-center justify-center bg-${selectedColour}-400 rounded-full shadow w-7 h-7`}
                     >
-                        <svg
-                            className="w-5 h-5 text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
+                        {type === 'github' && (
+                            <a href="https://github.com/tludlow/Deliberate">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-5 h-5 text-white"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="2"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+                                </svg>
+                            </a>
+                        )}
+                        {type === 'food' && (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-5 h-5 text-white"
+                                viewBox="0 0 24 24"
+                                stroke-width="2"
+                                stroke="currentColor"
+                                fill="none"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-                            />
-                        </svg>
+                            >
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M3 19l15 -15l3 3l-6 6l2 2a14 14 0 0 1 -14 4" />
+                            </svg>
+                        )}
                     </div>
                 </div>
                 <div className="flex-grow h-full p-1 pl-4">
-                    <h5 className="text-sm font-semibold">{title}</h5>
+                    <h5 className="text-sm font-semibold truncate overflow-ellipsis">{title}</h5>
                     <p className="flex items-center text-xs font-medium text-gray-500">
                         {start} <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> {end}
                     </p>

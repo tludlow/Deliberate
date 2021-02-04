@@ -17,6 +17,7 @@ import * as authController from './controllers/auth'
 import * as ssoController from './controllers/sso'
 import * as teamController from './controllers/team'
 import * as userController from './controllers/user'
+import * as calendarController from './controllers/calendar'
 
 //Midleware
 import { AuthTokenMiddleware } from './middleware/authMiddleware'
@@ -54,6 +55,9 @@ app.post(
     [AuthTokenMiddleware, IsTeamMember, HasPermission('ADMIN')],
     teamController.ChangeTeamMemberPermission
 )
+
+//Calendar
+app.get('/calendar/user/:userId', calendarController.UserCalendar)
 
 //User
 app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)
