@@ -50,8 +50,8 @@ export const GithubSSO = async (req: Request, res: Response) => {
             {
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 3,
                 issuer: 'deliberate',
-                subject: 'refreshtoken-github',
-                data: { name: user.data.name || user.data.login },
+                subject: 'refreshtoken',
+                data: { name: user.data.name || user.data.login, githubToken: authToken },
             },
             'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
         )
@@ -61,8 +61,8 @@ export const GithubSSO = async (req: Request, res: Response) => {
             {
                 exp: Math.floor(Date.now() / 1000) + 60 * 60,
                 issuer: 'deliberate',
-                subject: 'accesstoken-github',
-                data: { name: user.data.name || user.data.login },
+                subject: 'accesstoken',
+                data: { name: user.data.name || user.data.login, githubToken: authToken },
             },
             'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
         )
@@ -88,3 +88,5 @@ export const GithubSSO = async (req: Request, res: Response) => {
         return
     }
 }
+
+export const GetGithubRepos = async (req: Request, res: Response) => {}

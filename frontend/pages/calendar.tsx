@@ -6,6 +6,7 @@ import Layout from '../components/Layout'
 import { useEffect, useRef, useState } from 'react'
 import { CalendarIcon } from '@/components/icons'
 import Day from '../components/calendar/Day'
+import api from 'lib/api'
 
 export default function Calendar() {
     let now = dayjs()
@@ -16,35 +17,35 @@ export default function Calendar() {
 
     const calendarData = [
         {
-            day: '01-02-2021',
+            day: '11-02-2021',
             start: 9,
             end: 18,
             tasks: [{ title: 'Wake up! 🛏', start: '9:00 AM', end: '9:30 AM' }],
         },
         {
-            day: '02-02-2021',
+            day: '12-02-2021',
             start: 9,
             end: 18,
             tasks: [
                 { title: 'Scrum standup', start: '9:30 AM', end: '10:30 AM' },
                 { title: 'Finish homework 📚', start: '12:00 PM', end: '1:00 PM' },
-                { title: 'Have lunch with the bros', start: '1:00 PM', end: '2:15 PM' },
+                { title: 'Have lunch', start: '1:00 PM', end: '2:15 PM' },
             ],
         },
         {
-            day: '03-02-2021',
+            day: '13-02-2021',
             start: 9,
             end: 17,
             tasks: [{ title: 'Prepare dissertation', start: '9:00 AM', end: '11:30 AM' }],
         },
         {
-            day: '04-02-2021',
+            day: '14-02-2021',
             start: 9,
             end: 18,
             tasks: [
                 { title: 'Social Informatics Lecture', start: '9:00 AM', end: '10:00 AM' },
                 { title: 'Prepare for meeting', start: '10:15 AM', end: '10:45 AM' },
-                { title: 'Project meeting with Ian', start: '11:00 AM', end: '11:30 AM' },
+                { title: 'Project meeting with Ian', start: '11:30 AM', end: '12:00 PM' },
                 { title: 'Lunch', start: '12:00 PM', end: '1:00 PM' },
                 { title: 'Social Informatics Lab', start: '1:00 PM', end: '2:00 PM' },
                 { title: 'Project Coding', start: '2:00 PM', end: '3:30 PM' },
@@ -56,13 +57,23 @@ export default function Calendar() {
             ],
         },
         {
-            day: '05-02-2021',
+            day: '15-02-2021',
             start: 9,
             end: 19,
             tasks: [
                 { title: 'Scrum standup', start: '9:30 AM', end: '10:30 AM' },
                 { title: 'Finish homework 📚', start: '12:00 PM', end: '1:00 PM' },
-                { title: 'Have lunch with the bros', start: '1:00 PM', end: '2:15 PM' },
+                { title: 'Have lunch', start: '1:00 PM', end: '2:15 PM' },
+            ],
+        },
+        {
+            day: '16-02-2021',
+            start: 9,
+            end: 19,
+            tasks: [
+                { title: 'Scrum standup', start: '9:30 AM', end: '10:30 AM' },
+                { title: 'Finish homework 📚', start: '12:00 PM', end: '1:00 PM' },
+                { title: 'Have lunch', start: '1:00 PM', end: '2:15 PM' },
             ],
         },
     ]
@@ -93,6 +104,15 @@ export default function Calendar() {
     }
 
     useEffect(() => {
+        //Load calendar data
+        api.get('/calendar/user')
+            .then((response: any) => {
+                console.log(response)
+            })
+            .catch((error: any) => {
+                console.log(error)
+            })
+
         //Find the calendar for today and scroll it into the center of the view port
         scrollCalendarToToday()
 
@@ -143,7 +163,7 @@ export default function Calendar() {
 
     // Attach the handler
 
-    const [showActionMenu, setShowActionMenu] = useState(true)
+    const [showActionMenu, setShowActionMenu] = useState(false)
     return (
         <Layout title="My Calendar" showSearch>
             <section
@@ -168,7 +188,7 @@ export default function Calendar() {
                             xmlns="http://www.w3.org/2000/svg"
                             className="text-white w-7 h-7"
                             viewBox="0 0 24 24"
-                            stroke-width="2.5"
+                            strokeWidth="2.5"
                             stroke="currentColor"
                             fill="none"
                             strokeLinecap="round"
@@ -184,11 +204,34 @@ export default function Calendar() {
                         {showActionMenu && (
                             <>
                                 {/* Action menu */}
-                                <div className="fixed inset-y-0 left-0 z-30 p-3 bg-gray-100 border-r border-gray-300 w-72 top-13">
+                                <div className="fixed inset-y-0 left-0 z-30 p-3 bg-white border-r border-gray-300 cursor-default w-80 top-13">
                                     <div className="flex flex-col">
-                                        <h3 className="py-2 text-xl font-bold text-center border-b border-gray-300">
+                                        <h3 className="pb-2 text-xl font-bold text-center text-gray-800 border-b border-gray-300">
                                             Calendar Actions
                                         </h3>
+                                    </div>
+                                    <div className="p-3">
+                                        <ul className="space-y-5">
+                                            <li className="p-2 border rounded cursor-pointer border-brand hover:bg-gray-100">
+                                                <button className="flex justify-between w-full">
+                                                    <span className="font-semibold">Add Task</span>
+                                                    <svg
+                                                        className="w-6 h-6 text-white bg-green-500 rounded-full"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                                 <div
@@ -200,12 +243,32 @@ export default function Calendar() {
                     </div>
                 </div>
 
+                <button
+                    onClick={() => scrollCalendarToToday()}
+                    className="fixed z-40 hidden p-4 rounded-full cursor-pointer md:block bg-brand right-6 bottom-6 hover:shadow"
+                >
+                    <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                    </svg>
+                </button>
+
                 <div className="flex w-full h-full px-12">
                     {calendarData.map((day, i) => (
                         <Day
                             key={i}
                             day={dayjs(day.day, 'DD-MM-YYYY')}
-                            now={now.hour(14).minute(15)}
+                            now={now.hour(9).minute(30)}
                             startHour={day.start}
                             endHour={day.end}
                             tasks={day.tasks}

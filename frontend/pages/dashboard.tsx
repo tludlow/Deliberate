@@ -27,6 +27,11 @@ export function Dashboard() {
     return (
         <Layout title={user.username} contained>
             <section className="mt-4">
+                <Link href="/calendar">
+                    <a href="/calendar" className="mb-2 underline text-brand hover:text-brand-light">
+                        My Calendar
+                    </a>
+                </Link>
                 <div className="flex items-center space-x-3">
                     <ClockIcon className="w-7 h-7 text-brand" />
                     <h3 className="text-xl font-bold">Recent Activity</h3>

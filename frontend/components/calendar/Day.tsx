@@ -94,7 +94,15 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
                 {/* Task container */}
                 <div style={{ height: '54.3rem' }} className="absolute inset-x-0 mt-0.5 right-3 left-14">
                     {tasks.map((task, i) => (
-                        <Task title={task.title} start={task.start} end={task.end} type="github" />
+                        <Task
+                            key={i}
+                            title={task.title}
+                            start={task.start}
+                            end={task.end}
+                            type="food"
+                            day={day}
+                            now={now}
+                        />
                     ))}
                 </div>
             </article>

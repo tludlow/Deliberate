@@ -28,8 +28,10 @@ export const AuthTokenMiddleware = async (req: Request, res: Response, next: Nex
                 return
             }
 
+            console.log(decodedToken)
             //User is authenticated, add their token to the request locals so it can possibly be used later
             res.locals.user_id = decodedToken?.data.id
+            res.locals.github_token = decodedToken?.data.githubToken
             next()
         })
     }

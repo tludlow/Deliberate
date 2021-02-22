@@ -18,6 +18,7 @@ import * as ssoController from './controllers/sso'
 import * as teamController from './controllers/team'
 import * as userController from './controllers/user'
 import * as calendarController from './controllers/calendar'
+import * as webhookController from './controllers/webhooks'
 
 //Midleware
 import { AuthTokenMiddleware } from './middleware/authMiddleware'
@@ -57,10 +58,14 @@ app.post(
 )
 
 //Calendar
-app.get('/calendar/user/:userId', calendarController.UserCalendar)
+app.get('/calendar/user', AuthTokenMiddleware, calendarController.UserCalendar)
+app.post('/calendar/task/add', calendarController.AddTaskToCalendar)
 
 //User
 app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)
+
+//Webhooks
+app.post('/webhook/issue', webhookController.SetupRepoIssueData)
 
 //Catch all 404
 app.get('/*', apiController.FourOFour)

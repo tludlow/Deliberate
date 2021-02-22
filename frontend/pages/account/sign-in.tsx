@@ -15,7 +15,6 @@ export default function SignIn() {
         dispatch(clearLoginErrors())
     }, [])
 
-    const oauthScope: string[] = ['repo']
 
     return (
         <Layout title="Sign In" contained>
@@ -50,9 +49,9 @@ export default function SignIn() {
                 <div className="flex flex-col items-center">
                     <p className="text-lg font-medium">Sign in with these other platforms</p>
                     <a
-                        href={`https://github.com/login/oauth/authorize?client_id=39a17c505bbbab3e6804&scope=${oauthScope.join(
-                            ' '
-                        )}`}
+                        href={`https://github.com/login/oauth/authorize?client_id=39a17c505bbbab3e6804&scope=${[
+                            'repo',
+                        ].join(' ')}`}
                     >
                         <div className="flex items-center justify-center px-4 py-2 mt-3 space-x-4 text-white bg-black rounded cursor-pointer hover:shadow">
                             <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">

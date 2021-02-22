@@ -12,9 +12,11 @@ type TaskProps = {
     start: string
     end: string
     type: string
+    day: dayjs.Dayjs
+    now: dayjs.Dayjs
 }
 
-export default function Task({ title, start, end, type = 'github' }: TaskProps) {
+export default function Task({ title, start, end, type = 'github', day, now }: TaskProps) {
     const [open, setOpen] = useState(false)
 
     const closeModal = () => {
@@ -70,7 +72,7 @@ export default function Task({ title, start, end, type = 'github' }: TaskProps) 
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="w-5 h-5 text-white"
                                     viewBox="0 0 24 24"
-                                    stroke-width="2"
+                                    strokeWidth="2"
                                     stroke="currentColor"
                                     fill="none"
                                     strokeLinecap="round"
@@ -86,7 +88,7 @@ export default function Task({ title, start, end, type = 'github' }: TaskProps) 
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="w-5 h-5 text-white"
                                 viewBox="0 0 24 24"
-                                stroke-width="2"
+                                strokeWidth="2"
                                 stroke="currentColor"
                                 fill="none"
                                 strokeLinecap="round"
