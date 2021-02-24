@@ -1,4 +1,6 @@
 import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+dayjs.extend(customParseFormat)
 
 import { Menu, Transition } from '@headlessui/react'
 import { useEffect, useRef, useState } from 'react'
@@ -13,8 +15,9 @@ type DayProps = {
 }
 interface TaskProp {
     title: string
-    start: string
-    end: string
+    description: string
+    start_time: string
+    end_time: string
 }
 
 const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
@@ -97,8 +100,8 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
                         <Task
                             key={i}
                             title={task.title}
-                            start={task.start}
-                            end={task.end}
+                            start={dayjs(task.start_time, 'HH:mm:ss').format('HH:mm A')}
+                            end={dayjs(task.end_time, 'HH:mm:ss').format('HH:mm A')}
                             type="food"
                             day={day}
                             now={now}

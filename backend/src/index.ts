@@ -59,7 +59,8 @@ app.post(
 
 //Calendar
 app.get('/calendar/user', AuthTokenMiddleware, calendarController.UserCalendar)
-app.post('/calendar/task/add', calendarController.AddTaskToCalendar)
+// app.post('/calendar/task/add', calendarController.AddTaskToCalendar)
+app.get('/calendar/day/:day', AuthTokenMiddleware, calendarController.GetUserTasksForDay)
 
 //User
 app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)

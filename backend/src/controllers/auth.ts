@@ -65,6 +65,8 @@ export const Login = async (req: Request, res: Response) => {
         httpOnly: true,
     })
 
+    console.log(`Access token: ${accessToken}`)
+
     //Send the information back to the user now that they are "logged in"
     res.status(200).json({
         email,

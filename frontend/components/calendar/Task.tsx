@@ -33,7 +33,8 @@ export default function Task({ title, start, end, type = 'github', day, now }: T
     }
 
     const calculateTopOffset = (start: string) => {
-        const startTime = dayjs(start, 'h:mm A')
+        console.log(start)
+        const startTime = dayjs(start, 'HH:mm A')
         const dayStart = dayjs().hour(9).minute(0).second(0).millisecond(0)
 
         const difference = startTime.diff(dayStart, 'minute')
@@ -41,7 +42,7 @@ export default function Task({ title, start, end, type = 'github', day, now }: T
     }
 
     useEffect(() => {
-        console.log(calculateHeight(start, end))
+        // console.log(6 * calculateHeight(start, end))
     }, [])
 
     let possibleColours = ['red', 'green', 'blue', 'indigo', 'pink', 'gray']
