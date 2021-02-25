@@ -7,6 +7,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { CalendarIcon } from '@/components/icons'
 import Day from '../components/calendar/Day'
 import api from 'lib/api'
+import { Transition } from '@headlessui/react'
 
 /* tslint:disable */
 
@@ -38,6 +39,7 @@ export default function Calendar() {
         }
     }
 
+    const [hasLoadedOnce, setHasLoadedOnce] = useState(false)
     const [loading, setLoading] = useState(true)
     const [calendarData, setCalendarData] = useState([])
     let daysToLoad: any = []
@@ -49,17 +51,15 @@ export default function Calendar() {
         let localNow = dayjs()
 
         //Find which days to load, the date today and some days surrounding it
-        for (let i = -4; i <= 4; i++) {
+        for (let i = -14; i <= 14; i++) {
             daysToLoad.push(localNow.add(i, 'day').format('YYYY-MM-DD'))
         }
 
         daysToLoad.forEach((day: any) => {
             api.get(`/calendar/day/${day}`)
                 .then((response: any) => {
+                    console.log(response)
                     setCalendarData((data) => [...data, response.data])
-                    if (response.data.tasks.length > 0) {
-                        console.log(response)
-                    }
                 })
                 .catch((error: any) => {
                     console.log(error)
@@ -71,15 +71,20 @@ export default function Calendar() {
 
         window.addEventListener('wheel', scrollHorizontally)
         window.addEventListener('resize', scrollCalendarToToday)
+        calendar.current?.addEventListener('scroll', handleScroll)
 
-        setLoading(false)
         setTimeout(() => {
             scrollCalendarToToday()
-        }, 150)
+            setTimeout(() => {
+                setLoading(false)
+                setHasLoadedOnce(true)
+            }, 500)
+        }, 1000)
 
         return () => {
             window.removeEventListener('wheel', scrollHorizontally)
             window.removeEventListener('resize', scrollCalendarToToday)
+            calendar.current?.removeEventListener('scroll', handleScroll)
         }
     }, [])
 
@@ -90,31 +95,28 @@ export default function Calendar() {
 
     // Scroll handler for lazy loading the dates on the edge of the horizontal axis
 
-    // const handleScroll = (e: any) => {
-    //     let width = calendar.current?.getBoundingClientRect()["width"]
-    //     let scrollWidth = calendar.current?.scrollWidth
-    //     let scrollLeft = calendar.current?.scrollLeft
-    // 	// const scrollWidth = $('#scrollquestion')[0].scrollWidth;
-    //   	// const scrollLeft = $('#scrollquestion').scrollLeft();
+    const handleScroll = (e: any) => {
+        let width = calendar.current?.getBoundingClientRect()['width']
+        let scrollWidth = calendar.current?.scrollWidth
+        let scrollLeft = calendar.current?.scrollLeft
+        // const scrollWidth = $('#scrollquestion')[0].scrollWidth;
+        // const scrollLeft = $('#scrollquestion').scrollLeft();
 
-    // //   if($scrollWidth - $width === $scrollLeft){
-    // //     alert('right end');
-    // //   }
-    // //   if($scrollLeft===0){
-    // //     alert('left end');
-    // //   }
-    // // console.log("Width: ", width)
-    // // console.log("Scroll Left: ", scrollLeft)
-    // // console.log("Scroll Width: ", scrollWidth)
-    // // console.log("-------------")
+        //   if($scrollWidth - $width === $scrollLeft){
+        //     alert('right end');
+        //   }
+        //   if($scrollLeft===0){
+        //     alert('left end');
+        //   }
+        // console.log("Width: ", width)
+        // console.log("Scroll Left: ", scrollLeft)
+        // console.log("Scroll Width: ", scrollWidth)
+        // console.log("-------------")
 
-    //     if (width + scrollLeft === scrollWidth) {
-    //         console.log("right")
-    //     }
-    //     if(scrollLeft === 0) {
-    //         console.log("left")
-    //     }
-    // }
+        if (width + scrollLeft >= 0.9 * scrollWidth) {
+            console.log('right')
+        }
+    }
 
     // Attach the handler
 
@@ -155,46 +157,51 @@ export default function Calendar() {
                             <line x1="12" y1="12" x2="12" y2="12.01" />
                             <line x1="16" y1="12" x2="16" y2="12.01" />
                         </svg>
-
-                        {showActionMenu && (
-                            <>
-                                {/* Action menu */}
-                                <div className="fixed inset-y-0 left-0 z-30 p-3 bg-white border-r border-gray-300 cursor-default w-80 top-13">
-                                    <div className="flex flex-col">
-                                        <h3 className="pb-2 text-xl font-bold text-center text-gray-800 border-b border-gray-300">
-                                            Calendar Actions
-                                        </h3>
-                                    </div>
-                                    <div className="p-3">
-                                        <ul className="space-y-5">
-                                            <li className="p-2 border rounded cursor-pointer border-brand hover:bg-gray-100">
-                                                <button className="flex justify-between w-full">
-                                                    <span className="font-semibold">Add Task</span>
-                                                    <svg
-                                                        className="w-6 h-6 text-white bg-green-500 rounded-full"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth={2}
-                                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
+                        <Transition
+                            show={showActionMenu}
+                            enter="transition-opacity duration-75"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="transition-opacity duration-150"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            {/* Action menu */}
+                            <div className="fixed inset-y-0 left-0 z-30 p-3 bg-white border-r border-gray-300 cursor-default w-80 top-13">
+                                <div className="flex flex-col">
+                                    <h3 className="pb-2 text-xl font-bold text-center text-gray-800 border-b border-gray-300">
+                                        Calendar Actions
+                                    </h3>
                                 </div>
-                                <div
-                                    onMouseEnter={() => setShowActionMenu(false)}
-                                    className="fixed inset-0 bg-gray-700 bg-opacity-50 top-13"
-                                ></div>
-                            </>
-                        )}
+                                <div className="p-3">
+                                    <ul className="space-y-5">
+                                        <li className="p-2 border rounded cursor-pointer border-brand hover:bg-gray-100">
+                                            <button className="flex justify-between w-full">
+                                                <span className="font-semibold">Add Task</span>
+                                                <svg
+                                                    className="w-6 h-6 text-white bg-green-500 rounded-full"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div
+                                onMouseEnter={() => setShowActionMenu(false)}
+                                className="fixed inset-0 bg-gray-700 bg-opacity-50 top-13"
+                            ></div>
+                        </Transition>
                     </div>
                 </div>
 

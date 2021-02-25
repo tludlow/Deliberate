@@ -145,7 +145,7 @@ export default function Navbar({ showSearch }: NavbarProps) {
                             <Image
                                 className="w-8 h-8 border rounded-full group-hover:border-gray-100 group-hover:shadow"
                                 src="/defaultimage.webp"
-                                alt="James Dean"
+                                alt={user.username}
                                 width={32}
                                 height={32}
                             />

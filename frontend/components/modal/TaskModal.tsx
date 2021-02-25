@@ -10,11 +10,12 @@ type TaskModalProps = {
     closeModal: () => void
     id: number
     title: string
+    description: string
     start: string
     end: string
 }
 
-export default function TaskModal({ isOpen, closeModal, id, title, start, end }: TaskModalProps) {
+export default function TaskModal({ isOpen, closeModal, id, title, description, start, end }: TaskModalProps) {
     return (
         <ModalHOC isOpen={isOpen} closeModal={closeModal} modalWidth="w-full lg:w-1/2 xl:w-5/12">
             <div className="absolute inset-x-0 flex justify-center -mt-12">
@@ -54,10 +55,10 @@ export default function TaskModal({ isOpen, closeModal, id, title, start, end }:
                 </div>
 
                 <div className="mt-6">
-                    <p className="leading-tight text-center text-gray-600"></p>
+                    <p className="leading-tight text-center text-gray-600">{description}</p>
                 </div>
 
-                <div className="flex items-center justify-center space-x-6">
+                <div className="flex items-center justify-center mt-4 space-x-6">
                     <button className="px-3 py-2 bg-gray-200 border border-gray-200 rounded hover:shadow hover:bg-gray-300">
                         Edit Task Time
                     </button>

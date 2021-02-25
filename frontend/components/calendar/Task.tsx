@@ -4,11 +4,12 @@ dayjs.extend(customParseFormat)
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { RightArrowIcon } from '../icons'
+import { FoodIcon, GithubIcon, RightArrowIcon } from '../icons'
 import TaskModal from '../modal/TaskModal'
 
 type TaskProps = {
     title: string
+    description: string
     start: string
     end: string
     type: string
@@ -16,7 +17,7 @@ type TaskProps = {
     now: dayjs.Dayjs
 }
 
-export default function Task({ title, start, end, type = 'github', day, now }: TaskProps) {
+export default function Task({ title, description, start, end, type = 'github', day, now }: TaskProps) {
     const [open, setOpen] = useState(false)
 
     const closeModal = () => {
@@ -33,17 +34,12 @@ export default function Task({ title, start, end, type = 'github', day, now }: T
     }
 
     const calculateTopOffset = (start: string) => {
-        console.log(start)
         const startTime = dayjs(start, 'HH:mm A')
         const dayStart = dayjs().hour(9).minute(0).second(0).millisecond(0)
 
         const difference = startTime.diff(dayStart, 'minute')
         return difference / 60
     }
-
-    useEffect(() => {
-        // console.log(6 * calculateHeight(start, end))
-    }, [])
 
     let possibleColours = ['red', 'green', 'blue', 'indigo', 'pink', 'gray']
     const selectedColour = possibleColours[Math.floor(Math.random() * possibleColours.length)]
@@ -52,7 +48,15 @@ export default function Task({ title, start, end, type = 'github', day, now }: T
         <>
             {open &&
                 createPortal(
-                    <TaskModal isOpen={open} closeModal={closeModal} id={1} title={title} start={start} end={end} />,
+                    <TaskModal
+                        isOpen={open}
+                        closeModal={closeModal}
+                        id={1}
+                        title={title}
+                        description={description}
+                        start={start}
+                        end={end}
+                    />,
                     document.body
                 )}
 
@@ -69,40 +73,20 @@ export default function Task({ title, start, end, type = 'github', day, now }: T
                     >
                         {type === 'github' && (
                             <a href="https://github.com/tludlow/Deliberate">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="w-5 h-5 text-white"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="2"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
-                                </svg>
+                                <GithubIcon className="w-5 h-5 text-white" />
                             </a>
                         )}
-                        {type === 'food' && (
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-5 h-5 text-white"
-                                viewBox="0 0 24 24"
-                                strokeWidth="2"
-                                stroke="currentColor"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M3 19l15 -15l3 3l-6 6l2 2a14 14 0 0 1 -14 4" />
-                            </svg>
-                        )}
+                        {type === 'food' && <FoodIcon className="w-5 h-5 text-white" />}
                     </div>
                 </div>
-                <div className="flex-grow h-full p-1 pl-4">
-                    <h5 className="text-sm font-semibold truncate overflow-ellipsis">{title}</h5>
+                <div
+                    className={`flex-grow h-full p-1 pl-4 ${
+                        calculateHeight(start, end) < 0.3 ? 'flex justify-between leading-none pr-4' : ''
+                    }`}
+                >
+                    <h5 className={`text-sm font-semibold ${calculateHeight(start, end) < 0.3 ? '-mt-0.5' : ''} `}>
+                        {title}
+                    </h5>
                     <p className="flex items-center text-xs font-medium text-gray-500">
                         {start} <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> {end}
                     </p>
