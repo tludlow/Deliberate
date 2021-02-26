@@ -47,7 +47,7 @@ export const Login = async (req: Request, res: Response) => {
     //Access token, short lived (1 hour) and used to authenticate against the api
     const accessToken = jwt.sign(
         {
-            exp: Math.floor(Date.now() / 1000) + 60 * 60,
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 72,
             issuer: 'deliberate',
             subject: 'accesstoken',
             data: { email: email, id: checkResult.rows[0].id },
@@ -61,7 +61,7 @@ export const Login = async (req: Request, res: Response) => {
         httpOnly: true,
     })
     res.cookie('access_token', accessToken, {
-        expires: new Date(Date.now() / 100 + 60 * 60),
+        expires: new Date(Date.now() / 100 + 60 * 60 * 72),
         httpOnly: true,
     })
 

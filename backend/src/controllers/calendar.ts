@@ -23,60 +23,52 @@ export const UserCalendar = async (req: Request, res: Response) => {
 }
 
 export const AddTaskToCalendar = async (req: Request, res: Response) => {
-    checkTaskOverlaps([
-        {
-            id: 1,
-            title: 'testing 1',
-            description: 'hello this is a test 1',
-            day: dayjs('2021-02-24'),
-            startTime: dayjs('2021-02-24 13:00:00', 'YYYY-MM-DD HH:mm:ss'),
-            endTime: dayjs('2021-02-24 14:20:00', 'YYYY-MM-DD HH:mm:ss'),
-        },
-        {
-            id: 2,
-            title: 'testing 2',
-            description: 'this is a second test',
-            day: dayjs('2021-02-24'),
-            startTime: dayjs('2021-02-24 14:00:00', 'YYYY-MM-DD HH:mm:ss'),
-            endTime: dayjs('2021-02-24 14:30:00', 'YYYY-MM-DD HH:mm:ss'),
-        },
-        {
-            id: 3,
-            title: 'testing 3',
-            description: 'this is a third test',
-            day: dayjs('2021-03-24'),
-            startTime: dayjs('2021-03-24 14:00:00', 'YYYY-MM-DD HH:mm:ss'),
-            endTime: dayjs('2021-03-24 14:30:00', 'YYYY-MM-DD HH:mm:ss'),
-        },
-    ])
-    res.status(200).send({
-        hi: [
-            {
-                id: 1,
-                title: 'testing 1',
-                description: 'hello this is a test 1',
-                day: dayjs('2021-02-24'),
-                startTime: dayjs('2021-02-24 13:00:00', 'YYYY-MM-DD HH:mm:ss'),
-                endTime: dayjs('2021-02-24 14:20:00', 'YYYY-MM-DD HH:mm:ss'),
-            },
-            {
-                id: 2,
-                title: 'testing 2',
-                description: 'this is a second test',
-                day: dayjs('2021-02-24'),
-                startTime: dayjs('2021-02-24 14:00:00', 'YYYY-MM-DD HH:mm:ss'),
-                endTime: dayjs('2021-02-24 14:30:00', 'YYYY-MM-DD HH:mm:ss'),
-            },
-            {
-                id: 3,
-                title: 'testing 3',
-                description: 'this is a third test',
-                day: dayjs('2021-03-24'),
-                startTime: dayjs('2021-03-24 14:00:00', 'YYYY-MM-DD HH:mm:ss'),
-                endTime: dayjs('2021-03-24 14:30:00', 'YYYY-MM-DD HH:mm:ss'),
-            },
-        ][0].endTime.hour(),
-    })
+    const { title, description, day, start_time, end_time } = req.body
+    const { user_id } = res.locals
+
+    //Check that the task is not overlapping with another
+    //Get the tasks for the day
+    try {
+        let daysTasks = await query(
+            'SELECT title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+            [day, user_id]
+        )
+        let appendedTasks: any = []
+        daysTasks.rows.forEach((task) => {
+            appendedTasks.push({
+                title: task.title,
+                description: task.description,
+                day: dayjs(task.day),
+                start_time: dayjs(`${day} ${task.start_time}`, 'YYYY-MM-DD HH:mm:ss'),
+                end_time: dayjs(`${day} ${task.end_time}`, 'YYYY-MM-DD HH:mm:ss'),
+            })
+        })
+
+        appendedTasks.push({
+            title: title,
+            description: description,
+            day: dayjs(day),
+            start_time: dayjs(`${day} ${start_time}`, 'YYYY-MM-DD HH:mm:ss'),
+            end_time: dayjs(`${day} ${end_time}`, 'YYYY-MM-DD HH:mm:ss'),
+        })
+
+        if (checkTaskOverlaps(appendedTasks)) {
+            res.status(400).send({ message: 'Task overlaps with another task within this calendar on this day' })
+            return
+        }
+
+        let addTask = await query(
+            'INSERT INTO tasks(title, description, day, start_time, end_time, calendar_id) VALUES($1, $2, $3, $4, $5, $6)',
+            [title, description, day, start_time, end_time, user_id]
+        )
+
+        console.log(addTask)
+
+        res.status(200).send({ day, start: 9, end: 18, tasks: appendedTasks })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ error })
+    }
 }
 
 export const GetUserTasksForDay = async (req: Request, res: Response) => {

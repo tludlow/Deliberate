@@ -5,22 +5,37 @@ dayjs.extend(customParseFormat)
 dayjs.extend(isBetween)
 
 type Task = {
-    id: number
     title: string
     description: string
     day: Dayjs
-    startTime: Dayjs
-    endTime: Dayjs
+    start_time: Dayjs
+    end_time: Dayjs
 }
 //For a given day, ensure none of the tasks overlap with eachother
 export const checkTaskOverlaps = (tasks: Task[]) => {
-    tasks.forEach((task) => {
-        tasks.forEach((compared) => {
+    let isInvalid = false
+    for (let task of tasks) {
+        for (let compared of tasks) {
+            if (task === compared) {
+                continue
+            }
             //make sure the compared task starts before the first and ends before the last
-            let invalidTime =
-                task.startTime.isBetween(compared.startTime, compared.endTime, null, '()') ||
-                task.endTime.isBetween(compared.startTime, compared.endTime, null, '()')
-            invalidTime && console.log(`Task: ${task.id} conflicts with task: ${compared.id}`)
-        })
-    })
+            let invalidStart = task.start_time.isBetween(compared.start_time, compared.end_time, null, '[]')
+            let invalidEnd = task.end_time.isBetween(compared.start_time, compared.end_time, null, '[]')
+
+            if (invalidStart) {
+                console.log(`${task.title} - ${task.start_time} is between ${compared.start_time}-${compared.end_time}`)
+            }
+            if (invalidEnd) {
+                console.log(`${task.title} - ${task.end_time} is between ${compared.start_time}-${compared.end_time}`)
+            }
+
+            let invalid = invalidStart || invalidEnd
+            if (invalid) {
+                isInvalid = true
+                break
+            }
+        }
+    }
+    return isInvalid
 }
