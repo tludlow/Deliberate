@@ -86,3 +86,7 @@ export const GetUserTasksForDay = async (req: Request, res: Response) => {
         res.status(500).send({ error })
     }
 }
+
+export const DeleteTaskByID = async (req: Request, res: Response) => {
+    res.status(200)
+}

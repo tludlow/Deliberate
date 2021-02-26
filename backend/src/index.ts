@@ -61,6 +61,7 @@ app.post(
 app.get('/calendar/user', AuthTokenMiddleware, calendarController.UserCalendar)
 app.post('/calendar/task', AuthTokenMiddleware, calendarController.AddTaskToCalendar)
 app.get('/calendar/day/:day', AuthTokenMiddleware, calendarController.GetUserTasksForDay)
+app.post('/calendar/task/delete', AuthTokenMiddleware, calendarController.DeleteTaskByID)
 
 //User
 app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)

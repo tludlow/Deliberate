@@ -3,11 +3,13 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
 
 import Layout from '../components/Layout'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { CalendarIcon } from '@/components/icons'
+import { useEffect, useRef, useState } from 'react'
 import Day from '../components/calendar/Day'
 import api from 'lib/api'
 import { Transition } from '@headlessui/react'
+import { CaretRightIcon } from '@/components/icons'
+import { createPortal } from 'react-dom'
+import CreateTaskModal from '../components/modal/CreateTaskModal'
 
 /* tslint:disable */
 
@@ -39,8 +41,12 @@ export default function Calendar() {
         }
     }
 
-    const [hasLoadedOnce, setHasLoadedOnce] = useState(false)
-    const [loading, setLoading] = useState(true)
+    const [createTaskOpen, setCreateTaskOpen] = useState(false)
+
+    const closeCreateTaskModal = () => {
+        setCreateTaskOpen(false)
+    }
+
     const [calendarData, setCalendarData] = useState([])
     let daysToLoad: any = []
 
@@ -75,10 +81,6 @@ export default function Calendar() {
 
         setTimeout(() => {
             scrollCalendarToToday()
-            setTimeout(() => {
-                setLoading(false)
-                setHasLoadedOnce(true)
-            }, 500)
         }, 1000)
 
         return () => {
@@ -134,6 +136,12 @@ export default function Calendar() {
                 {/* Right occlusion */}
                 {/* <div className="right-0 hidden w-32 md:fixed bg-gradient-to-l from-gray-50 to-transparent h-within"></div> */}
 
+                {createTaskOpen &&
+                    createPortal(
+                        <CreateTaskModal isOpen={createTaskOpen} closeModal={closeCreateTaskModal} />,
+                        document.body
+                    )}
+
                 {/* Control menu */}
                 <div
                     onMouseEnter={() => setShowActionMenu(true)}
@@ -175,23 +183,12 @@ export default function Calendar() {
                                 </div>
                                 <div className="p-3">
                                     <ul className="space-y-5">
-                                        <li className="p-2 border rounded cursor-pointer border-brand hover:bg-gray-100">
-                                            <button className="flex justify-between w-full">
-                                                <span className="font-semibold">Add Task</span>
-                                                <svg
-                                                    className="w-6 h-6 text-white bg-green-500 rounded-full"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                                    />
-                                                </svg>
+                                        <li className="w-full">
+                                            <button onClick={() => setCreateTaskOpen(true)} className="w-full">
+                                                <div className="flex items-center p-2 hover:bg-gray-100">
+                                                    <CaretRightIcon className="block w-5 h-5 text-gray-600" />
+                                                    <p className="font-semibold">Add Task</p>
+                                                </div>
                                             </button>
                                         </li>
                                     </ul>

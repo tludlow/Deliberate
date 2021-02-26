@@ -1,5 +1,5 @@
 import ModalHOC from './Modal'
-import { RightArrowIcon } from '../icons/index'
+import { ClockIcon, RightArrowIcon, TrashIcon } from '../icons/index'
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -37,10 +37,20 @@ export default function TaskModal({ isOpen, closeModal, id, title, description, 
                 </div>
             </div>
             <div className="mt-5">
-                <h3 className="text-xl font-bold text-center">{title}</h3>
+                <h3 className="text-xl font-bold text-center">
+                    {title}{' '}
+                    <button>
+                        <TrashIcon className="w-4 h-4 text-red-500 hover:text-red-600" />
+                    </button>
+                </h3>
                 <div className="flex items-center justify-between">
                     <p className="flex items-center flex-1 text-xs font-medium text-gray-500">
-                        {start} <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> {end}
+                        <span className="flex items-center mr-3">
+                            {start} <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> {end}{' '}
+                        </span>
+                        <button>
+                            <ClockIcon className="w-4 h-4 text-gray-700 hover:text-gray-500" />
+                        </button>
                     </p>
                     <a
                         className="text-sm font-semibold text-blue-600 hover:underline"
@@ -56,15 +66,6 @@ export default function TaskModal({ isOpen, closeModal, id, title, description, 
 
                 <div className="mt-6">
                     <p className="leading-tight text-center text-gray-600">{description}</p>
-                </div>
-
-                <div className="flex items-center justify-center mt-4 space-x-6">
-                    <button className="px-3 py-2 bg-gray-200 border border-gray-200 rounded hover:shadow hover:bg-gray-300">
-                        Edit Task Time
-                    </button>
-                    <button className="px-3 py-2 text-white bg-red-500 border border-gray-200 rounded hover:shadow hover:bg-red-400">
-                        Delete Task
-                    </button>
                 </div>
             </div>
         </ModalHOC>

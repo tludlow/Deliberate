@@ -17,11 +17,15 @@ export const checkTaskOverlaps = (tasks: Task[]) => {
     for (let task of tasks) {
         for (let compared of tasks) {
             if (task === compared) {
+                console.log('is same!')
+                console.log(task)
+                console.log(compared)
                 continue
             }
             //make sure the compared task starts before the first and ends before the last
-            let invalidStart = task.start_time.isBetween(compared.start_time, compared.end_time, null, '[]')
-            let invalidEnd = task.end_time.isBetween(compared.start_time, compared.end_time, null, '[]')
+            let invalidStart = task.start_time.isBetween(compared.start_time, compared.end_time, null, '()')
+            let invalidEnd = task.end_time.isBetween(compared.start_time, compared.end_time, null, '()')
+            let sameStartEnd = task.start_time.isSame(compared.start_time) && task.end_time.isSame(compared.end_time)
 
             if (invalidStart) {
                 console.log(`${task.title} - ${task.start_time} is between ${compared.start_time}-${compared.end_time}`)
@@ -30,12 +34,12 @@ export const checkTaskOverlaps = (tasks: Task[]) => {
                 console.log(`${task.title} - ${task.end_time} is between ${compared.start_time}-${compared.end_time}`)
             }
 
-            let invalid = invalidStart || invalidEnd
+            let invalid = invalidStart || invalidEnd || sameStartEnd
             if (invalid) {
                 isInvalid = true
                 break
             }
         }
     }
-    return isInvalid
+    return isInvalidA
 }
