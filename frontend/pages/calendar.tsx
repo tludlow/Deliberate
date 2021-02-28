@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import Day from '../components/calendar/Day'
 import api from 'lib/api'
 import { Transition } from '@headlessui/react'
-import { CaretRightIcon } from '@/components/icons'
+import { CaretRightIcon, ArrowLeft, ArrowRight } from '@/components/icons'
 import { createPortal } from 'react-dom'
 import CreateTaskModal from '../components/modal/CreateTaskModal'
 
@@ -64,7 +64,6 @@ export default function Calendar() {
         daysToLoad.forEach((day: any) => {
             api.get(`/calendar/day/${day}`)
                 .then((response: any) => {
-                    console.log(response)
                     setCalendarData((data) => [...data, response.data])
                 })
                 .catch((error: any) => {
@@ -77,7 +76,7 @@ export default function Calendar() {
 
         window.addEventListener('wheel', scrollHorizontally)
         window.addEventListener('resize', scrollCalendarToToday)
-        calendar.current?.addEventListener('scroll', handleScroll)
+        //calendar.current?.addEventListener('scroll', handleScroll)
 
         setTimeout(() => {
             scrollCalendarToToday()
@@ -86,7 +85,7 @@ export default function Calendar() {
         return () => {
             window.removeEventListener('wheel', scrollHorizontally)
             window.removeEventListener('resize', scrollCalendarToToday)
-            calendar.current?.removeEventListener('scroll', handleScroll)
+            //calendar.current?.removeEventListener('scroll', handleScroll)
         }
     }, [])
 
@@ -97,27 +96,69 @@ export default function Calendar() {
 
     // Scroll handler for lazy loading the dates on the edge of the horizontal axis
 
-    const handleScroll = (e: any) => {
-        let width = calendar.current?.getBoundingClientRect()['width']
-        let scrollWidth = calendar.current?.scrollWidth
-        let scrollLeft = calendar.current?.scrollLeft
-        // const scrollWidth = $('#scrollquestion')[0].scrollWidth;
-        // const scrollLeft = $('#scrollquestion').scrollLeft();
+    // const handleScroll = (e: any) => {
+    //     let width = calendar.current?.getBoundingClientRect()['width']
+    //     let scrollWidth = calendar.current?.scrollWidth
+    //     let scrollLeft = calendar.current?.scrollLeft
+    //     // const scrollWidth = $('#scrollquestion')[0].scrollWidth;
+    //     // const scrollLeft = $('#scrollquestion').scrollLeft();
 
-        //   if($scrollWidth - $width === $scrollLeft){
-        //     alert('right end');
-        //   }
-        //   if($scrollLeft===0){
-        //     alert('left end');
-        //   }
-        // console.log("Width: ", width)
-        // console.log("Scroll Left: ", scrollLeft)
-        // console.log("Scroll Width: ", scrollWidth)
-        // console.log("-------------")
+    //     //   if($scrollWidth - $width === $scrollLeft){
+    //     //     alert('right end');
+    //     //   }
+    //     //   if($scrollLeft===0){
+    //     //     alert('left end');
+    //     //   }
+    //     // console.log("Width: ", width)
+    //     // console.log("Scroll Left: ", scrollLeft)
+    //     // console.log("Scroll Width: ", scrollWidth)
+    //     // console.log("-------------")
 
-        if (width + scrollLeft >= 0.9 * scrollWidth) {
-            console.log('right')
-        }
+    //     if (width + scrollLeft >= 0.9 * scrollWidth) {
+    //         if (shouldLoad) {
+    //             loadFuture()
+    //         }
+    //     }
+    //     if (scrollLeft <= 0.1 * scrollWidth) {
+    //         if (shouldLoad) {
+    //             loadPast()
+    //         }
+    //     }
+    // }
+
+    const loadFuture = () => {
+        //get the current largest day loaded
+        let sorted = calendarData.sort((a, b) => new Date(a.day) - new Date(b.day))
+        console.log(sorted)
+        let largestLoadedDay = sorted[sorted.length - 1]
+
+        api.get(`/calendar/${largestLoadedDay.day}/future`)
+            .then((response) => {
+                let newData = [...calendarData, ...response.data.calendarData]
+                setCalendarData(newData)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const loadPast = () => {
+        //get the current largest day loaded
+        let sorted = calendarData.sort((a, b) => new Date(a.day) - new Date(b.day))
+        let lowestDayLoaded = sorted[0]
+        console.log(lowestDayLoaded)
+
+        api.get(`/calendar/${lowestDayLoaded.day}/past`)
+            .then((response) => {
+                let newData = [...response.data.calendarData, ...calendarData]
+                setCalendarData(newData)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+
+        let least = document.getElementById(dayjs(lowestDayLoaded.day).format('D-MMMM-YYYY').toLowerCase())
+        least.scrollIntoView({ inline: 'center', behavior: 'auto' })
     }
 
     // Attach the handler
@@ -223,6 +264,15 @@ export default function Calendar() {
                 </button>
 
                 <div className="flex w-full h-full px-12">
+                    <div className="flex items-center w-48 h-full">
+                        <button
+                            onClick={() => loadPast()}
+                            className="flex items-center justify-center p-6 mx-12 rounded-full bg-brand hover:bg-brand-light hover:shadow"
+                        >
+                            <ArrowLeft className="w-5 h-5 text-white" />
+                        </button>
+                    </div>
+
                     {calendarData
                         .sort((a, b) => new Date(a.day) - new Date(b.day))
                         .map((day, i) => (
@@ -235,6 +285,14 @@ export default function Calendar() {
                                 tasks={day.tasks}
                             />
                         ))}
+                    <div className="flex items-center w-48 h-full">
+                        <button
+                            onClick={() => loadFuture()}
+                            className="flex items-center justify-center p-6 mx-12 rounded-full bg-brand hover:bg-brand-light hover:shadow"
+                        >
+                            <ArrowRight className="w-5 h-5 text-white" />
+                        </button>
+                    </div>
                 </div>
             </section>
         </Layout>

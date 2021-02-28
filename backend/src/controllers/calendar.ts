@@ -90,3 +90,55 @@ export const GetUserTasksForDay = async (req: Request, res: Response) => {
 export const DeleteTaskByID = async (req: Request, res: Response) => {
     res.status(200)
 }
+
+export const LoadFuture = async (req: Request, res: Response) => {
+    const { user_id } = res.locals
+
+    let day = dayjs(req.params.day)
+    let futureDay = []
+    day = day.add(1, 'day')
+    for (let i = 0; i <= 14; i++) {
+        futureDay.push(day.add(i, 'day').format('YYYY-MM-DD'))
+    }
+
+    let response = []
+
+    try {
+        for (let getDay of futureDay) {
+            let daysTasks = await query(
+                'SELECT title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+                [getDay, user_id]
+            )
+            response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
+        }
+        res.status(200).send({ calendarData: response })
+    } catch (error) {
+        res.status(500).send({ error })
+    }
+}
+
+export const LoadPast = async (req: Request, res: Response) => {
+    const { user_id } = res.locals
+
+    let day = dayjs(req.params.day)
+    let futureDay = []
+    day = day.subtract(1, 'day')
+    for (let i = 0; i <= 14; i++) {
+        futureDay.push(day.subtract(i, 'day').format('YYYY-MM-DD'))
+    }
+
+    let response = []
+
+    try {
+        for (let getDay of futureDay) {
+            let daysTasks = await query(
+                'SELECT title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+                [getDay, user_id]
+            )
+            response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
+        }
+        res.status(200).send({ calendarData: response })
+    } catch (error) {
+        res.status(500).send({ error })
+    }
+}

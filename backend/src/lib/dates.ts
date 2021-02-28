@@ -41,5 +41,5 @@ export const checkTaskOverlaps = (tasks: Task[]) => {
             }
         }
     }
-    return isInvalidA
+    return isInvalid
 }

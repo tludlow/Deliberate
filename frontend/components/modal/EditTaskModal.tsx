@@ -1,34 +1,54 @@
 import ModalHOC from './Modal'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
+import { Field, Form, Formik, ErrorMessage } from 'formik'
 import api from 'lib/api'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
 
-type CreateTaskModalProps = {
+type EditTaskModalProps = {
     isOpen: boolean
     closeModal: () => void
+    id: number
+    title: string
+    description: string
+    date: dayjs.Dayjs
+    start_time: string
+    end_time: string
 }
 
-export default function CreateTaskModal({ isOpen, closeModal }: CreateTaskModalProps) {
+export default function EditTaskModal({
+    isOpen,
+    closeModal,
+    id,
+    title,
+    description,
+    date,
+    start_time,
+    end_time,
+}: EditTaskModalProps) {
     const [error, setError] = useState('')
+
     return (
         <ModalHOC isOpen={isOpen} closeModal={closeModal} modalWidth="w-full lg:w-1/2 xl:w-5/12">
             <div className="flex justify-center">
-                <h4 className="text-xl font-bold">Add Task</h4>
+                <h4 className="text-xl font-bold">Edit Task - {title}</h4>
             </div>
 
             <div className="mt-6">
                 <Formik
-                    initialValues={{ title: '', description: '', day: '', start_time: '', end_time: '' }}
+                    initialValues={{
+                        title,
+                        description,
+                        day: date.format('YYYY-MM-DD'),
+                        start_time: start_time.split(' ')[0],
+                        end_time: end_time.split(' ')[0],
+                    }}
                     validate={(values) => {
                         const errors: any = {}
 
-                        console.log(`${values.day} ${values.start_time}`)
-
-                        let startTime = dayjs(`${values.day} ${values.start_time}`, 'YYYY-MM-DD HH-mm')
-                        let endTime = dayjs(`${values.day} ${values.end_time}`, 'YYYY-MM-DD HH-mm')
+                        let startTime = dayjs(`${date.format('YYYY-MM-DD')} ${values.start_time}`, 'YYYY-MM-DD HH-mm')
+                        let endTime = dayjs(`${date.format('YYYY-MM-DD')} ${values.end_time}`, 'YYYY-MM-DD HH-mm')
 
                         console.log(startTime)
                         console.log(endTime)
@@ -43,26 +63,27 @@ export default function CreateTaskModal({ isOpen, closeModal }: CreateTaskModalP
                     }}
                     onSubmit={async (values, { setSubmitting }) => {
                         setSubmitting(true)
-                        api.post('/calendar/task', {
-                            title: values.title,
-                            description: values.description,
-                            day: values.day,
-                            start_time: `${values.start_time}:00`,
-                            end_time: `${values.end_time}:00`,
-                        })
-                            .then((response) => {
-                                console.log(response)
-                                closeModal()
-                                location.reload()
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                                setError(error.response.data.message)
-                            })
+                        alert(JSON.stringify(values))
+                        // api.post('/calendar/task', {
+                        //     title: values.title,
+                        //     description: values.description,
+                        //     day: values.day,
+                        //     start_time: `${values.start_time}:00`,
+                        //     end_time: `${values.end_time}:00`,
+                        // })
+                        //     .then((response) => {
+                        //         console.log(response)
+                        //         closeModal()
+                        //         location.reload()
+                        //     })
+                        //     .catch((error) => {
+                        //         console.log(error)
+                        //         setError(error.response.data.message)
+                        //     })
                         setSubmitting(false)
                     }}
                 >
-                    {({ isSubmitting }) => (
+                    {({ values, isSubmitting }) => (
                         <Form className="flex flex-col w-full mt-4 space-y-4">
                             <div className="flex flex-col">
                                 <label className="font-medium" htmlFor="title">
@@ -136,14 +157,13 @@ export default function CreateTaskModal({ isOpen, closeModal }: CreateTaskModalP
                             <ErrorMessage name="end_time">
                                 {(msg) => <div className="form-error">{msg}</div>}
                             </ErrorMessage>
-
                             {error.length > 0 && <p className="form-error">{error}</p>}
                             <button
                                 className="w-full h-12 mt-8 font-medium text-white rounded cursor-pointer bg-brand hover:bg-blue-500 disabled:bg-blue-300 disabled:cusor-not-allowed"
                                 disabled={isSubmitting}
                                 type="submit"
                             >
-                                Add Task
+                                Edit Task
                             </button>
                         </Form>
                     )}

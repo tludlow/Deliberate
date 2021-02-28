@@ -54,6 +54,7 @@ export default function Task({ title, description, start, end, type = 'github', 
                         id={1}
                         title={title}
                         description={description}
+                        date={day}
                         start={start}
                         end={end}
                     />,

@@ -101,6 +101,7 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
                             key={i}
                             title={task.title}
                             description={task.description}
+                            day={day}
                             start={dayjs(task.start_time, 'HH:mm:ss').format('HH:mm A')}
                             end={dayjs(task.end_time, 'HH:mm:ss').format('HH:mm A')}
                             type="food"
