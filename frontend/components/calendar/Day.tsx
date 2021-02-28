@@ -53,6 +53,9 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
     let hourBlock = timeline.current?.childNodes[1] as HTMLElement
     let hourBlockHeightRem = 6 //hourBlock?.getBoundingClientRect().height / 16
 
+    useEffect(() => {
+        console.log(tasks)
+    }, [])
     return (
         <div
             id={day.format('D-MMMM-YYYY').toLowerCase()}
@@ -105,8 +108,8 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
                             start={dayjs(task.start_time, 'HH:mm:ss').format('HH:mm A')}
                             end={dayjs(task.end_time, 'HH:mm:ss').format('HH:mm A')}
                             type="food"
-                            day={day}
                             now={now}
+                            id={task.id}
                         />
                     ))}
                 </div>

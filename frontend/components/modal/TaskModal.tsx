@@ -1,11 +1,11 @@
 import ModalHOC from './Modal'
 import { EditIcon, RightArrowIcon, TrashIcon } from '../icons/index'
-
+import api from 'lib/api'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { createPortal } from 'react-dom'
 import EditTaskModal from './EditTaskModal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 dayjs.extend(relativeTime)
 
 type TaskModalProps = {
@@ -25,6 +25,22 @@ export default function TaskModal({ isOpen, closeModal, id, title, description, 
     const closeEditTaskModal = () => {
         setEditOpen(false)
     }
+
+    const deleteTask = () => {
+        api.post('/calendar/task/delete', { task_id: id })
+            .then((response) => {
+                console.log(response)
+                closeModal()
+                location.reload()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    useEffect(() => {
+        console.log(id)
+    }, [])
 
     return (
         <>
@@ -64,7 +80,7 @@ export default function TaskModal({ isOpen, closeModal, id, title, description, 
                 <div className="mt-5">
                     <h3 className="text-xl font-bold text-center">
                         {title}{' '}
-                        <button>
+                        <button onClick={() => deleteTask()}>
                             <TrashIcon className="w-4 h-4 text-red-500 hover:text-red-600" />
                         </button>
                     </h3>

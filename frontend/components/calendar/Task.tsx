@@ -8,6 +8,7 @@ import { FoodIcon, GithubIcon, RightArrowIcon } from '../icons'
 import TaskModal from '../modal/TaskModal'
 
 type TaskProps = {
+    id: number
     title: string
     description: string
     start: string
@@ -17,7 +18,7 @@ type TaskProps = {
     now: dayjs.Dayjs
 }
 
-export default function Task({ title, description, start, end, type = 'github', day, now }: TaskProps) {
+export default function Task({ id, title, description, start, end, type = 'github', day, now }: TaskProps) {
     const [open, setOpen] = useState(false)
 
     const closeModal = () => {
@@ -51,7 +52,7 @@ export default function Task({ title, description, start, end, type = 'github', 
                     <TaskModal
                         isOpen={open}
                         closeModal={closeModal}
-                        id={1}
+                        id={id}
                         title={title}
                         description={description}
                         date={day}

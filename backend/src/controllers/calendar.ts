@@ -78,7 +78,7 @@ export const GetUserTasksForDay = async (req: Request, res: Response) => {
     console.log(day)
     try {
         let daysTasks = await query(
-            'SELECT title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+            'SELECT tasks.id, title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
             [day, user]
         )
         res.status(200).send({ day, start: 9, end: 18, tasks: daysTasks.rows })
@@ -88,7 +88,25 @@ export const GetUserTasksForDay = async (req: Request, res: Response) => {
 }
 
 export const DeleteTaskByID = async (req: Request, res: Response) => {
-    res.status(200)
+    //Check that the user is the owner of this task
+    const { user_id } = res.locals
+    const { task_id } = req.body
+
+    console.log(req.body)
+
+    try {
+        let check = await query('SELECT calendar_id FROM tasks WHERE id=$1', [task_id])
+        console.log(check.rows)
+        if (check.rows[0].calendar_id !== user_id) {
+            res.status(400).send({ message: "You don't own this task" })
+        }
+
+        let deleteTask = await query('DELETE FROM tasks WHERE id=$1', [task_id])
+        res.status(200).send({ ok: true })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: 'Error occured deleting the task' })
+    }
 }
 
 export const LoadFuture = async (req: Request, res: Response) => {
@@ -106,7 +124,7 @@ export const LoadFuture = async (req: Request, res: Response) => {
     try {
         for (let getDay of futureDay) {
             let daysTasks = await query(
-                'SELECT title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+                'SELECT tasks.id, title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
                 [getDay, user_id]
             )
             response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
@@ -132,7 +150,7 @@ export const LoadPast = async (req: Request, res: Response) => {
     try {
         for (let getDay of futureDay) {
             let daysTasks = await query(
-                'SELECT title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+                'SELECT tasks.id, title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
                 [getDay, user_id]
             )
             response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
