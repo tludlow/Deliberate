@@ -109,7 +109,7 @@ export default function CreateTaskModal({ isOpen, closeModal }: CreateTaskModalP
                                         type="time"
                                         name="start_time"
                                         id="start_time"
-                                        min="9:00"
+                                        min="09:00"
                                         max="18:00"
                                         required
                                     />
@@ -123,7 +123,7 @@ export default function CreateTaskModal({ isOpen, closeModal }: CreateTaskModalP
                                         type="time"
                                         name="end_time"
                                         id="end_time"
-                                        min="9:00"
+                                        min="09:00"
                                         max="18:00"
                                         required
                                     />

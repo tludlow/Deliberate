@@ -7,6 +7,8 @@ import { createPortal } from 'react-dom'
 import EditTaskModal from './EditTaskModal'
 import { useEffect, useState } from 'react'
 dayjs.extend(relativeTime)
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+dayjs.extend(customParseFormat)
 
 type TaskModalProps = {
     isOpen: boolean
@@ -39,7 +41,7 @@ export default function TaskModal({ isOpen, closeModal, id, title, description, 
     }
 
     useEffect(() => {
-        console.log(id)
+        console.log(`${date.format('YYYY-MM-DD')} ${start}`)
     }, [])
 
     return (
@@ -87,7 +89,9 @@ export default function TaskModal({ isOpen, closeModal, id, title, description, 
                     <div className="flex items-center justify-between">
                         <p className="flex items-center flex-1 text-xs font-medium text-gray-500">
                             <span className="flex items-center mr-3">
-                                {start} <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> {end}{' '}
+                                {dayjs(start, 'HH:mm A').format('h:mm A')}{' '}
+                                <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" />{' '}
+                                {dayjs(end, 'HH:mm A').format('h:mm A')}{' '}
                             </span>
                             <button onClick={() => setEditOpen(true)}>
                                 <EditIcon className="w-4 h-4 text-gray-700 hover:text-gray-500" />
@@ -101,7 +105,9 @@ export default function TaskModal({ isOpen, closeModal, id, title, description, 
                             View on GitHub
                         </a>
                         <p className="flex justify-end flex-1 text-xs font-medium text-gray-500">
-                            {dayjs().to(dayjs().add(2, 'hour'))}
+                            {dayjs().to(
+                                dayjs(`${date.format('YYYY-MM-DD')} ${start.split(' ')[0]}`, 'YYYY-MM-DD HH:mm')
+                            )}
                         </p>
                     </div>
 

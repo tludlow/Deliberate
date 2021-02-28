@@ -90,7 +90,9 @@ export default function Task({ id, title, description, start, end, type = 'githu
                         {title}
                     </h5>
                     <p className="flex items-center text-xs font-medium text-gray-500">
-                        {start} <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" /> {end}
+                        {dayjs(start, 'HH:mm A').format('h:mm A')}{' '}
+                        <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" />{' '}
+                        {dayjs(end, 'HH:mm A').format('h:mm A')}
                     </p>
                 </div>
             </div>
