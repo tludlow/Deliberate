@@ -60,6 +60,7 @@ app.post(
 //Calendar
 app.get('/calendar/user', AuthTokenMiddleware, calendarController.UserCalendar)
 app.post('/calendar/task', AuthTokenMiddleware, calendarController.AddTaskToCalendar)
+app.post('/calendar/task/edit', AuthTokenMiddleware, calendarController.EditTask)
 app.get('/calendar/day/:day', AuthTokenMiddleware, calendarController.GetUserTasksForDay)
 app.post('/calendar/task/delete', AuthTokenMiddleware, calendarController.DeleteTaskByID)
 app.get('/calendar/:day/future', AuthTokenMiddleware, calendarController.LoadFuture)
@@ -69,7 +70,8 @@ app.get('/calendar/:day/past', AuthTokenMiddleware, calendarController.LoadPast)
 app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)
 
 //Webhooks
-app.post('/webhook/issue', webhookController.SetupRepoIssueData)
+app.post('/webhook/github/issue', webhookController.GithubIssueWebhook)
+app.post('/webhook/github/milestone', webhookController.GithubMilestoneWebhook)
 
 //Catch all 404
 app.get('/*', apiController.FourOFour)

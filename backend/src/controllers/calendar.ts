@@ -71,11 +71,66 @@ export const AddTaskToCalendar = async (req: Request, res: Response) => {
     }
 }
 
+export const EditTask = async (req: Request, res: Response) => {
+    const { id, title, description, day, start_time, end_time } = req.body
+    const { user_id } = res.locals
+
+    //Check that the task is not overlapping with another
+    //Get the tasks for the day
+    try {
+        let check = await query('SELECT calendar_id FROM tasks WHERE id=$1', [id])
+        if (check.rowCount > 0 && check.rows[0].calendar_id !== user_id) {
+            res.status(400).send({ message: "You don't own this task" })
+        }
+
+        let daysTasks = await query(
+            'SELECT title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 AND tasks.id != $3 ORDER BY start_time',
+            [day, user_id, id]
+        )
+
+        let appendedTasks: any = []
+        daysTasks.rows.forEach((task) => {
+            appendedTasks.push({
+                title: task.title,
+                description: task.description,
+                day: dayjs(task.day),
+                start_time: dayjs(`${day} ${task.start_time}`, 'YYYY-MM-DD HH:mm:ss'),
+                end_time: dayjs(`${day} ${task.end_time}`, 'YYYY-MM-DD HH:mm:ss'),
+            })
+        })
+
+        appendedTasks.push({
+            title: title,
+            description: description,
+            day: dayjs(day),
+            start_time: dayjs(`${day} ${start_time}`, 'YYYY-MM-DD HH:mm:ss'),
+            end_time: dayjs(`${day} ${end_time}`, 'YYYY-MM-DD HH:mm:ss'),
+        })
+
+        if (checkTaskOverlaps(appendedTasks)) {
+            res.status(400).send({ message: 'Task overlaps with another task within this calendar on this day' })
+            return
+        }
+        let deleteTask = await query(
+            'UPDATE tasks SET title=$1, description=$2, day=$3, start_time=$4, end_time=$5 WHERE id=$6',
+            [title, description, day, start_time, end_time, id]
+        )
+        res.status(200).send({
+            title,
+            description,
+            day,
+            start_time,
+            end_time,
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: 'Error occured deleting the task' })
+    }
+}
+
 export const GetUserTasksForDay = async (req: Request, res: Response) => {
     const day = req.params.day
     const user = res.locals.user_id
-
-    console.log(day)
     try {
         let daysTasks = await query(
             'SELECT tasks.id, title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
@@ -97,7 +152,7 @@ export const DeleteTaskByID = async (req: Request, res: Response) => {
     try {
         let check = await query('SELECT calendar_id FROM tasks WHERE id=$1', [task_id])
         console.log(check.rows)
-        if (check.rows[0].calendar_id !== user_id) {
+        if (check.rowCount > 0 && check.rows[0].calendar_id !== user_id) {
             res.status(400).send({ message: "You don't own this task" })
         }
 

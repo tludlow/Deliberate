@@ -18,6 +18,7 @@ interface TaskProp {
     description: string
     start_time: string
     end_time: string
+    type: string
 }
 
 const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
@@ -110,6 +111,7 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
                             type="food"
                             now={now}
                             id={task.id}
+                            type={task.type}
                         />
                     ))}
                 </div>

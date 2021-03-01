@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import Day from '../components/calendar/Day'
 import api from 'lib/api'
 import { Transition } from '@headlessui/react'
-import { CaretRightIcon, ArrowLeft, ArrowRight } from '@/components/icons'
+import { CaretRightIcon, ArrowLeft, ArrowRight, CalendarIcon } from '@/components/icons'
 import { createPortal } from 'react-dom'
 import CreateTaskModal from '../components/modal/CreateTaskModal'
 
@@ -164,6 +164,7 @@ export default function Calendar() {
     // Attach the handler
 
     const [showActionMenu, setShowActionMenu] = useState(false)
+    const [showMilestoneMenu, setShowMilestoneMenu] = useState(false)
     return (
         <Layout title="My Calendar">
             <section
@@ -187,7 +188,7 @@ export default function Calendar() {
                 <div
                     onMouseEnter={() => setShowActionMenu(true)}
                     onMouseLeave={() => setShowActionMenu(false)}
-                    className="fixed z-40 hidden p-4 rounded-full cursor-pointer md:block bg-brand left-6 bottom-6"
+                    className="fixed hidden p-4 rounded-full cursor-pointer z-60 md:block bg-brand left-6 bottom-6"
                 >
                     <div className="relative">
                         <svg
@@ -225,6 +226,14 @@ export default function Calendar() {
                                 <div className="p-3">
                                     <ul className="space-y-5">
                                         <li className="w-full">
+                                            <button onClick={() => scrollCalendarToToday()} className="w-full">
+                                                <div className="flex items-center p-2 hover:bg-gray-100">
+                                                    <CalendarIcon className="block w-5 h-5 mr-1 text-gray-600" />
+                                                    <p className="font-semibold">Scroll to Today</p>
+                                                </div>
+                                            </button>
+                                        </li>
+                                        <li className="w-full">
                                             <button onClick={() => setCreateTaskOpen(true)} className="w-full">
                                                 <div className="flex items-center p-2 hover:bg-gray-100">
                                                     <CaretRightIcon className="block w-5 h-5 text-gray-600" />
@@ -243,25 +252,53 @@ export default function Calendar() {
                     </div>
                 </div>
 
-                <button
-                    onClick={() => scrollCalendarToToday()}
-                    className="fixed z-40 hidden p-4 rounded-full cursor-pointer md:block bg-brand right-6 bottom-6 hover:shadow"
+                <div
+                    onMouseEnter={() => setShowMilestoneMenu(true)}
+                    onMouseLeave={() => setShowMilestoneMenu(false)}
+                    className="fixed hidden p-4 rounded-full cursor-pointer z-60 md:block bg-brand right-6 bottom-6"
                 >
-                    <svg
-                        className="w-6 h-6 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
+                    <div className="relative">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="text-white w-7 h-7"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2.5"
+                            stroke="currentColor"
+                            fill="none"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                    </svg>
-                </button>
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <circle cx="12" cy="12" r="9" />
+                            <line x1="8" y1="12" x2="8" y2="12.01" />
+                            <line x1="12" y1="12" x2="12" y2="12.01" />
+                            <line x1="16" y1="12" x2="16" y2="12.01" />
+                        </svg>
+                        <Transition
+                            show={showMilestoneMenu}
+                            enter="transition-opacity duration-75"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="transition-opacity duration-150"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            {/* Action menu */}
+                            <div className="fixed inset-y-0 right-0 z-30 p-3 bg-white border-r border-gray-300 cursor-default w-80 top-13">
+                                <div className="flex flex-col">
+                                    <h3 className="pb-2 text-xl font-bold text-center text-gray-800 border-b border-gray-300">
+                                        Milestones
+                                    </h3>
+                                </div>
+                                <div className="p-3"></div>
+                            </div>
+                            <div
+                                onMouseEnter={() => setShowMilestoneMenu(false)}
+                                className="fixed inset-0 bg-gray-700 bg-opacity-50 top-13"
+                            ></div>
+                        </Transition>
+                    </div>
+                </div>
 
                 <div className="flex w-full h-full px-12">
                     <div className="flex items-center w-48 h-full">

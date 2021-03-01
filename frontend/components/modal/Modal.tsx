@@ -13,7 +13,7 @@ const ModalHOC = ({ children, isOpen, closeModal, modalWidth }: ModalHOCProps) =
         <Transition show={isOpen}>
             <div
                 id="modal-wrapper"
-                className="fixed inset-x-0 bottom-0 z-40 px-4 pb-6 sm:inset-0 sm:p-0 sm:flex sm:items-center sm:justify-center"
+                className="fixed inset-x-0 bottom-0 px-4 pb-6 z-60 sm:inset-0 sm:p-0 sm:flex sm:items-center sm:justify-center"
             >
                 <Transition.Child
                     enter="ease-out duration-300"
@@ -24,7 +24,7 @@ const ModalHOC = ({ children, isOpen, closeModal, modalWidth }: ModalHOCProps) =
                     leaveTo="opacity-0"
                 >
                     <div onClick={() => closeModal()} className="fixed inset-0 transition-opacity">
-                        <div className="absolute inset-0 bg-gray-700 opacity-75"></div>
+                        <div className="absolute inset-0 bg-gray-800 opacity-80"></div>
                     </div>
                 </Transition.Child>
 

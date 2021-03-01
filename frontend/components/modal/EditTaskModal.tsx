@@ -63,23 +63,22 @@ export default function EditTaskModal({
                     }}
                     onSubmit={async (values, { setSubmitting }) => {
                         setSubmitting(true)
-                        alert(JSON.stringify(values))
-                        // api.post('/calendar/task', {
-                        //     title: values.title,
-                        //     description: values.description,
-                        //     day: values.day,
-                        //     start_time: `${values.start_time}:00`,
-                        //     end_time: `${values.end_time}:00`,
-                        // })
-                        //     .then((response) => {
-                        //         console.log(response)
-                        //         closeModal()
-                        //         location.reload()
-                        //     })
-                        //     .catch((error) => {
-                        //         console.log(error)
-                        //         setError(error.response.data.message)
-                        //     })
+                        api.post('/calendar/task/edit', {
+                            id,
+                            title: values.title,
+                            description: values.description,
+                            day: values.day,
+                            start_time: `${values.start_time}:00`,
+                            end_time: `${values.end_time}:00`,
+                        })
+                            .then((response) => {
+                                closeModal()
+                                location.reload()
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                                setError(error.response.data.message)
+                            })
                         setSubmitting(false)
                     }}
                 >

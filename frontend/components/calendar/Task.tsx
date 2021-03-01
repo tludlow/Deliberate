@@ -2,9 +2,9 @@ import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
 
-import { useEffect, useState } from 'react'
+import {  useState } from 'react'
 import { createPortal } from 'react-dom'
-import { FoodIcon, GithubIcon, RightArrowIcon } from '../icons'
+import { UserIcon, GithubIcon, RightArrowIcon } from '../icons'
 import TaskModal from '../modal/TaskModal'
 
 type TaskProps = {
@@ -16,6 +16,7 @@ type TaskProps = {
     type: string
     day: dayjs.Dayjs
     now: dayjs.Dayjs
+    type: string
 }
 
 export default function Task({ id, title, description, start, end, type = 'github', day, now }: TaskProps) {
@@ -58,6 +59,7 @@ export default function Task({ id, title, description, start, end, type = 'githu
                         date={day}
                         start={start}
                         end={end}
+                        type={type}
                     />,
                     document.body
                 )}
@@ -78,7 +80,7 @@ export default function Task({ id, title, description, start, end, type = 'githu
                                 <GithubIcon className="w-5 h-5 text-white" />
                             </a>
                         )}
-                        {type === 'food' && <FoodIcon className="w-5 h-5 text-white" />}
+                        {type === 'personal' && <UserIcon className="w-5 h-5 text-white" />}
                     </div>
                 </div>
                 <div

@@ -30,7 +30,7 @@ export default function Notifications() {
                         >
                             <Menu.Items
                                 static
-                                className="absolute right-0 z-10 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none w-96"
+                                className="absolute right-0 z-50 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none w-96"
                             >
                                 <div className="flex justify-between px-4 py-3">
                                     <h3 className="text-xl font-bold text-gray-800">Notifications</h3>
