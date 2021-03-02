@@ -133,7 +133,7 @@ export const GetUserTasksForDay = async (req: Request, res: Response) => {
     const user = res.locals.user_id
     try {
         let daysTasks = await query(
-            'SELECT tasks.id, title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+            'SELECT tasks.id, title, description, start_time, end_time, type FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
             [day, user]
         )
         res.status(200).send({ day, start: 9, end: 18, tasks: daysTasks.rows })

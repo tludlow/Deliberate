@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
+import { query } from '../db'
 
 export const GithubSSO = async (req: Request, res: Response) => {
     //Received the code from github for the user
@@ -42,7 +43,25 @@ export const GithubSSO = async (req: Request, res: Response) => {
     try {
         console.log('AUTH TOKEN IS: ' + authToken)
         let user = await axios.get('https://api.github.com/user', { headers: { Authorization: `Bearer ${authToken}` } })
-        console.log(user.data)
+
+        let checkIfUserAccountInSystem = await query('SELECT id FROM users WHERE github_id=$1', [user.data.id])
+        if (checkIfUserAccountInSystem.rowCount == 0) {
+            //Create this account
+            let newUser = await query(
+                'INSERT INTO users (first_name, last_name, email, password, github_token, github_id VALUES($1, $2, $3, $4, $5, $6)',
+                [
+                    user.data.name.split(' ')[0],
+                    user.data.name.split(' ')[1],
+                    user.data.email,
+                    'github-sso',
+                    authToken,
+                    user.data.id,
+                ]
+            )
+        } else {
+            //log in and update the token we have in the system
+            let newUser = await query('UPDATE users SET github_token=$1 WHERE github_id=$2', [authToken, user.data.id])
+        }
 
         //Generate tokens for this user and log them in!
 
@@ -51,7 +70,7 @@ export const GithubSSO = async (req: Request, res: Response) => {
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 3,
                 issuer: 'deliberate',
                 subject: 'refreshtoken',
-                data: { name: user.data.name || user.data.login, githubToken: authToken },
+                data: { name: user.data.name || user.data.login, githubToken: authToken, githubID: user.data.id },
             },
             'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
         )
@@ -62,7 +81,7 @@ export const GithubSSO = async (req: Request, res: Response) => {
                 exp: Math.floor(Date.now() / 1000) + 60 * 60,
                 issuer: 'deliberate',
                 subject: 'accesstoken',
-                data: { name: user.data.name || user.data.login, githubToken: authToken },
+                data: { name: user.data.name || user.data.login, githubToken: authToken, githubID: user.data.id },
             },
             'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
         )
@@ -90,3 +109,18 @@ export const GithubSSO = async (req: Request, res: Response) => {
 }
 
 export const GetGithubRepos = async (req: Request, res: Response) => {}
+
+export const AccountConnectedToGithub = async (req: Request, res: Response) => {
+    const { user_id } = res.locals
+    try {
+        let isConnected = await query('SELECT github_id FROM users WHERE id=$1', [user_id])
+        if (isConnected.rows[0].github_id != null) {
+            res.status(200).send({ connected: true })
+        } else {
+            res.status(200).send({ connected: false })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: 'An error occured checking if your account is connected to github' })
+    }
+}

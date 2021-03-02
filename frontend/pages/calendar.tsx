@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import Day from '../components/calendar/Day'
 import api from 'lib/api'
 import { Transition } from '@headlessui/react'
-import { CaretRightIcon, ArrowLeft, ArrowRight, CalendarIcon } from '@/components/icons'
+import { CaretRightIcon, ArrowLeft, ArrowRight, CalendarIcon, MarkerIcon } from '@/components/icons'
 import { createPortal } from 'react-dom'
 import CreateTaskModal from '../components/modal/CreateTaskModal'
 
@@ -164,7 +164,7 @@ export default function Calendar() {
     // Attach the handler
 
     const [showActionMenu, setShowActionMenu] = useState(false)
-    const [showMilestoneMenu, setShowMilestoneMenu] = useState(false)
+    const [showMilestoneMenu, setShowMilestoneMenu] = useState(true)
     return (
         <Layout title="My Calendar">
             <section
@@ -252,28 +252,14 @@ export default function Calendar() {
                     </div>
                 </div>
 
+                {/* Calendar menu */}
                 <div
                     onMouseEnter={() => setShowMilestoneMenu(true)}
                     onMouseLeave={() => setShowMilestoneMenu(false)}
                     className="fixed hidden p-4 rounded-full cursor-pointer z-60 md:block bg-brand right-6 bottom-6"
                 >
                     <div className="relative">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="text-white w-7 h-7"
-                            viewBox="0 0 24 24"
-                            strokeWidth="2.5"
-                            stroke="currentColor"
-                            fill="none"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <circle cx="12" cy="12" r="9" />
-                            <line x1="8" y1="12" x2="8" y2="12.01" />
-                            <line x1="12" y1="12" x2="12" y2="12.01" />
-                            <line x1="16" y1="12" x2="16" y2="12.01" />
-                        </svg>
+                        <MarkerIcon className="text-white h-7 w-7" />
                         <Transition
                             show={showMilestoneMenu}
                             enter="transition-opacity duration-75"
@@ -290,7 +276,26 @@ export default function Calendar() {
                                         Milestones
                                     </h3>
                                 </div>
-                                <div className="p-3"></div>
+                                <div className="p-3">
+                                    <ul>
+                                        <div className="flex justify-between p-1 border border-gray-600 rounded">
+                                            <div>
+                                                <h4 className="text-lg font-semibold">Milestone title</h4>
+                                                <p className="mt-0.5 flex items-center text-sm">
+                                                    <CalendarIcon className="w-4 h-4 mr-2 text-gray-700" />
+                                                    <span>
+                                                        2021-05-23 <span className="text-gray-400">- in 34 days</span>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            <div className="flex items-center justify-center flex-grow h-full mt-2">
+                                                <div className="flex items-center justify-center bg-red-500 rounded-full w-9 h-9">
+                                                    <span className="text-white tabular-nums">3</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ul>
+                                </div>
                             </div>
                             <div
                                 onMouseEnter={() => setShowMilestoneMenu(false)}

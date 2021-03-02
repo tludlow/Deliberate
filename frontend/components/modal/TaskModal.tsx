@@ -1,5 +1,5 @@
 import ModalHOC from './Modal'
-import { EditIcon, RightArrowIcon, TrashIcon } from '../icons/index'
+import { EditIcon, GithubIcon, RightArrowIcon, TrashIcon, UserIcon } from '../icons/index'
 import api from 'lib/api'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -19,9 +19,20 @@ type TaskModalProps = {
     date: dayjs.Dayjs
     start: string
     end: string
+    type: string
 }
 
-export default function TaskModal({ isOpen, closeModal, id, title, description, date, start, end }: TaskModalProps) {
+export default function TaskModal({
+    isOpen,
+    closeModal,
+    id,
+    title,
+    description,
+    date,
+    start,
+    end,
+    type,
+}: TaskModalProps) {
     const [editOpen, setEditOpen] = useState(false)
 
     const closeEditTaskModal = () => {
@@ -63,20 +74,8 @@ export default function TaskModal({ isOpen, closeModal, id, title, description, 
             <ModalHOC isOpen={isOpen} closeModal={closeModal} modalWidth="w-full lg:w-1/2 xl:w-5/12">
                 <div className="absolute inset-x-0 flex justify-center -mt-12">
                     <div className="flex items-center justify-center w-12 h-12 bg-green-500 border-2 border-white rounded-full">
-                        <svg
-                            className="text-white w-9 h-9"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-                            />
-                        </svg>
+                        {type === 'github' && <GithubIcon className="text-white w-9 h-9" />}
+                        {type === 'personal' && <UserIcon className="text-white w-9 h-9" />}
                     </div>
                 </div>
                 <div className="mt-5">

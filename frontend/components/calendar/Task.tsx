@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
 
-import {  useState } from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { UserIcon, GithubIcon, RightArrowIcon } from '../icons'
 import TaskModal from '../modal/TaskModal'
@@ -13,13 +13,12 @@ type TaskProps = {
     description: string
     start: string
     end: string
-    type: string
     day: dayjs.Dayjs
     now: dayjs.Dayjs
     type: string
 }
 
-export default function Task({ id, title, description, start, end, type = 'github', day, now }: TaskProps) {
+export default function Task({ id, title, description, start, end, type, day, now }: TaskProps) {
     const [open, setOpen] = useState(false)
 
     const closeModal = () => {

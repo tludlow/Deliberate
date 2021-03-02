@@ -43,6 +43,7 @@ app.post('/user/register', authController.Signup)
 
 //SSO
 app.get('/auth/github', ssoController.GithubSSO)
+app.get('/auth/github/connected', AuthTokenMiddleware, ssoController.AccountConnectedToGithub)
 
 //Teams
 app.post('/team/create', AuthTokenMiddleware, teamController.Create)

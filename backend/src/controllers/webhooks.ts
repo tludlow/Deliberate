@@ -20,6 +20,8 @@ export const GithubIssueWebhook = async (req: Request, res: Response) => {
 export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
     const payload = JSON.parse(req.body.payload)
 
+    console.log(payload)
+
     if (payload.action === 'opened') {
         try {
             let openedMilestone = await query('UPDATE milestones SET state=$1 WHERE id=$2', [
