@@ -29,7 +29,7 @@ export const AuthTokenMiddleware = async (req: Request, res: Response, next: Nex
             }
 
             // console.log('Decoded token: ')
-            // console.log(decodedToken)
+            console.log(decodedToken)
             // console.log(authToken)
             //User is authenticated, add their token to the request locals so it can possibly be used later
             res.locals.user_id = decodedToken?.data.id

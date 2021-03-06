@@ -44,12 +44,12 @@ const ModalHOC = ({ children, isOpen, closeModal, modalWidth }: ModalHOCProps) =
                         aria-labelledby="modal-headline"
                     >
                         {/* X button to close modal */}
-                        <div
+                        <button
                             onClick={() => closeModal()}
                             className="absolute p-2 rounded-full cursor-pointer hover:bg-gray-200 right-2 top-2"
                         >
                             <CloseIcon className="w-5 h-5" />
-                        </div>
+                        </button>
                         {children}
                     </div>
                 </Transition.Child>

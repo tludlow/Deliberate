@@ -71,6 +71,7 @@ app.get('/calendar/:day/past', AuthTokenMiddleware, calendarController.LoadPast)
 app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)
 
 //Webhooks
+app.post('/webhook/register/:owner/:repo', AuthTokenMiddleware, webhookController.RegisterRepoWebhooks)
 app.post('/webhook/github/issue', webhookController.GithubIssueWebhook)
 app.post('/webhook/github/milestone', webhookController.GithubMilestoneWebhook)
 

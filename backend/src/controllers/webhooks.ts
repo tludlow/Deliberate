@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { SetupRepoHooks } from '../lib/webhooks'
 import { query } from '../db'
 
 export const GithubIssueWebhook = async (req: Request, res: Response) => {
@@ -98,4 +99,16 @@ export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
     }
 
     console.log('-----[milestone webhook]------')
+}
+
+export const RegisterRepoWebhooks = async (req: Request, res: Response) => {
+    const { owner, repo } = req.params
+    const { github_token } = res.locals
+
+    if (!github_token) {
+        res.status(500).send({ message: 'No github token provided' })
+        return
+    }
+    SetupRepoHooks(github_token, owner, repo)
+    res.status(200).send({ params: req.params })
 }

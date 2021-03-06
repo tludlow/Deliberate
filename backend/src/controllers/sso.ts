@@ -67,7 +67,7 @@ export const GithubSSO = async (req: Request, res: Response) => {
 
         const refreshToken = jwt.sign(
             {
-                exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 3,
+                exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 72,
                 issuer: 'deliberate',
                 subject: 'refreshtoken',
                 data: { name: user.data.name || user.data.login, githubToken: authToken, githubID: user.data.id },
@@ -78,7 +78,7 @@ export const GithubSSO = async (req: Request, res: Response) => {
         //Access token, short lived (1 hour) and used to authenticate against the api
         const accessToken = jwt.sign(
             {
-                exp: Math.floor(Date.now() / 1000) + 60 * 60,
+                exp: Math.floor(Date.now() / 1000) + 60 * 60 * 72,
                 issuer: 'deliberate',
                 subject: 'accesstoken',
                 data: { name: user.data.name || user.data.login, githubToken: authToken, githubID: user.data.id },
@@ -88,11 +88,11 @@ export const GithubSSO = async (req: Request, res: Response) => {
 
         //Set the cookies for the user
         res.cookie('refresh_token', refreshToken, {
-            expires: new Date(Date.now() / 1000 + 60 * 60 * 24 * 30 * 3),
+            expires: new Date(Date.now() / 1000 + 60 * 60 * 24 * 30 * 72),
             httpOnly: true,
         })
         res.cookie('access_token', accessToken, {
-            expires: new Date(Date.now() / 100 + 60 * 60),
+            expires: new Date(Date.now() / 100 + 60 * 60 * 72),
             httpOnly: true,
         })
 

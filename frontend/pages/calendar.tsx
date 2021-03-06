@@ -164,7 +164,7 @@ export default function Calendar() {
     // Attach the handler
 
     const [showActionMenu, setShowActionMenu] = useState(false)
-    const [showMilestoneMenu, setShowMilestoneMenu] = useState(true)
+    const [showMilestoneMenu, setShowMilestoneMenu] = useState(false)
     return (
         <Layout title="My Calendar">
             <section
