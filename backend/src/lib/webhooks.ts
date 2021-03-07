@@ -1,5 +1,7 @@
 import { request } from '@octokit/request'
 export async function SetupRepoHooks(token: string, owner: string, repo: string) {
+    let repo_id = -1
+
     const requestWithAuth = request.defaults({
         headers: {
             authorization: `token ${token}`,
@@ -15,6 +17,8 @@ export async function SetupRepoHooks(token: string, owner: string, repo: string)
         }
     } catch (error) {
         console.log('error getting already registered webhooks')
+        console.log(error)
+        return repo_id
     }
 
     if (!webhooksAdded.includes('issues')) {
@@ -27,9 +31,10 @@ export async function SetupRepoHooks(token: string, owner: string, repo: string)
                     events: ['issues'],
                 },
             })
-            console.log(data)
         } catch (error) {
             console.log('error setting up issues webhook')
+            console.log(error)
+            return repo_id
         }
     }
 
@@ -44,8 +49,12 @@ export async function SetupRepoHooks(token: string, owner: string, repo: string)
                 },
             })
             console.log(data)
+            repo_id = data.id
         } catch (error) {
             console.log('error setting up issues webhook')
+            console.log(error)
+            return repo_id
         }
     }
+    return repo_id
 }

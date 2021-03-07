@@ -6,11 +6,84 @@ export const GithubIssueWebhook = async (req: Request, res: Response) => {
     //Get the current data as a request and then register a webhook for this
     const payload = JSON.parse(req.body.payload)
     const event_type = req.headers['x-github-event']
-    console.log(event_type)
 
-    if (event_type == 'issues') {
-        switch (payload.action) {
-            case 'created':
+    if (payload.action === 'opened') {
+        try {
+            let assignedUsers: number[] = []
+            payload.issue.assignees.forEach((user: any) => {
+                assignedUsers.push(user.id)
+            })
+            let labels: string[] = []
+            payload.issue.labels.forEach((label: any) => {
+                labels.push(label.name)
+            })
+            let insertIssue = await query(
+                'INSERT INTO issues (id, repo_id, title, description, assigned_users, milestone_id, labels) VALUES($1, $2, $3, $4, $5, $6, $7)',
+                [
+                    payload.issue.id,
+                    payload.repository.id,
+                    payload.issue.title,
+                    payload.issue.body,
+                    `{${assignedUsers.join(',')}}`,
+                    payload.issue.milestone?.id,
+                    `{${labels.join(',')}}`,
+                ]
+            )
+            console.log(insertIssue)
+            res.status(200).send({ data: req.body })
+            return
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ message: error })
+        }
+    }
+    if (payload.action === 'deleted') {
+        try {
+            let deleteIssue = await query('DELETE FROM issues WHERE id=$1', [payload.issue.id])
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ message: error })
+        }
+    }
+    if (payload.action === 'assigned' || payload.action === 'unassigned') {
+        let assignedUsers: number[] = []
+        payload.issue.assignees.forEach((user: any) => {
+            assignedUsers.push(user.id)
+        })
+        try {
+            let changeAssignedUsers = await query('UPDATE issues SET assigned_users=$1 WHERE id=$2', [
+                `{${assignedUsers.join(',')}}`,
+                payload.issue.id,
+            ])
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ message: error })
+        }
+    }
+    if (payload.action === 'labeled' || payload.action === 'unlabeled') {
+        let labels: string[] = []
+        payload.issue.labels.forEach((label: any) => {
+            labels.push(label.name)
+        })
+        try {
+            let changeLabels = await query('UPDATE issues SET labels=$1 WHERE id=$2', [
+                `{${labels.join(',')}}`,
+                payload.issue.id,
+            ])
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ message: error })
+        }
+    }
+    if (payload.action === 'milestoned' || payload.action === 'demilestoned') {
+        try {
+            let changeIssueMilestone = await query('UPDATE issues SET milestone_id=$1 WHERE id=$2', [
+                payload.issue.milestone?.id,
+                payload.issue.id,
+            ])
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ message: error })
         }
     }
     // console.log(payload)
@@ -29,7 +102,7 @@ export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
                 'open',
                 payload.milestone.id,
             ])
-            res.status(200)
+            res.status(200).send({ data: req.body })
             return
         } catch (error) {
             console.log(error)
@@ -48,7 +121,7 @@ export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
                     payload.milestone.state,
                 ]
             )
-            res.status(200)
+            res.status(200).send({ data: req.body })
             return
         } catch (error) {
             console.log(error)
@@ -67,7 +140,7 @@ export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
                     payload.milestone.id,
                 ]
             )
-            res.status(200)
+            res.status(200).send({ data: req.body })
             return
         } catch (error) {
             console.log(error)
@@ -80,7 +153,7 @@ export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
                 'closed',
                 payload.milestone.id,
             ])
-            res.status(200)
+            res.status(200).send({ data: req.body })
             return
         } catch (error) {
             console.log(error)
@@ -90,7 +163,7 @@ export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
     if (payload.action === 'deleted') {
         try {
             let deleteMilestone = await query('DELETE FROM milestones WHERE id=$1', [payload.milestone.id])
-            res.status(200)
+            res.status(200).send({ data: req.body })
             return
         } catch (error) {
             console.log(error)
@@ -99,16 +172,37 @@ export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
     }
 
     console.log('-----[milestone webhook]------')
+    res.status(200).send({ data: req.body })
 }
 
 export const RegisterRepoWebhooks = async (req: Request, res: Response) => {
     const { owner, repo } = req.params
-    const { github_token } = res.locals
+    const { github_token, user_id } = res.locals
 
     if (!github_token) {
         res.status(500).send({ message: 'No github token provided' })
         return
     }
-    SetupRepoHooks(github_token, owner, repo)
-    res.status(200).send({ params: req.params })
+    let repoID = await SetupRepoHooks(github_token, owner, repo)
+    if (repoID != -1) {
+        let isTrackedAlready = await query('SELECT count(*) as exists FROM tracked_repos WHERE repo_id=$1', [repoID])
+        if (isTrackedAlready.rows[0].exists === '0') {
+            let addToTrackedRepos = await query('INSERT INTO tracked_repos (repo_id) VALUES ($1)', [repoID])
+        }
+        let isUserAdded = await query('SELECT count(*) as added FROM user_repos WHERE user_id=$1 AND repo_id=$2', [
+            user_id,
+            repoID,
+        ])
+        if (isUserAdded.rows[0].added === '0') {
+            let addToTrackedRepos = await query('INSERT INTO user_repos (user_id, repo_id) VALUES ($1, $2)', [
+                user_id,
+                repoID,
+            ])
+        }
+    } else {
+        res.status(500).send({ message: 'Error setting up repo webhooks' })
+        return
+    }
+
+    res.status(200).send({ params: req.params, repo_id: repoID })
 }
