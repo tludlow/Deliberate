@@ -111,8 +111,6 @@ export const GithubSSO = async (req: Request, res: Response) => {
 
 export const GetGithubRepos = async (req: Request, res: Response) => {
     const token = res.locals?.github_token
-    console.log(token)
-
     const requestWithAuth = request.defaults({
         headers: {
             authorization: `token ${token}`,
@@ -128,7 +126,16 @@ export const AccountConnectedToGithub = async (req: Request, res: Response) => {
     try {
         let isConnected = await query('SELECT github_id FROM users WHERE id=$1', [user_id])
         if (isConnected.rows[0].github_id != null) {
-            res.status(200).send({ connected: true })
+            const token = res.locals?.github_token
+            const requestWithAuth = request.defaults({
+                headers: {
+                    authorization: `token ${token}`,
+                },
+            })
+
+            const { data } = await requestWithAuth(`GET /user/repos`)
+
+            res.status(200).send({ connected: true, repos: data })
         } else {
             res.status(200).send({ connected: false })
         }
