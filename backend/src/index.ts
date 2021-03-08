@@ -40,38 +40,39 @@ app.get('/ping', apiController.Ping)
 //Auth
 app.post('/user/login', authController.Login)
 app.post('/user/register', authController.Signup)
+app.get('/user/repos', AuthTokenMiddleware('github'), ssoController.GetGithubRepos)
 
 //SSO
 app.get('/auth/github', ssoController.GithubSSO)
-app.get('/auth/github/connected', AuthTokenMiddleware, ssoController.AccountConnectedToGithub)
+app.get('/auth/github/connected', AuthTokenMiddleware(''), ssoController.AccountConnectedToGithub)
 
 //Teams
 app.post('/team/create', AuthTokenMiddleware, teamController.Create)
 app.get(
     '/team/:teamName',
-    [AuthTokenMiddleware, IsTeamMember, HasPermission('REGULAR')],
+    [AuthTokenMiddleware(''), IsTeamMember, HasPermission('REGULAR')],
     teamController.TeamInformation
 )
 app.post(
     '/team/:teamName/permission',
-    [AuthTokenMiddleware, IsTeamMember, HasPermission('ADMIN')],
+    [AuthTokenMiddleware(''), IsTeamMember, HasPermission('ADMIN')],
     teamController.ChangeTeamMemberPermission
 )
 
 //Calendar
-app.get('/calendar/user', AuthTokenMiddleware, calendarController.UserCalendar)
-app.post('/calendar/task', AuthTokenMiddleware, calendarController.AddTaskToCalendar)
-app.post('/calendar/task/edit', AuthTokenMiddleware, calendarController.EditTask)
-app.get('/calendar/day/:day', AuthTokenMiddleware, calendarController.GetUserTasksForDay)
-app.post('/calendar/task/delete', AuthTokenMiddleware, calendarController.DeleteTaskByID)
-app.get('/calendar/:day/future', AuthTokenMiddleware, calendarController.LoadFuture)
-app.get('/calendar/:day/past', AuthTokenMiddleware, calendarController.LoadPast)
+app.get('/calendar/user', AuthTokenMiddleware(''), calendarController.UserCalendar)
+app.post('/calendar/task', AuthTokenMiddleware(''), calendarController.AddTaskToCalendar)
+app.post('/calendar/task/edit', AuthTokenMiddleware(''), calendarController.EditTask)
+app.get('/calendar/day/:day', AuthTokenMiddleware(''), calendarController.GetUserTasksForDay)
+app.post('/calendar/task/delete', AuthTokenMiddleware(''), calendarController.DeleteTaskByID)
+app.get('/calendar/:day/future', AuthTokenMiddleware(''), calendarController.LoadFuture)
+app.get('/calendar/:day/past', AuthTokenMiddleware(''), calendarController.LoadPast)
 
 //User
-app.get('/user/dashboard', AuthTokenMiddleware, userController.Dashboard)
+app.get('/user/dashboard', AuthTokenMiddleware(''), userController.Dashboard)
 
 //Webhooks
-app.post('/webhook/register/:owner/:repo', AuthTokenMiddleware, webhookController.RegisterRepoWebhooks)
+app.post('/webhook/register/:owner/:repo', AuthTokenMiddleware(''), webhookController.RegisterRepoWebhooks)
 app.post('/webhook/github/issue', webhookController.GithubIssueWebhook)
 app.post('/webhook/github/milestone', webhookController.GithubMilestoneWebhook)
 

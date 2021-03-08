@@ -112,13 +112,14 @@ export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
     if (payload.action === 'created') {
         try {
             let createMilestone = await query(
-                'INSERT INTO milestones (id, title, description, due_date, state) VALUES ($1, $2, $3, $4, $5)',
+                'INSERT INTO milestones (id, title, description, due_date, state, repo_id) VALUES ($1, $2, $3, $4, $5, $6)',
                 [
                     payload.milestone.id,
                     payload.milestone.title,
                     payload.milestone.description,
                     payload.milestone.due_on,
                     payload.milestone.state,
+                    payload.repository.id,
                 ]
             )
             res.status(200).send({ data: req.body })

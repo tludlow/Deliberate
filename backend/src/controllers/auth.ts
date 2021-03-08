@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { query } from '../db'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { access } from 'fs/promises'
 
 /**
  * Authentication route to log in a user
@@ -39,7 +38,12 @@ export const Login = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 3,
             issuer: 'deliberate',
             subject: 'refreshtoken',
-            data: { email: email, id: checkResult.rows[0].id },
+            data: {
+                email: email,
+                id: checkResult.rows[0].id,
+                github_token: checkResult.rows[0].github_token,
+                github_id: checkResult.rows[0].github_id,
+            },
         },
         'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
     )
@@ -50,7 +54,12 @@ export const Login = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 72,
             issuer: 'deliberate',
             subject: 'accesstoken',
-            data: { email: email, id: checkResult.rows[0].id },
+            data: {
+                email: email,
+                id: checkResult.rows[0].id,
+                github_token: checkResult.rows[0].github_token,
+                github_id: checkResult.rows[0].github_id,
+            },
         },
         'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
     )
@@ -132,7 +141,7 @@ export const Signup = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 3,
             issuer: 'deliberate',
             subject: 'refreshtoken',
-            data: { email: email, id: newUserId },
+            data: { email: email, id: newUserId, github_token: '', github_id: -1 },
         },
         'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
     )
@@ -143,7 +152,7 @@ export const Signup = async (req: Request, res: Response) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 12,
             issuer: 'deliberate',
             subject: 'accesstoken',
-            data: { email, id: newUserId },
+            data: { email, id: newUserId, github_token: '', github_id: -1 },
         },
         'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
     )

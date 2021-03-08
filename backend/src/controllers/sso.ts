@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import { query } from '../db'
+import { request } from '@octokit/request'
 
 export const GithubSSO = async (req: Request, res: Response) => {
     //Received the code from github for the user
@@ -70,7 +71,7 @@ export const GithubSSO = async (req: Request, res: Response) => {
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 72,
                 issuer: 'deliberate',
                 subject: 'refreshtoken',
-                data: { name: user.data.name || user.data.login, githubToken: authToken, githubID: user.data.id },
+                data: { name: user.data.name || user.data.login, github_token: authToken, github_id: user.data.id },
             },
             'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
         )
@@ -81,7 +82,7 @@ export const GithubSSO = async (req: Request, res: Response) => {
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 72,
                 issuer: 'deliberate',
                 subject: 'accesstoken',
-                data: { name: user.data.name || user.data.login, githubToken: authToken, githubID: user.data.id },
+                data: { name: user.data.name || user.data.login, github_token: authToken, github_id: user.data.id },
             },
             'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
         )
@@ -108,7 +109,19 @@ export const GithubSSO = async (req: Request, res: Response) => {
     }
 }
 
-export const GetGithubRepos = async (req: Request, res: Response) => {}
+export const GetGithubRepos = async (req: Request, res: Response) => {
+    const token = res.locals?.github_token
+    console.log(token)
+
+    const requestWithAuth = request.defaults({
+        headers: {
+            authorization: `token ${token}`,
+        },
+    })
+
+    const { data } = await requestWithAuth(`GET /user/repos`)
+    res.status(200).send({ data })
+}
 
 export const AccountConnectedToGithub = async (req: Request, res: Response) => {
     const { user_id } = res.locals
