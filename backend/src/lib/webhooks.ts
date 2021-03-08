@@ -48,7 +48,6 @@ export async function SetupRepoHooks(token: string, owner: string, repo: string)
                     events: ['milestone'],
                 },
             })
-            console.log(data)
             repo_id = data.id
         } catch (error) {
             console.log('error setting up issues webhook')
@@ -56,5 +55,10 @@ export async function SetupRepoHooks(token: string, owner: string, repo: string)
             return repo_id
         }
     }
+
+    const { data } = await requestWithAuth(`GET /repos/${owner}/${repo}`)
+    repo_id = data.id
+    console.log(data)
+
     return repo_id
 }

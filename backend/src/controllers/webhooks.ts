@@ -87,14 +87,12 @@ export const GithubIssueWebhook = async (req: Request, res: Response) => {
         }
     }
     // console.log(payload)
-    console.log('-----[issues webhook]------')
+    // console.log('-----[issues webhook]------')
     res.status(200).send({ data: req.body })
 }
 
 export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
     const payload = JSON.parse(req.body.payload)
-
-    console.log(payload)
 
     if (payload.action === 'opened') {
         try {
@@ -172,13 +170,13 @@ export const GithubMilestoneWebhook = async (req: Request, res: Response) => {
         }
     }
 
-    console.log('-----[milestone webhook]------')
+    // console.log('-----[milestone webhook]------')
     res.status(200).send({ data: req.body })
 }
 
 export const RegisterRepoWebhooks = async (req: Request, res: Response) => {
     const { owner, repo } = req.params
-    const { github_token, user_id } = res.locals
+    const { github_token, user_id, github_id } = res.locals
 
     if (!github_token) {
         res.status(500).send({ message: 'No github token provided' })
@@ -188,7 +186,10 @@ export const RegisterRepoWebhooks = async (req: Request, res: Response) => {
     if (repoID != -1) {
         let isTrackedAlready = await query('SELECT count(*) as exists FROM tracked_repos WHERE repo_id=$1', [repoID])
         if (isTrackedAlready.rows[0].exists === '0') {
-            let addToTrackedRepos = await query('INSERT INTO tracked_repos (repo_id) VALUES ($1)', [repoID])
+            let addToTrackedRepos = await query(
+                'INSERT INTO tracked_repos (repo_id, name, owner, owner_id) VALUES ($1, $2, $3, $4)',
+                [repoID, repo, owner, github_id]
+            )
         }
         let isUserAdded = await query('SELECT count(*) as added FROM user_repos WHERE user_id=$1 AND repo_id=$2', [
             user_id,
@@ -201,7 +202,7 @@ export const RegisterRepoWebhooks = async (req: Request, res: Response) => {
             ])
         }
     } else {
-        res.status(500).send({ message: 'Error setting up repo webhooks' })
+        res.status(500).send({ message: 'Error setting up repo webhooks, delete all the webhooks and try again!' })
         return
     }
 

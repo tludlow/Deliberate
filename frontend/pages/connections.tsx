@@ -1,11 +1,10 @@
 import Layout from '@/components/Layout'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import api from 'lib/api'
 import withAuthentication from '@/components/HOC/withAuthentication'
 import useSWR from 'swr'
 import { GithubIcon } from '@/components/icons'
 import LoadingSpinner from '@/components/LoadingSpinner'
-import { SSL_OP_ALL } from 'constants'
 
 const fetcher = (url: string) => api.get(url).then((res) => res.data)
 function Connections() {
@@ -94,7 +93,19 @@ function RepoConnection(props: {
 
     const handleConnectionClick = () => {
         console.log(`click: ${props.full_name}`)
-        setLocalConnected(!localConnected)
+        if (!localConnected) {
+            let data = props.full_name.split('/')
+            api.post(`/webhook/register/${data[0]}/${data[1]}`)
+                .then((response) => {
+                    console.log(response)
+                    setLocalConnected(!localConnected)
+                })
+                .catch((error) => {
+                    console.log(error)
+                    setLocalConnected(false)
+                    alert('Error connecting to repository')
+                })
+        }
     }
 
     return (
