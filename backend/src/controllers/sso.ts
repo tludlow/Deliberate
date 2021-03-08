@@ -117,7 +117,7 @@ export const GetGithubRepos = async (req: Request, res: Response) => {
         },
     })
 
-    const { data } = await requestWithAuth(`GET /user/repos`)
+    const { data } = await requestWithAuth(`GET /user/repos?sort=created&affiliation=owner`)
     res.status(200).send({ data })
 }
 
@@ -133,9 +133,32 @@ export const AccountConnectedToGithub = async (req: Request, res: Response) => {
                 },
             })
 
-            const { data } = await requestWithAuth(`GET /user/repos`)
+            let { data } = await requestWithAuth(`GET /user/repos?sort=created&affiliation=owner`)
 
-            res.status(200).send({ connected: true, repos: data })
+            let repoIds: number[] = []
+
+            data.forEach((repo: any) => {
+                repoIds.push(repo.id)
+            })
+
+            try {
+                let localConnectionsForUser = await query(
+                    'SELECT repo_id FROM user_repos WHERE user_id=$1 AND repo_id = ANY($2::int[])',
+                    [user_id, repoIds]
+                )
+                localConnectionsForUser.rows.forEach((local) => {
+                    data.forEach((repo: any, idx: number) => {
+                        if (local.repo_id === repo.id) {
+                            data[idx]['local_connected'] = true
+                        }
+                    })
+                })
+                res.status(200).send({ connected: true, local_connection: localConnectionsForUser.rows, repos: data })
+            } catch (error) {
+                console.log(error)
+                res.status(500).send({ message: 'Error getting repo connection data locally' })
+                return
+            }
         } else {
             res.status(200).send({ connected: false })
         }

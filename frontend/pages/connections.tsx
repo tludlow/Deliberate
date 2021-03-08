@@ -1,16 +1,32 @@
 import Layout from '@/components/Layout'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import api from 'lib/api'
 import withAuthentication from '@/components/HOC/withAuthentication'
 import useSWR from 'swr'
 import { GithubIcon } from '@/components/icons'
+import LoadingSpinner from '@/components/LoadingSpinner'
+import { SSL_OP_ALL } from 'constants'
 
 const fetcher = (url: string) => api.get(url).then((res) => res.data)
 function Connections() {
     const { data, error } = useSWR('/auth/github/connected', fetcher)
 
-    if (error) return <div>failed to load</div>
-    if (!data) return <div>loading...</div>
+    if (error)
+        return (
+            <Layout title="Connections">
+                <div className="flex justify-center w-full mt-6">
+                    <p>Failed to load connections data</p>
+                </div>
+            </Layout>
+        )
+    if (!data)
+        return (
+            <Layout title="Connections">
+                <div className="flex justify-center w-full mt-6">
+                    <LoadingSpinner className="w-12 h-12 text-brand" />
+                </div>
+            </Layout>
+        )
     if (!data.connected) {
         return (
             <Layout title="Connections" contained>
@@ -25,8 +41,6 @@ function Connections() {
                             Connect now
                         </button>
                     </div>
-                    <div className="">Coming soon...</div>
-                    <div className="">Coming soon...</div>
                 </div>
             </Layout>
         )
@@ -45,8 +59,6 @@ function Connections() {
                                 Disconnect
                             </button>
                         </div>
-                        <div className="flex items-center h-full">Coming soon...</div>
-                        <div className="flex items-center h-full">Coming soon...</div>
                     </div>
                 </div>
                 <div className="mt-12">
@@ -54,29 +66,13 @@ function Connections() {
                     <ul className="grid grid-cols-2 mt-4 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-8">
                         {data.repos.map((repo: any, idx: number) => (
                             <li className="p-1 bg-gray-200" key={idx}>
-                                <a
-                                    className="flex items-center font-semibold text-blue-500 truncate hover:underline overflow-ellipsis"
-                                    href={repo.html_url}
-                                    target="_blank"
-                                >
-                                    {repo.private && (
-                                        <svg
-                                            className="w-5 h-5 mr-1 text-black"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
-                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                                            ></path>
-                                        </svg>
-                                    )}
-                                    <p className="break-words">{repo.full_name}</p>
-                                </a>
+                                <RepoConnection
+                                    id={repo.id}
+                                    full_name={repo.full_name}
+                                    local_connected={repo.local_connected}
+                                    private={repo.private}
+                                    html_url={repo.html_url}
+                                />
                             </li>
                         ))}
                     </ul>
@@ -86,3 +82,59 @@ function Connections() {
     }
 }
 export default withAuthentication(Connections)
+
+function RepoConnection(props: {
+    id: number
+    full_name: string
+    local_connected: boolean
+    private: boolean
+    html_url: string
+}) {
+    const [localConnected, setLocalConnected] = useState(props.local_connected)
+
+    const handleConnectionClick = () => {
+        console.log(`click: ${props.full_name}`)
+        setLocalConnected(!localConnected)
+    }
+
+    return (
+        <>
+            <a
+                className="flex items-center font-semibold text-blue-500 truncate hover:underline overflow-ellipsis"
+                href={props.html_url}
+                target="_blank"
+            >
+                {props.private && (
+                    <svg
+                        className="flex-shrink-0 w-5 h-5 mr-1 text-black"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                        ></path>
+                    </svg>
+                )}
+                <p className="break-words">{props.full_name}</p>
+            </a>
+            <form className="flex items-center mt-1 ml-0.5 space-x-2">
+                <input
+                    onClick={() => handleConnectionClick()}
+                    className="border border-gray-600 rounded"
+                    type="checkbox"
+                    name={`connected-${props.id}`}
+                    id={`connected-${props.id}`}
+                    defaultChecked={localConnected}
+                />
+                <label htmlFor={`connected-${props.id}`}>
+                    {localConnected ? <span className="text-green-500">Connected</span> : <span>Connect</span>}
+                </label>
+            </form>
+        </>
+    )
+}
