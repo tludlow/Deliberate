@@ -86,6 +86,34 @@ export const GithubIssueWebhook = async (req: Request, res: Response) => {
             res.status(500).send({ message: error })
         }
     }
+    if (payload.action === 'reopened') {
+        try {
+            let reOpenIssue = await query('UPDATE issues SET state=$1 WHERE id=$2', ['open', payload.issue.id])
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ message: error })
+        }
+    }
+    if (payload.action === 'closed') {
+        try {
+            let closedIssue = await query('UPDATE issues SET state=$1 WHERE id=$2', ['closed', payload.issue.id])
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ message: error })
+        }
+    }
+    if (payload.action === 'edited') {
+        try {
+            let editedIssue = await query('UPDATE issues SET title=$1, description=$2) WHERE id=$3', [
+                payload.issue.id,
+                payload.issue.title,
+                payload.issue.body,
+            ])
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ message: error })
+        }
+    }
     // console.log(payload)
     // console.log('-----[issues webhook]------')
     res.status(200).send({ data: req.body })
