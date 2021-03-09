@@ -169,20 +169,22 @@ create unique index connected_sso_user_id_uindex
 
 create table issues
 (
-    id             integer      not null
+    id             integer                                not null
         constraint issues_pk
             primary key,
-    repo_id        integer      not null
+    repo_id        integer                                not null
         constraint issues_tracked_repos_repo_id_fk
             references tracked_repos (repo_id)
             on update cascade on delete cascade,
-    title          varchar(100) not null,
+    title          varchar(100)                           not null,
     description    varchar(500),
     assigned_users integer[],
     milestone_id   integer
         constraint issues_milestones_id_fk
             references milestones,
-    labels         text[]
+    labels         text[],
+    created_at     date                     default now() not null,
+    updated_at     timestamp with time zone default now() not null
 );
 
 alter table issues
@@ -190,4 +192,10 @@ alter table issues
 
 create unique index issues_id_uindex
     on issues (id);
+
+create trigger set_timestamp
+    before update
+    on issues
+    for each row
+execute procedure trigger_set_timestamp();
 
