@@ -4,6 +4,7 @@ import { Request, Response } from 'express'
 import { request } from '@octokit/request'
 import dayjs, { Dayjs } from 'dayjs'
 import { query } from '../db'
+import { ScheduleUserCalendar } from '../lib/scheduling'
 
 export const UserCalendar = async (req: Request, res: Response) => {
     console.log(res.locals)
@@ -213,5 +214,15 @@ export const LoadPast = async (req: Request, res: Response) => {
         res.status(200).send({ calendarData: response })
     } catch (error) {
         res.status(500).send({ error })
+    }
+}
+
+export const ScheduleTasks = async (req: Request, res: Response) => {
+    const { user_id } = res.locals
+    try {
+        let scheduledData = await ScheduleUserCalendar(user_id)
+        res.status(200).send({ scheduledData })
+    } catch (error) {
+        res.status(500).send({ message: error })
     }
 }

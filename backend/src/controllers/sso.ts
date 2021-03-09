@@ -47,22 +47,33 @@ export const GithubSSO = async (req: Request, res: Response) => {
 
         let checkIfUserAccountInSystem = await query('SELECT id FROM users WHERE github_id=$1', [user.data.id])
         if (checkIfUserAccountInSystem.rowCount == 0) {
+            let firstName = ''
+            let lastName = ' '
+            if (user.data.name) {
+                firstName = user.data.name.split(' ')[0]
+                lastName = user.data.name.split(' ')[1]
+            } else {
+                firstName = user.data.login
+            }
             //Create this account
             let newUser = await query(
-                'INSERT INTO users (first_name, last_name, email, password, github_token, github_id VALUES($1, $2, $3, $4, $5, $6)',
-                [
-                    user.data.name.split(' ')[0],
-                    user.data.name.split(' ')[1],
-                    user.data.email,
-                    'github-sso',
-                    authToken,
-                    user.data.id,
-                ]
+                'INSERT INTO users (first_name, last_name, email, password, github_token, github_id) VALUES($1, $2, $3, $4, $5, $6)',
+                [firstName, lastName, user.data.email || '', 'github-sso', authToken, user.data.id]
             )
+
+            let newId = await query('SELECT id FROM users WHERE github_id=$1', [user.data.id])
+
+            let insertUserCalendar = await query('INSERT INTO user_calendars (id, user_id) VALUES($1, $2)', [
+                newId.rows[0].id,
+                newId.rows[0].id,
+            ])
+            console.log(newUser)
         } else {
             //log in and update the token we have in the system
             let newUser = await query('UPDATE users SET github_token=$1 WHERE github_id=$2', [authToken, user.data.id])
         }
+
+        let newId = await query('SELECT id FROM users WHERE github_id=$1', [user.data.id])
 
         //Generate tokens for this user and log them in!
 
@@ -71,7 +82,12 @@ export const GithubSSO = async (req: Request, res: Response) => {
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30 * 72,
                 issuer: 'deliberate',
                 subject: 'refreshtoken',
-                data: { name: user.data.name || user.data.login, github_token: authToken, github_id: user.data.id },
+                data: {
+                    id: newId.rows[0].id,
+                    name: user.data.name || user.data.login,
+                    github_token: authToken,
+                    github_id: user.data.id,
+                },
             },
             'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
         )
@@ -82,7 +98,12 @@ export const GithubSSO = async (req: Request, res: Response) => {
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 72,
                 issuer: 'deliberate',
                 subject: 'accesstoken',
-                data: { name: user.data.name || user.data.login, github_token: authToken, github_id: user.data.id },
+                data: {
+                    id: newId.rows[0].id,
+                    name: user.data.name || user.data.login,
+                    github_token: authToken,
+                    github_id: user.data.id,
+                },
             },
             'J%uErl<*6odhgm)XA8%}=SFePD(&`1'
         )

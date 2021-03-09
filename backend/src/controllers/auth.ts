@@ -133,6 +133,10 @@ export const Signup = async (req: Request, res: Response) => {
     let getNewUserId = await query('SELECT id FROM users WHERE email=$1 LIMIT 1', [email])
 
     let newUserId = getNewUserId.rows[0].id
+    let insertUserCalendar = await query('INSERT INTO user_calendars (id, user_id) VALUES($1, $2)', [
+        newUserId,
+        newUserId,
+    ])
 
     //Generate the user a set of access and refresh tokens because they have been authenticated
     //Refresh token, long lived (3 months) and used to generate new access tokens
