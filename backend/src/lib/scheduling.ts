@@ -13,6 +13,7 @@ export async function ScheduleDay(
     user_id: number
 ) {
     let endOfDay = dayjs(`${schedulingTime.format('YYYY-MM-DD')} 18:00:00`, 'YYYY-MM-DD HH:mm:ss')
+    schedulingTime = schedulingTime.hour(9).minute(0).second(0).millisecond(0)
     while (schedulingTime.isBefore(endOfDay) || schedulingTime.isSame(endOfDay)) {
         //Check if theres a task scheduled now
         while (true) {
@@ -27,21 +28,20 @@ export async function ScheduleDay(
                 return tasksToSchedule
             }
 
-            let splitStart = daysTasks[0].start_time.split(':')
-            let splitEnd = daysTasks[0].end_time.split(':')
-            let startTime = dayjs(daysTasks[0].day)
-                .hour(splitStart[0])
-                .minute(splitStart[1])
-                .second(splitStart[2])
-                .millisecond(0)
-            let endTime = dayjs(daysTasks[0].day)
-                .hour(splitEnd[0])
-                .minute(splitEnd[1])
-                .second(splitEnd[2])
-                .millisecond(0)
-
             //If a task is scheduled at this time jump to the end
             if (daysTasks.length > 0) {
+                let splitStart = daysTasks[0].start_time.split(':')
+                let splitEnd = daysTasks[0].end_time.split(':')
+                let startTime = dayjs(daysTasks[0].day)
+                    .hour(splitStart[0])
+                    .minute(splitStart[1])
+                    .second(splitStart[2])
+                    .millisecond(0)
+                let endTime = dayjs(daysTasks[0].day)
+                    .hour(splitEnd[0])
+                    .minute(splitEnd[1])
+                    .second(splitEnd[2])
+                    .millisecond(0)
                 if (schedulingTime.isBetween(startTime, endTime, null, '[)')) {
                     console.log(`same as another task: ${schedulingTime.format('YYYY-MM-DD HH:mm:ss')}`)
                     //Task already scheduled here, lets jump to the end of this task
@@ -124,6 +124,9 @@ export async function ScheduleDay(
 export async function ScheduleUserCalendar(user_id: number) {
     //Get all issues ordered by milestone which the user is assigned to
 
+    console.log('STARTING SCHEDULE')
+    let currentTime = dayjs()
+    let now = dayjs()
     try {
         let infoToSchedule = await query(
             'SELECT issues.id, issues.title, issues.description, issues.assigned_users, m.due_date, cardinality(assigned_users) as assigned_count FROM issues INNER JOIN user_repos ur on issues.repo_id = ur.repo_id LEFT JOIN milestones m on m.id = issues.milestone_id WHERE ur.user_id=$1 AND issues.id NOT IN (SELECT issue_id FROM tasks WHERE calendar_id=1 AND issue_id IS NOT NULL) ORDER BY due_date, assigned_count DESC, updated_at',
@@ -132,30 +135,35 @@ export async function ScheduleUserCalendar(user_id: number) {
 
         let issuesToSchedule = infoToSchedule.rows
 
-        let now = dayjs()
         while (true) {
             let issuesLeft = issuesToSchedule
             //When to start scheduling (for today or tomorrow if the day has already ended)
-            if (now.isAfter(dayjs().hour(18).minute(0).second(0))) {
+            if (currentTime.isAfter(dayjs().hour(18).minute(0).second(0))) {
                 //Start scheduling tomorrow (the day has already ended)
-                now = now.add(1, 'day').hour(9).minute(0).second(0).millisecond(0)
-            }
-            if (now.isBefore(dayjs().hour(18).minute(0).second(0))) {
-                now = now.hour(9).minute(0).second(0).millisecond(0)
+                console.log('scheduling tomorrow because today has ended')
+                now = now.add(1, 'day')
             }
 
-            //Get the tasks for today
+            //Get the tasks for the day being scheduled
             let scheduledPersonalTasksForToday = await query(
                 'SELECT * FROM tasks WHERE calendar_id=$1 AND type=$2 AND day=$3 ORDER BY day, start_time',
                 [user_id, 'personal', now.format('YYYY-MM-DD')]
             )
 
+            console.log(`Scheduling for ${now.format('YYYY-MM-DD')}`)
+            console.log('Scheduling issues:')
+            console.log(issuesLeft)
+            console.log('Scheduling around tasks:')
+            console.log(scheduledPersonalTasksForToday.rows)
             let remainingIssues = await ScheduleDay(now, scheduledPersonalTasksForToday.rows, issuesLeft, user_id)
+            console.log('Remaining issues:')
+            console.log(remainingIssues)
             if (issuesToSchedule.length === 0) {
+                console.log('breaking')
+                console.log('ENDING SCHEDULE')
                 break
             }
-            now = now.add(1, 'day').hour(9).minute(0).second(0).millisecond(0)
-            console.log(`remaining issues: ${remainingIssues.length}`)
+            now = now.add(1, 'day')
             issuesToSchedule = remainingIssues
         }
     } catch (error) {
