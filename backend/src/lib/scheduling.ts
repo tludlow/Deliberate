@@ -74,6 +74,11 @@ export async function ScheduleDay(
                     console.log(`jumping to: ${schedulingTime.format('YYYY-MM-DD HH:mm:ss')}`)
                     continue
                 } else {
+                    if (Number(schedulingTime.hour()) >= 17 && Number(schedulingTime.minute()) > 0) {
+                        //No time left in the day to schedule any more tasks
+                        console.log('no time left for day')
+                        return tasksToSchedule
+                    }
                     //Schedule a task in this period
                     console.log(`amount left to schedule: ${tasksToSchedule.length}`)
                     let schedulingIssue = tasksToSchedule[0]
@@ -95,6 +100,11 @@ export async function ScheduleDay(
                     console.log('-------------')
                 }
             } else {
+                if (Number(schedulingTime.hour()) >= 17 && Number(schedulingTime.minute()) > 0) {
+                    //No time left in the day to schedule any more tasks
+                    console.log('no time left for day')
+                    return tasksToSchedule
+                }
                 //Schedule a task in this period
                 console.log(`amount left to schedule: ${tasksToSchedule.length}`)
                 let schedulingIssue = tasksToSchedule[0]
@@ -146,8 +156,8 @@ export async function ScheduleUserCalendar(user_id: number) {
 
             //Get the tasks for the day being scheduled
             let scheduledPersonalTasksForToday = await query(
-                'SELECT * FROM tasks WHERE calendar_id=$1 AND type=$2 AND day=$3 ORDER BY day, start_time',
-                [user_id, 'personal', now.format('YYYY-MM-DD')]
+                'SELECT * FROM tasks WHERE calendar_id=$1 AND day=$2 ORDER BY day, start_time',
+                [user_id, now.format('YYYY-MM-DD')]
             )
 
             console.log(`Scheduling for ${now.format('YYYY-MM-DD')}`)
