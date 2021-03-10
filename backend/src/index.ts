@@ -80,7 +80,11 @@ app.get(
     calendarController.TeamLoadFuture
 )
 app.get('/team/:teamName/calendar/:day/past', [AuthTokenMiddleware(''), IsTeamMember], calendarController.TeamLoadPast)
-
+app.post(
+    '/team/:teamName/calendar/task',
+    [AuthTokenMiddleware(''), IsTeamMember],
+    calendarController.AddTeamTaskToCalendar
+)
 
 //User
 app.get('/user/dashboard', AuthTokenMiddleware(''), userController.Dashboard)

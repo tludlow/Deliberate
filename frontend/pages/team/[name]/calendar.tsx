@@ -7,7 +7,7 @@ import api from 'lib/api'
 import { Transition } from '@headlessui/react'
 import { CaretRightIcon, ArrowLeft, ArrowRight, CalendarIcon, MarkerIcon } from '@/components/icons'
 import { createPortal } from 'react-dom'
-import CreateTaskModal from '@/components/modal/CreateTaskModal'
+import CreateTaskModal from '@/components/modal/CreateTeamTaskModal'
 import Day from '@/components/calendar/Day'
 import Layout from '@/components/Layout'
 import { GetServerSideProps } from 'next'
@@ -187,7 +187,11 @@ export default function TeamCalendar(props: { teamName: string }) {
 
                 {createTaskOpen &&
                     createPortal(
-                        <CreateTaskModal isOpen={createTaskOpen} closeModal={closeCreateTaskModal} />,
+                        <CreateTaskModal
+                            isOpen={createTaskOpen}
+                            closeModal={closeCreateTaskModal}
+                            teamName={props.teamName}
+                        />,
                         document.body
                     )}
 

@@ -299,3 +299,53 @@ export const GetTeamTasksForDay = async (req: Request, res: Response) => {
         res.status(500).send({ error })
     }
 }
+
+export const AddTeamTaskToCalendar = async (req: Request, res: Response) => {
+    const { title, description, day, start_time, end_time } = req.body
+    const { user_id } = res.locals
+    const { team_id } = res.locals
+
+    //Check that the task is not overlapping with another
+    //Get the tasks for the day
+    try {
+        let daysTasks = await query(
+            'SELECT team_tasks.id, title, description, start_time, end_time, type FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id WHERE day = $1 AND t.id = $2 ORDER BY start_time',
+            [day, team_id]
+        )
+        let appendedTasks: any = []
+        daysTasks.rows.forEach((task) => {
+            appendedTasks.push({
+                title: task.title,
+                description: task.description,
+                day: dayjs(task.day),
+                start_time: dayjs(`${day} ${task.start_time}`, 'YYYY-MM-DD HH:mm:ss'),
+                end_time: dayjs(`${day} ${task.end_time}`, 'YYYY-MM-DD HH:mm:ss'),
+            })
+        })
+
+        appendedTasks.push({
+            title: title,
+            description: description,
+            day: dayjs(day),
+            start_time: dayjs(`${day} ${start_time}`, 'YYYY-MM-DD HH:mm:ss'),
+            end_time: dayjs(`${day} ${end_time}`, 'YYYY-MM-DD HH:mm:ss'),
+        })
+
+        if (checkTaskOverlaps(appendedTasks)) {
+            res.status(400).send({ message: 'Task overlaps with another task within this calendar on this day' })
+            return
+        }
+
+        let addTask = await query(
+            'INSERT INTO team_tasks(title, description, day, start_time, end_time, calendar_id) VALUES($1, $2, $3, $4, $5, $6)',
+            [title, description, day, start_time, end_time, team_id]
+        )
+
+        console.log(addTask)
+
+        res.status(200).send({ day, start: 9, end: 18, tasks: appendedTasks })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ error })
+    }
+}
