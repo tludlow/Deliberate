@@ -69,6 +69,19 @@ app.get('/calendar/:day/future', AuthTokenMiddleware(''), calendarController.Loa
 app.get('/calendar/:day/past', AuthTokenMiddleware(''), calendarController.LoadPast)
 app.get('/calendar/user/schedule', AuthTokenMiddleware(''), calendarController.ScheduleTasks)
 
+app.get(
+    '/team/:teamName/calendar/day/:day',
+    [AuthTokenMiddleware(''), IsTeamMember],
+    calendarController.GetTeamTasksForDay
+)
+app.get(
+    '/team/:teamName/calendar/:day/future',
+    [AuthTokenMiddleware(''), IsTeamMember],
+    calendarController.TeamLoadFuture
+)
+app.get('/team/:teamName/calendar/:day/past', [AuthTokenMiddleware(''), IsTeamMember], calendarController.TeamLoadPast)
+
+
 //User
 app.get('/user/dashboard', AuthTokenMiddleware(''), userController.Dashboard)
 
@@ -76,6 +89,7 @@ app.get('/user/dashboard', AuthTokenMiddleware(''), userController.Dashboard)
 app.post('/webhook/register/:owner/:repo', AuthTokenMiddleware('github'), webhookController.RegisterRepoWebhooks)
 app.post('/webhook/github/issue', webhookController.GithubIssueWebhook)
 app.post('/webhook/github/milestone', webhookController.GithubMilestoneWebhook)
+app.get('/webhook/test/:owner/:repo', AuthTokenMiddleware('github'), webhookController.TestingOneTwoThree)
 
 //Catch all 404
 app.get('/*', apiController.FourOFour)

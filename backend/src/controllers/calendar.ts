@@ -226,3 +226,76 @@ export const ScheduleTasks = async (req: Request, res: Response) => {
         res.status(500).send({ message: error })
     }
 }
+
+/**
+ *  Team endpoints
+ */
+
+export const TeamLoadFuture = async (req: Request, res: Response) => {
+    const { user_id } = res.locals
+    const { team_id } = res.locals
+
+    let day = dayjs(req.params.day)
+    let futureDay = []
+    day = day.add(1, 'day')
+    for (let i = 0; i <= 14; i++) {
+        futureDay.push(day.add(i, 'day').format('YYYY-MM-DD'))
+    }
+
+    let response = []
+
+    try {
+        for (let getDay of futureDay) {
+            let daysTasks = await query(
+                'SELECT team_tasks.id, title, description, start_time, end_time, type FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id WHERE day = $1 AND t.id = $2 ORDER BY start_time',
+                [getDay, team_id]
+            )
+            response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
+        }
+        res.status(200).send({ calendarData: response })
+    } catch (error) {
+        res.status(500).send({ error })
+    }
+}
+
+export const TeamLoadPast = async (req: Request, res: Response) => {
+    const { user_id } = res.locals
+    const { team_id } = res.locals
+
+    let day = dayjs(req.params.day)
+    let futureDay = []
+    day = day.subtract(1, 'day')
+    for (let i = 0; i <= 14; i++) {
+        futureDay.push(day.subtract(i, 'day').format('YYYY-MM-DD'))
+    }
+
+    let response = []
+
+    try {
+        for (let getDay of futureDay) {
+            let daysTasks = await query(
+                'SELECT team_tasks.id, title, description, start_time, end_time, type FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id WHERE day = $1 AND t.id = $2 ORDER BY start_time',
+                [getDay, team_id]
+            )
+            response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
+        }
+        res.status(200).send({ calendarData: response })
+    } catch (error) {
+        res.status(500).send({ error })
+    }
+}
+
+export const GetTeamTasksForDay = async (req: Request, res: Response) => {
+    const day = req.params.day
+    const user = res.locals.user_id
+    const { team_id } = res.locals
+    try {
+        let daysTasks = await query(
+            'SELECT team_tasks.id, title, description, start_time, end_time, type FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id WHERE day = $1 AND t.id = $2 ORDER BY start_time',
+            [day, team_id]
+        )
+        res.status(200).send({ day, start: 9, end: 18, tasks: daysTasks.rows })
+    } catch (error) {
+        res.status(500).send({ error })
+    }
+}

@@ -9,8 +9,8 @@ import { createPortal } from 'react-dom'
 import api from 'lib/api'
 import useSWR from 'swr'
 import Image from 'next/image'
-import { UserAddIcon } from '../../components/icons/index'
 import { GetServerSideProps } from 'next'
+import { UserAddIcon } from '@/components/icons'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const teamName = context.query.name

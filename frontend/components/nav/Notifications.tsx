@@ -12,9 +12,9 @@ export default function Notifications() {
                             <Menu.Button as="div" className="border-none shadow-none">
                                 <div className="relative cursor-pointer">
                                     <BellIcon className="text-white w-7 h-7 hover:text-gray-200 hover:shadow" />
-                                    <div className="absolute bottom-0 right-0 flex items-center justify-center w-4 h-4 bg-red-500 rounded-full">
+                                    {/* <div className="absolute bottom-0 right-0 flex items-center justify-center w-4 h-4 bg-red-500 rounded-full">
                                         <span className="text-sm text-white select-none">1</span>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </Menu.Button>
                         </span>

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { SetupRepoHooks } from '../lib/webhooks'
 import { query } from '../db'
+import { request } from '@octokit/request'
 
 export const GithubIssueWebhook = async (req: Request, res: Response) => {
     //Get the current data as a request and then register a webhook for this
@@ -210,6 +211,15 @@ export const RegisterRepoWebhooks = async (req: Request, res: Response) => {
         res.status(500).send({ message: 'No github token provided' })
         return
     }
+
+    const requestWithAuth = request.defaults({
+        headers: {
+            authorization: `token ${github_token}`,
+        },
+    })
+
+    const { data } = await requestWithAuth(`GET repos/${owner}/${repo}/collaborators`)
+
     let repoID = await SetupRepoHooks(github_token, owner, repo)
     if (repoID != -1) {
         let isTrackedAlready = await query('SELECT count(*) as exists FROM tracked_repos WHERE repo_id=$1', [repoID])
@@ -235,4 +245,34 @@ export const RegisterRepoWebhooks = async (req: Request, res: Response) => {
     }
 
     res.status(200).send({ params: req.params, repo_id: repoID })
+}
+
+export const TestingOneTwoThree = async (req: Request, res: Response) => {
+    const { owner, repo } = req.params
+    const { github_token, user_id, github_id } = res.locals
+
+    if (!github_token) {
+        res.status(500).send({ message: 'No github token provided' })
+        return
+    }
+
+    const requestWithAuth = request.defaults({
+        headers: {
+            authorization: `token ${github_token}`,
+        },
+    })
+
+    let memberIds: number[] = []
+
+    const { data } = await requestWithAuth(`GET /repos/${owner}/${repo}/collaborators`)
+    for (let member of data) {
+        memberIds.push(member.id)
+    }
+
+    //Setup a team for the repo and invite all users who have a deliberate account automatically
+    if (memberIds.length > 1) {
+        //Create a team for the repository
+    }
+
+    res.status(200).send({ params: req.params, memberIds, data })
 }

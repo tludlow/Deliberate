@@ -64,14 +64,16 @@ export default function Team({ initials, name, memberCount }: TeamType) {
                                 <div className="py-1">
                                     <Menu.Item>
                                         {({ active }) => (
-                                            <a
-                                                href="#account-settings"
-                                                className={`${
-                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                                } flex  justify-between w-full px-4 py-2 text-medium text-sm leading-5 text-left`}
-                                            >
-                                                Team calendar
-                                            </a>
+                                            <Link href="/team/[name]/calendar" as={`/team/${name}/calendar`}>
+                                                <a
+                                                    href={`/team/${name}/calendar`}
+                                                    className={`${
+                                                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+                                                    } flex  justify-between w-full px-4 py-2 text-medium text-sm leading-5 text-left`}
+                                                >
+                                                    Team calendar
+                                                </a>
+                                            </Link>
                                         )}
                                     </Menu.Item>
                                     <Menu.Item>
