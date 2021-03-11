@@ -41,6 +41,8 @@ export const GithubIssueWebhook = async (req: Request, res: Response) => {
     if (payload.action === 'deleted') {
         try {
             let deleteIssue = await query('DELETE FROM issues WHERE id=$1', [payload.issue.id])
+            let deleteTask = await query('DELETE FROM tasks WHERE issue_id=$1', [payload.issue.id])
+            let deleteTeamTask = await query('DELETE FROM team_tasks WHERE issue_id=$1', [payload.issue.id])
         } catch (error) {
             console.log(error)
             res.status(500).send({ message: error })
@@ -218,17 +220,18 @@ export const RegisterRepoWebhooks = async (req: Request, res: Response) => {
         },
     })
 
-    const { data } = await requestWithAuth(`GET repos/${owner}/${repo}/collaborators`)
+    const { data } = await requestWithAuth(`GET /repos/${owner}/${repo}/collaborators`)
 
     let repoID = await SetupRepoHooks(github_token, owner, repo)
     if (repoID != -1) {
         let isTrackedAlready = await query('SELECT count(*) as exists FROM tracked_repos WHERE repo_id=$1', [repoID])
         if (isTrackedAlready.rows[0].exists === '0') {
             let addToTrackedRepos = await query(
-                'INSERT INTO tracked_repos (repo_id, name, owner, owner_id) VALUES ($1, $2, $3, $4)',
-                [repoID, repo, owner, github_id]
+                'INSERT INTO tracked_repos (repo_id, name, owner, owner_id) VALUES ($1, $2, $3, $4) ON CONFLICT (repo_id) DO UPDATE SET repo_id=$5',
+                [repoID, repo, owner, github_id, repoID]
             )
         }
+
         let isUserAdded = await query('SELECT count(*) as added FROM user_repos WHERE user_id=$1 AND repo_id=$2', [
             user_id,
             repoID,
@@ -238,6 +241,11 @@ export const RegisterRepoWebhooks = async (req: Request, res: Response) => {
                 user_id,
                 repoID,
             ])
+        }
+
+        if (isTrackedAlready.rows[0].exists === '1') {
+            console.log('setting up team')
+            let setupTeam = await SetupTeam(repoID, owner, repo)
         }
     } else {
         res.status(500).send({ message: 'Error setting up repo webhooks, delete all the webhooks and try again!' })
@@ -275,4 +283,24 @@ export const TestingOneTwoThree = async (req: Request, res: Response) => {
     }
 
     res.status(200).send({ params: req.params, memberIds, data })
+}
+
+async function SetupTeam(repoID: number, owner: string, repo: string) {
+    //Check if a team already exists for this repository
+    try {
+        let teamExists = await query('SELECT count(*) AS exists FROM teams where id=$1', [repoID])
+        if (teamExists.rows[0].exists === '1') {
+        } else {
+            //Create team and add users
+            let createTeam = await query('INSERT INTO teams VALUES($1, $2)', [repoID, repo])
+            let createTeamRepo = await query('INSERT INTO team_repos VALUES($1, $2)', [repoID, repoID])
+
+            //Get all the members who follow this repo and add them to the team
+            let allMembers = await query('SELECT user_id FROM user_repos WHERE repo_id=$1', [repoID])
+            for (let member of allMembers.rows) {
+                let addMember = await query('INSERT INTO team_members VALUES($1, $2)', [repoID, member.user_id])
+            }
+        }
+    } catch (error) {}
+    return true
 }

@@ -17,7 +17,8 @@ export const checkTaskOverlaps = (tasks: Task[]) => {
     let isInvalid = false
     for (let task of tasks) {
         for (let compared of tasks) {
-            if (task.id === compared.id) {
+            if (task === compared) {
+                console.log(`${task.title}  same as ${compared.title}`)
                 continue
             }
             //make sure the compared task starts before the first and ends before the last

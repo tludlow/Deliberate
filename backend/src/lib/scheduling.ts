@@ -13,7 +13,6 @@ export async function ScheduleUserDay(
     user_id: number
 ) {
     let endOfDay = dayjs(`${schedulingTime.format('YYYY-MM-DD')} 18:00:00`, 'YYYY-MM-DD HH:mm:ss')
-    schedulingTime = schedulingTime.hour(9).minute(0).second(0).millisecond(0)
     while (schedulingTime.isBefore(endOfDay) || schedulingTime.isSame(endOfDay)) {
         //Check if theres a task scheduled now
         while (true) {
@@ -85,7 +84,10 @@ export async function ScheduleUserDay(
 
                     //Find how long to schedule for (from the task description)
                     let lengthMinutes = 60
-                    if (!isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0]))) {
+                    if (
+                        !isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0])) &&
+                        schedulingIssue.description.includes('time:')
+                    ) {
                         lengthMinutes = Number(schedulingIssue.description.split('time:').pop().split('m')[0])
                     }
                     if (timeUntilNextTask * 60 < lengthMinutes) {
@@ -130,9 +132,13 @@ export async function ScheduleUserDay(
                 console.log(`amount left to schedule: ${tasksToSchedule.length}`)
                 let schedulingIssue = tasksToSchedule[0]
                 let lengthMinutes = 60
-                if (!isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0]))) {
+                if (
+                    !isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0])) &&
+                    schedulingIssue.description.includes('time:')
+                ) {
                     lengthMinutes = Number(schedulingIssue.description.split('time:').pop().split('m')[0])
                 }
+                console.log(lengthMinutes)
                 let insertNewTask = await query(
                     'INSERT INTO tasks (title, description, day, start_time, end_time, calendar_id, type, issue_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
                     [
@@ -165,7 +171,6 @@ export async function ScheduleTeamDay(
     team_id: number
 ) {
     let endOfDay = dayjs(`${schedulingTime.format('YYYY-MM-DD')} 18:00:00`, 'YYYY-MM-DD HH:mm:ss')
-    schedulingTime = schedulingTime.hour(9).minute(0).second(0).millisecond(0)
     while (schedulingTime.isBefore(endOfDay) || schedulingTime.isSame(endOfDay)) {
         //Check if theres a task scheduled now
         while (true) {
@@ -237,9 +242,13 @@ export async function ScheduleTeamDay(
 
                     //Find how long to schedule for (from the task description)
                     let lengthMinutes = 60
-                    if (!isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0]))) {
+                    if (
+                        !isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0])) &&
+                        schedulingIssue.description.includes('time:')
+                    ) {
                         lengthMinutes = Number(schedulingIssue.description.split('time:').pop().split('m')[0])
                     }
+
                     if (timeUntilNextTask * 60 < lengthMinutes) {
                         console.log('no time to schedule here')
                         //Jump to the next task so we can start scheduling again
@@ -260,13 +269,15 @@ export async function ScheduleTeamDay(
                             schedulingIssue.description,
                             schedulingTime.format('YYYY-MM-DD'),
                             `${schedulingTime.hour()}:${schedulingTime.minute()}:00`,
-                            `${schedulingTime.add(1, 'hour').hour()}:${schedulingTime.add(1, 'hour').minute()}:00`,
+                            `${schedulingTime.add(lengthMinutes / 60, 'hour').hour()}:${schedulingTime
+                                .add(lengthMinutes / 60, 'hour')
+                                .minute()}:00`,
                             team_id,
                             'github',
                             schedulingIssue.id,
                         ]
                     )
-                    schedulingTime = schedulingTime.add(1, 'hour')
+                    schedulingTime = schedulingTime.add(lengthMinutes / 60, 'hour')
                     tasksToSchedule = tasksToSchedule.filter((taskSched, index) => taskSched.id !== schedulingIssue.id)
                     console.log('-------------')
                 }
@@ -280,9 +291,13 @@ export async function ScheduleTeamDay(
                 console.log(`amount left to schedule: ${tasksToSchedule.length}`)
                 let schedulingIssue = tasksToSchedule[0]
                 let lengthMinutes = 60
-                if (!isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0]))) {
+                if (
+                    !isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0])) &&
+                    schedulingIssue.description.includes('time:')
+                ) {
                     lengthMinutes = Number(schedulingIssue.description.split('time:').pop().split('m')[0])
                 }
+                console.log(lengthMinutes)
                 let insertNewTask = await query(
                     'INSERT INTO team_tasks (title, description, day, start_time, end_time, calendar_id, type, issue_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
                     [
@@ -290,13 +305,15 @@ export async function ScheduleTeamDay(
                         schedulingIssue.description,
                         schedulingTime.format('YYYY-MM-DD'),
                         `${schedulingTime.hour()}:${schedulingTime.minute()}:00`,
-                        `${schedulingTime.add(1, 'hour').hour()}:${schedulingTime.add(1, 'hour').minute()}:00`,
+                        `${schedulingTime.add(lengthMinutes / 60, 'hour').hour()}:${schedulingTime
+                            .add(lengthMinutes / 60, 'hour')
+                            .minute()}:00`,
                         team_id,
                         'github',
                         schedulingIssue.id,
                     ]
                 )
-                schedulingTime = schedulingTime.add(1, 'hour')
+                schedulingTime = schedulingTime.add(lengthMinutes / 60, 'hour')
                 tasksToSchedule = tasksToSchedule.filter((taskSched, index) => taskSched.id !== schedulingIssue.id)
                 console.log('-------------')
             }
@@ -314,7 +331,7 @@ export async function ScheduleUserCalendar(user_id: number) {
     let now = dayjs()
     try {
         let infoToSchedule = await query(
-            'SELECT issues.id, issues.title, issues.description, issues.assigned_users, m.due_date, cardinality(assigned_users) as assigned_count FROM issues INNER JOIN user_repos ur on issues.repo_id = ur.repo_id LEFT JOIN milestones m on m.id = issues.milestone_id WHERE ur.user_id=$1 AND issues.id NOT IN (SELECT issue_id FROM tasks WHERE calendar_id=$2 AND issue_id IS NOT NULL) ORDER BY due_date, assigned_count DESC, updated_at',
+            'SELECT issues.id, issues.title, issues.description, issues.assigned_users, m.due_date, cardinality(assigned_users) as assigned_count FROM issues INNER JOIN user_repos ur on issues.repo_id = ur.repo_id LEFT JOIN milestones m on m.id = issues.milestone_id INNER JOIN users u on ur.user_id = u.id WHERE ur.user_id=$1 AND AND u.github_id= ANY(assigned_users) issues.id NOT IN (SELECT issue_id FROM tasks WHERE calendar_id=$2 AND issue_id IS NOT NULL) ORDER BY due_date, assigned_count DESC, updated_at',
             [user_id, user_id]
         )
 
@@ -326,7 +343,7 @@ export async function ScheduleUserCalendar(user_id: number) {
             if (currentTime.isAfter(dayjs().hour(18).minute(0).second(0))) {
                 //Start scheduling tomorrow (the day has already ended)
                 console.log('scheduling tomorrow because today has ended')
-                now = now.add(1, 'day')
+                now = now.add(1, 'day').hour(9).minute(0).second(0).millisecond(0)
             }
 
             //Get the tasks for the day being scheduled
@@ -348,7 +365,7 @@ export async function ScheduleUserCalendar(user_id: number) {
                 console.log('ENDING SCHEDULE')
                 break
             }
-            now = now.add(1, 'day')
+            now = now.add(1, 'day').hour(9).minute(0).second(0).millisecond(0)
             issuesToSchedule = remainingIssues
         }
     } catch (error) {
@@ -376,7 +393,7 @@ export async function ScheduleTeamCalendar(team_id: number) {
             if (currentTime.isAfter(dayjs().hour(18).minute(0).second(0))) {
                 //Start scheduling tomorrow (the day has already ended)
                 console.log('scheduling tomorrow because today has ended')
-                now = now.add(1, 'day')
+                now = now.add(1, 'day').hour(9).minute(0).second(0).millisecond(0)
             }
 
             //Get the tasks for the day being scheduled
@@ -398,10 +415,11 @@ export async function ScheduleTeamCalendar(team_id: number) {
                 console.log('ENDING SCHEDULE')
                 break
             }
-            now = now.add(1, 'day')
+            now = now.add(1, 'day').hour(9).minute(0).second(0).millisecond(0)
             issuesToSchedule = remainingIssues
         }
     } catch (error) {
+        console.log(error)
         throw new Error(`Error scheduling tasks - ${error}`)
     }
 }
