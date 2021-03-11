@@ -15,9 +15,10 @@ type EditTaskModalProps = {
     date: dayjs.Dayjs
     start_time: string
     end_time: string
+    teamName: string
 }
 
-export default function EditTaskModal({
+export default function EditTeamTaskModal({
     isOpen,
     closeModal,
     id,
@@ -26,13 +27,14 @@ export default function EditTaskModal({
     date,
     start_time,
     end_time,
+    teamName,
 }: EditTaskModalProps) {
     const [error, setError] = useState('')
 
     return (
         <ModalHOC isOpen={isOpen} closeModal={closeModal} modalWidth="w-full lg:w-1/2 xl:w-5/12">
             <div className="flex justify-center">
-                <h4 className="text-xl font-bold">Edit Personal Task - {title}</h4>
+                <h4 className="text-xl font-bold">Edit Team Task - {title}</h4>
             </div>
 
             <div className="mt-6">
@@ -63,7 +65,7 @@ export default function EditTaskModal({
                     }}
                     onSubmit={async (values, { setSubmitting }) => {
                         setSubmitting(true)
-                        api.post('/calendar/task/edit', {
+                        api.post(`/team/${teamName}/calendar/task/edit`, {
                             id,
                             title: values.title,
                             description: values.description,

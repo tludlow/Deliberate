@@ -5,6 +5,7 @@ dayjs.extend(customParseFormat)
 dayjs.extend(isBetween)
 
 type Task = {
+    id: number
     title: string
     description: string
     day: Dayjs
@@ -16,10 +17,7 @@ export const checkTaskOverlaps = (tasks: Task[]) => {
     let isInvalid = false
     for (let task of tasks) {
         for (let compared of tasks) {
-            if (task === compared) {
-                console.log('is same!')
-                console.log(task)
-                console.log(compared)
+            if (task.id === compared.id) {
                 continue
             }
             //make sure the compared task starts before the first and ends before the last

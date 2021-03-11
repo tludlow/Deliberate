@@ -3,13 +3,11 @@ import { EditIcon, GithubIcon, RightArrowIcon, TrashIcon, UserIcon } from '../ic
 import api from 'lib/api'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { createPortal } from 'react-dom'
 import EditTaskModal from './EditTaskModal'
-import EditTeamTaskModal from './EditTeamTaskModal'
 import { useEffect, useState } from 'react'
 dayjs.extend(relativeTime)
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { useRouter } from 'next/router'
-import { createPortal } from 'react-dom'
 dayjs.extend(customParseFormat)
 
 type TaskModalProps = {
@@ -22,6 +20,7 @@ type TaskModalProps = {
     start: string
     end: string
     type: string
+    teamName: string
 }
 
 export default function TaskModal({
@@ -34,68 +33,33 @@ export default function TaskModal({
     start,
     end,
     type,
+    teamName,
 }: TaskModalProps) {
     const [editOpen, setEditOpen] = useState(false)
-    const router = useRouter()
-    let isTeamTask = false
-    let teamModal = true
 
-    const openEditModal = () => {
-        isTeamTask = router.pathname.includes('/team')
-        teamModal = isTeamTask
-        setEditOpen(true)
-    }
     const closeEditTaskModal = () => {
         setEditOpen(false)
     }
 
     const deleteTask = () => {
-        if (isTeamTask) {
-            api.post(`/team/${router.asPath.split('/')[2]}/calendar/task/delete`, { task_id: id })
-                .then((response) => {
-                    console.log(response)
-                    closeModal()
-                    location.reload()
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        } else {
-            api.post('/calendar/task/delete', { task_id: id })
-                .then((response) => {
-                    console.log(response)
-                    closeModal()
-                    location.reload()
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        }
+        api.post(`/team/${teamName}/calendar/task/delete`, { task_id: id })
+            .then((response) => {
+                console.log(response)
+                closeModal()
+                location.reload()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     useEffect(() => {
-        isTeamTask = router.pathname.includes('/team')
-    }, [editOpen])
+        console.log(`${date.format('YYYY-MM-DD')} ${start}`)
+    }, [])
 
     return (
         <>
-            {teamModal &&
-                createPortal(
-                    <EditTeamTaskModal
-                        isOpen={editOpen}
-                        closeModal={closeEditTaskModal}
-                        id={id}
-                        title={title}
-                        description={description}
-                        date={date}
-                        start_time={start}
-                        end_time={end}
-                        teamName={router.asPath.split('/')[2]}
-                    />,
-                    document.body
-                )}
-
-            {!teamModal &&
+            {editOpen &&
                 createPortal(
                     <EditTaskModal
                         isOpen={editOpen}
@@ -130,7 +94,7 @@ export default function TaskModal({
                                 <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" />{' '}
                                 {dayjs(end, 'HH:mm A').format('h:mm A')}{' '}
                             </span>
-                            <button onClick={() => openEditModal()}>
+                            <button onClick={() => setEditOpen(true)}>
                                 <EditIcon className="w-4 h-4 text-gray-700 hover:text-gray-500" />
                             </button>
                         </p>

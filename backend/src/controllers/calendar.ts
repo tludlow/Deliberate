@@ -4,7 +4,7 @@ import { Request, Response } from 'express'
 import { request } from '@octokit/request'
 import dayjs, { Dayjs } from 'dayjs'
 import { query } from '../db'
-import { ScheduleUserCalendar } from '../lib/scheduling'
+import { ScheduleUserCalendar, ScheduleTeamCalendar } from '../lib/scheduling'
 
 export const UserCalendar = async (req: Request, res: Response) => {
     console.log(res.locals)
@@ -134,13 +134,14 @@ export const EditTask = async (req: Request, res: Response) => {
         }
 
         let daysTasks = await query(
-            'SELECT title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 AND tasks.id != $3 ORDER BY start_time',
+            'SELECT tasks.id, title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 AND tasks.id != $3 ORDER BY start_time',
             [day, user_id, id]
         )
 
         let appendedTasks: any = []
         daysTasks.rows.forEach((task) => {
             appendedTasks.push({
+                id: task.id,
                 title: task.title,
                 description: task.description,
                 day: dayjs(task.day),
@@ -150,6 +151,7 @@ export const EditTask = async (req: Request, res: Response) => {
         })
 
         appendedTasks.push({
+            id: id,
             title: title,
             description: description,
             day: dayjs(day),
@@ -266,7 +268,7 @@ export const LoadPast = async (req: Request, res: Response) => {
     }
 }
 
-export const ScheduleTasks = async (req: Request, res: Response) => {
+export const ScheduleUserTasks = async (req: Request, res: Response) => {
     const { user_id } = res.locals
     try {
         let scheduledData = await ScheduleUserCalendar(user_id)
@@ -397,5 +399,98 @@ export const AddTeamTaskToCalendar = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
         res.status(500).send({ error })
+    }
+}
+
+export const ScheduleTeamTasks = async (req: Request, res: Response) => {
+    const { team_id } = res.locals
+    try {
+        let scheduledData = await ScheduleTeamCalendar(team_id)
+        res.status(200).send({ scheduledData })
+    } catch (error) {
+        res.status(500).send({ message: error })
+    }
+}
+
+export const DeleteTeamTaskByID = async (req: Request, res: Response) => {
+    //Check that the user is the owner of this task
+    const { user_id, team_id } = res.locals
+    const { task_id } = req.body
+
+    console.log(req.body)
+
+    try {
+        let check = await query('SELECT calendar_id FROM team_tasks WHERE id=$1', [task_id])
+        console.log(check.rows)
+        if (check.rowCount > 0 && check.rows[0].calendar_id !== team_id) {
+            res.status(400).send({ message: "You don't own this task" })
+            return
+        }
+
+        let deleteTask = await query('DELETE FROM team_tasks WHERE id=$1', [task_id])
+        res.status(200).send({ ok: true })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: 'Error occured deleting the task' })
+    }
+}
+export const EditTeamTask = async (req: Request, res: Response) => {
+    const { id, title, description, day, start_time, end_time } = req.body
+    const { user_id, team_id } = res.locals
+
+    console.log(`${day}  -  ${team_id}   -  ${id}`)
+
+    //Check that the task is not overlapping with another
+    //Get the tasks for the day
+    try {
+        let check = await query('SELECT calendar_id FROM team_tasks WHERE id=$1', [id])
+        if (check.rowCount > 0 && check.rows[0].calendar_id !== team_id) {
+            res.status(400).send({ message: "You don't own this task" })
+        }
+
+        let daysTasks = await query(
+            'SELECT team_tasks.id, title, description, start_time, end_time FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id WHERE day = $1 AND t.id = $2 AND team_tasks.id != $3 ORDER BY start_time',
+            [day, team_id, id]
+        )
+
+        let appendedTasks: any = []
+        daysTasks.rows.forEach((task) => {
+            appendedTasks.push({
+                id: task.id,
+                title: task.title,
+                description: task.description,
+                day: dayjs(task.day),
+                start_time: dayjs(`${day} ${task.start_time}`, 'YYYY-MM-DD HH:mm:ss'),
+                end_time: dayjs(`${day} ${task.end_time}`, 'YYYY-MM-DD HH:mm:ss'),
+            })
+        })
+
+        appendedTasks.push({
+            id: id,
+            title: title,
+            description: description,
+            day: dayjs(day),
+            start_time: dayjs(`${day} ${start_time}`, 'YYYY-MM-DD HH:mm:ss'),
+            end_time: dayjs(`${day} ${end_time}`, 'YYYY-MM-DD HH:mm:ss'),
+        })
+
+        if (checkTaskOverlaps(appendedTasks)) {
+            res.status(400).send({ message: 'Task overlaps with another task within this calendar on this day' })
+            return
+        }
+        let deleteTask = await query(
+            'UPDATE team_tasks SET title=$1, description=$2, day=$3, start_time=$4, end_time=$5 WHERE id=$6',
+            [title, description, day, start_time, end_time, id]
+        )
+        res.status(200).send({
+            title,
+            description,
+            day,
+            start_time,
+            end_time,
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: 'Error occured deleting the task' })
     }
 }

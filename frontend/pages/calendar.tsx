@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import Day from '../components/calendar/Day'
 import api from 'lib/api'
 import { Transition } from '@headlessui/react'
-import { CaretRightIcon, ArrowLeft, ArrowRight, CalendarIcon, MarkerIcon } from '@/components/icons'
+import { CaretRightIcon, ArrowLeft, ArrowRight, CalendarIcon, MarkerIcon, ClockIcon } from '@/components/icons'
 import { createPortal } from 'react-dom'
 import CreateTaskModal from '../components/modal/CreateTaskModal'
 
@@ -171,6 +171,17 @@ export default function Calendar() {
         least.scrollIntoView({ inline: 'center', behavior: 'auto' })
     }
 
+    const scheduleTasks = () => {
+        api.get('/calendar/user/schedule')
+            .then((response) => {
+                console.log(response)
+                location.reload()
+            })
+            .catch((error) => {
+                alert(error)
+            })
+    }
+
     // Attach the handler
 
     const [showActionMenu, setShowActionMenu] = useState(false)
@@ -248,6 +259,14 @@ export default function Calendar() {
                                                 <div className="flex items-center p-2 hover:bg-gray-100">
                                                     <CaretRightIcon className="block w-5 h-5 text-gray-600" />
                                                     <p className="font-semibold">Add Task</p>
+                                                </div>
+                                            </button>
+                                        </li>
+                                        <li className="w-full">
+                                            <button onClick={() => scheduleTasks()} className="w-full">
+                                                <div className="flex items-center p-2 hover:bg-gray-100">
+                                                    <ClockIcon className="block w-5 h-5 text-gray-600" />
+                                                    <p className="font-semibold">Schedule Issues</p>
                                                 </div>
                                             </button>
                                         </li>

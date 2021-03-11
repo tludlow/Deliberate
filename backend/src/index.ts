@@ -68,7 +68,7 @@ app.get('/calendar/day/:day', AuthTokenMiddleware(''), calendarController.GetUse
 app.post('/calendar/task/delete', AuthTokenMiddleware(''), calendarController.DeleteTaskByID)
 app.get('/calendar/:day/future', AuthTokenMiddleware(''), calendarController.LoadFuture)
 app.get('/calendar/:day/past', AuthTokenMiddleware(''), calendarController.LoadPast)
-app.get('/calendar/user/schedule', AuthTokenMiddleware(''), calendarController.ScheduleTasks)
+app.get('/calendar/user/schedule', AuthTokenMiddleware(''), calendarController.ScheduleUserTasks)
 
 app.get(
     '/team/:teamName/calendar/day/:day',
@@ -86,6 +86,13 @@ app.post(
     [AuthTokenMiddleware(''), IsTeamMember],
     calendarController.AddTeamTaskToCalendar
 )
+app.get('/team/:teamName/schedule', [AuthTokenMiddleware(''), IsTeamMember], calendarController.ScheduleTeamTasks)
+app.post(
+    '/team/:teamName/calendar/task/delete',
+    [AuthTokenMiddleware(''), IsTeamMember],
+    calendarController.DeleteTeamTaskByID
+)
+app.post('/team/:teamName/calendar/task/edit', [AuthTokenMiddleware(''), IsTeamMember], calendarController.EditTeamTask)
 
 //User
 app.get('/user/dashboard', AuthTokenMiddleware(''), userController.Dashboard)

@@ -1,8 +1,9 @@
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { useRouter } from 'next/router'
 dayjs.extend(customParseFormat)
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { UserIcon, GithubIcon, RightArrowIcon } from '../icons'
 import TaskModal from '../modal/TaskModal'
