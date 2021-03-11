@@ -331,7 +331,7 @@ export async function ScheduleUserCalendar(user_id: number) {
     let now = dayjs()
     try {
         let infoToSchedule = await query(
-            'SELECT issues.id, issues.title, issues.description, issues.assigned_users, m.due_date, cardinality(assigned_users) as assigned_count FROM issues INNER JOIN user_repos ur on issues.repo_id = ur.repo_id LEFT JOIN milestones m on m.id = issues.milestone_id INNER JOIN users u on ur.user_id = u.id WHERE ur.user_id=$1 AND AND u.github_id= ANY(assigned_users) issues.id NOT IN (SELECT issue_id FROM tasks WHERE calendar_id=$2 AND issue_id IS NOT NULL) ORDER BY due_date, assigned_count DESC, updated_at',
+            'SELECT issues.id, issues.title, issues.description, issues.assigned_users, m.due_date, cardinality(assigned_users) as assigned_count FROM issues INNER JOIN user_repos ur on issues.repo_id = ur.repo_id LEFT JOIN milestones m on m.id = issues.milestone_id INNER JOIN users u on ur.user_id = u.id WHERE ur.user_id=$1 AND u.github_id= ANY(assigned_users) AND issues.id NOT IN (SELECT issue_id FROM tasks WHERE calendar_id=$2 AND issue_id IS NOT NULL) ORDER BY due_date, assigned_count DESC, updated_at',
             [user_id, user_id]
         )
 
@@ -369,6 +369,7 @@ export async function ScheduleUserCalendar(user_id: number) {
             issuesToSchedule = remainingIssues
         }
     } catch (error) {
+        console.log(error)
         throw new Error(`Error scheduling tasks - ${error}`)
     }
 }
