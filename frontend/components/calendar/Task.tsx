@@ -16,9 +16,10 @@ type TaskProps = {
     day: dayjs.Dayjs
     now: dayjs.Dayjs
     type: string
+    milestone_id: number
 }
 
-export default function Task({ id, title, description, start, end, type, day, now }: TaskProps) {
+export default function Task({ id, title, description, start, end, type, day, now, milestone_id }: TaskProps) {
     const [open, setOpen] = useState(false)
 
     const closeModal = () => {
@@ -42,8 +43,30 @@ export default function Task({ id, title, description, start, end, type, day, no
         return difference / 60
     }
 
-    let possibleColours = ['red', 'green', 'blue', 'indigo', 'pink', 'gray']
-    const selectedColour = possibleColours[Math.floor(Math.random() * possibleColours.length)]
+    const calculateColour = () => {
+        let possibleColours = [
+            'bg-red-500',
+            'bg-green-500',
+            'bg-blue-500',
+            'bg-indigo-500',
+            'bg-pink-500',
+            'bg-yellow-500',
+            'bg-indigo-500',
+            'bg-purple-500',
+            'bg-blue-300',
+            'bg-indigo-700',
+            'bg-green-300',
+            'bg-yellow-400',
+        ]
+        if (type == 'personal') {
+            return `bg-gray-400`
+        }
+        if (!milestone_id) {
+            return `bg-red-700`
+        }
+
+        return possibleColours[milestone_id % possibleColours.length]
+    }
 
     return (
         <>
@@ -69,10 +92,10 @@ export default function Task({ id, title, description, start, end, type, day, no
                 className={`absolute flex items-center inset-x-0 bg-white rounded shadow cursor-pointer hover:bg-gray-100 hover:shadow-xs hover:border hover:border-gray-200 z-30 border border-gray-100`}
             >
                 <div
-                    className={`relative flex flex-col items-center justify-center flex-shrink-0 w-4 h-full bg-${selectedColour}-500 rounded-l`}
+                    className={`relative flex flex-col items-center justify-center flex-shrink-0 w-4 h-full ${calculateColour()} rounded-l`}
                 >
                     <div
-                        className={`absolute flex items-center justify-center bg-${selectedColour}-400 rounded-full shadow w-7 h-7`}
+                        className={`absolute flex items-center justify-center ${calculateColour()} rounded-full shadow w-7 h-7`}
                     >
                         {type === 'github' && (
                             <a href="https://github.com/tludlow/Deliberate">

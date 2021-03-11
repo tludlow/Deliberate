@@ -48,6 +48,7 @@ export default function Calendar() {
     }
 
     const [calendarData, setCalendarData] = useState([])
+    const [overallData, setOverallData] = useState([])
     let daysToLoad: any = []
 
     useEffect(() => {
@@ -60,6 +61,15 @@ export default function Calendar() {
         for (let i = -14; i <= 14; i++) {
             daysToLoad.push(localNow.add(i, 'day').format('YYYY-MM-DD'))
         }
+
+        //Get calendar overall info (not day info)
+        api.get('/calendar/info')
+            .then((response) => {
+                setOverallData(response.data.milestoneData)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
 
         daysToLoad.forEach((day: any) => {
             api.get(`/calendar/day/${day}`)
@@ -277,23 +287,33 @@ export default function Calendar() {
                                     </h3>
                                 </div>
                                 <div className="p-3">
-                                    <ul>
-                                        <div className="flex justify-between p-1 border border-gray-600 rounded">
-                                            <div>
-                                                <h4 className="text-lg font-semibold">Milestone title</h4>
-                                                <p className="mt-0.5 flex items-center text-sm">
-                                                    <CalendarIcon className="w-4 h-4 mr-2 text-gray-700" />
-                                                    <span>
-                                                        2021-05-23 <span className="text-gray-400">- in 34 days</span>
-                                                    </span>
-                                                </p>
-                                            </div>
-                                            <div className="flex items-center justify-center flex-grow h-full mt-2">
-                                                <div className="flex items-center justify-center bg-red-500 rounded-full w-9 h-9">
-                                                    <span className="text-white tabular-nums">3</span>
+                                    <ul className="space-y-6">
+                                        {overallData.map((milestone, i) => (
+                                            <li
+                                                key={i}
+                                                className="flex justify-between w-full p-1 px-3 border border-gray-600 rounded"
+                                            >
+                                                <div>
+                                                    <h4 className="text-lg font-semibold">{milestone.title}</h4>
+                                                    <p className="mt-0.5 flex items-center text-sm">
+                                                        <CalendarIcon className="w-4 h-4 mr-2 text-gray-700" />
+                                                        <span>
+                                                            {milestone.due_date.split('T')[0]}
+                                                            <span className="text-gray-400">
+                                                                - {dayjs(milestone.due_date).from()}
+                                                            </span>
+                                                        </span>
+                                                    </p>
                                                 </div>
-                                            </div>
-                                        </div>
+                                                <div className="flex items-center justify-center flex-grow h-full mt-2">
+                                                    <div className="flex items-center justify-center bg-red-500 rounded-full w-9 h-9">
+                                                        <span className="text-white tabular-nums">
+                                                            {milestone.percentage}%
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                             </div>

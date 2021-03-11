@@ -108,10 +108,10 @@ const Day = ({ day, now, startHour = 9, endHour = 17, tasks }: DayProps) => {
                             day={day}
                             start={dayjs(task.start_time, 'HH:mm:ss').format('HH:mm A')}
                             end={dayjs(task.end_time, 'HH:mm:ss').format('HH:mm A')}
-                            type="food"
                             now={now}
                             id={task.id}
                             type={task.type}
+                            milestone_id={task.milestone_id}
                         />
                     ))}
                 </div>

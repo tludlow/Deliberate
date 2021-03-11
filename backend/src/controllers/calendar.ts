@@ -23,6 +23,55 @@ export const UserCalendar = async (req: Request, res: Response) => {
     res.status(200).send({ data })
 }
 
+export const UserCalendarInfo = async (req: Request, res: Response) => {
+    const { user_id, github_token } = res.locals
+
+    const requestWithAuth = request.defaults({
+        headers: {
+            authorization: `token ${github_token}`,
+        },
+    })
+
+    interface MilestoneCompletePercent {
+        milestone_id: number
+        percentage: number
+    }
+    let percentMilestones: MilestoneCompletePercent[] = []
+    let milestoneData: any[] = []
+    try {
+        let reposToFetch = await query(
+            'SELECT owner, name FROM user_repos INNER JOIN tracked_repos tr ON tr.repo_id = user_repos.repo_id WHERE user_id=$1',
+            [user_id]
+        )
+
+        for (let row of reposToFetch.rows) {
+            const { data } = await requestWithAuth(`GET /repos/${row.owner}/${row.name}/milestones?sort=due_on`)
+            if (data.length === 0) {
+                continue
+            }
+            for (let milestone of data) {
+                percentMilestones.push({
+                    milestone_id: milestone.id,
+                    percentage: 100 - (milestone.open_issues / (milestone.open_issues + milestone.closed_issues)) * 100,
+                })
+            }
+        }
+
+        let milestonesForUser = await query(
+            'SELECT milestones.id, title, description, due_date, state FROM milestones INNER JOIN user_repos ur on milestones.repo_id = ur.repo_id INNER JOIN users u on ur.user_id = u.id WHERE user_id=$1 ORDER BY due_date',
+            [user_id]
+        )
+
+        milestonesForUser.rows.forEach((milestone, i) => {
+            let percentage = percentMilestones[i].percentage
+            milestoneData.push({ percentage, ...milestone })
+        })
+    } catch (error) {
+        res.status(500).send({ message: error })
+    }
+    res.status(200).send({ milestoneData })
+}
+
 export const AddTaskToCalendar = async (req: Request, res: Response) => {
     const { title, description, day, start_time, end_time } = req.body
     const { user_id } = res.locals
@@ -134,7 +183,7 @@ export const GetUserTasksForDay = async (req: Request, res: Response) => {
     const user = res.locals.user_id
     try {
         let daysTasks = await query(
-            'SELECT tasks.id, title, description, start_time, end_time, type FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+            'SELECT tasks.id, tasks.title, tasks.description, start_time, end_time, type, milestone_id FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id LEFT JOIN issues iss ON tasks.issue_id = iss.id LEFT JOIN milestones m on iss.milestone_id = m.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
             [day, user]
         )
         res.status(200).send({ day, start: 9, end: 18, tasks: daysTasks.rows })
@@ -180,7 +229,7 @@ export const LoadFuture = async (req: Request, res: Response) => {
     try {
         for (let getDay of futureDay) {
             let daysTasks = await query(
-                'SELECT tasks.id, title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+                'SELECT tasks.id, tasks.title, tasks.description, start_time, end_time, type, milestone_id FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id LEFT JOIN issues iss ON tasks.issue_id = iss.id LEFT JOIN milestones m on iss.milestone_id = m.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
                 [getDay, user_id]
             )
             response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
@@ -206,7 +255,7 @@ export const LoadPast = async (req: Request, res: Response) => {
     try {
         for (let getDay of futureDay) {
             let daysTasks = await query(
-                'SELECT tasks.id, title, description, start_time, end_time FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
+                'SELECT tasks.id, tasks.title, tasks.description, start_time, end_time, type, milestone_id FROM tasks INNER JOIN user_calendars uc on tasks.calendar_id = uc.id INNER JOIN users u on uc.user_id = u.id LEFT JOIN issues iss ON tasks.issue_id = iss.id LEFT JOIN milestones m on iss.milestone_id = m.id WHERE day = $1 AND u.id = $2 ORDER BY start_time',
                 [getDay, user_id]
             )
             response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
@@ -247,7 +296,7 @@ export const TeamLoadFuture = async (req: Request, res: Response) => {
     try {
         for (let getDay of futureDay) {
             let daysTasks = await query(
-                'SELECT team_tasks.id, title, description, start_time, end_time, type FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id WHERE day = $1 AND t.id = $2 ORDER BY start_time',
+                'SELECT team_tasks.id, team_tasks.title, team_tasks.description, start_time, end_time, type, milestone_id FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id LEFT JOIN issues i on team_tasks.issue_id = i.id LEFT JOIN milestones m on i.milestone_id = m.id WHERE day=$1 AND t.id=$2 ORDER BY start_time',
                 [getDay, team_id]
             )
             response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
@@ -274,7 +323,7 @@ export const TeamLoadPast = async (req: Request, res: Response) => {
     try {
         for (let getDay of futureDay) {
             let daysTasks = await query(
-                'SELECT team_tasks.id, title, description, start_time, end_time, type FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id WHERE day = $1 AND t.id = $2 ORDER BY start_time',
+                'SELECT team_tasks.id, team_tasks.title, team_tasks.description, start_time, end_time, type, milestone_id FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id LEFT JOIN issues i on team_tasks.issue_id = i.id LEFT JOIN milestones m on i.milestone_id = m.id WHERE day=$1 AND t.id=$2 ORDER BY start_time',
                 [getDay, team_id]
             )
             response.push({ day: getDay, start: 9, end: 18, tasks: daysTasks.rows })
@@ -291,11 +340,12 @@ export const GetTeamTasksForDay = async (req: Request, res: Response) => {
     const { team_id } = res.locals
     try {
         let daysTasks = await query(
-            'SELECT team_tasks.id, title, description, start_time, end_time, type FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id WHERE day = $1 AND t.id = $2 ORDER BY start_time',
+            'SELECT team_tasks.id, team_tasks.title, team_tasks.description, start_time, end_time, type, milestone_id FROM team_tasks INNER JOIN team_calendars tc on team_tasks.calendar_id = tc.id INNER JOIN teams t on tc.team_id = t.id LEFT JOIN issues i on team_tasks.issue_id = i.id LEFT JOIN milestones m on i.milestone_id = m.id WHERE day=$1 AND t.id=$2 ORDER BY start_time',
             [day, team_id]
         )
         res.status(200).send({ day, start: 9, end: 18, tasks: daysTasks.rows })
     } catch (error) {
+        console.log(error)
         res.status(500).send({ error })
     }
 }
