@@ -105,10 +105,10 @@ export const GithubIssueWebhook = async (req: Request, res: Response) => {
     }
     if (payload.action === 'edited') {
         try {
-            let editedIssue = await query('UPDATE issues SET title=$1, description=$2) WHERE id=$3', [
-                payload.issue.id,
+            let editedIssue = await query('UPDATE issues SET title=$1, description=$2 WHERE id=$3', [
                 payload.issue.title,
                 payload.issue.body,
+                payload.issue.id,
             ])
         } catch (error) {
             console.log(error)

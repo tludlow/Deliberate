@@ -65,22 +65,7 @@ export default function EditTeamTaskModal({
                     }}
                     onSubmit={async (values, { setSubmitting }) => {
                         setSubmitting(true)
-                        api.post(`/team/${teamName}/calendar/task/edit`, {
-                            id,
-                            title: values.title,
-                            description: values.description,
-                            day: values.day,
-                            start_time: `${values.start_time}:00`,
-                            end_time: `${values.end_time}:00`,
-                        })
-                            .then((response) => {
-                                closeModal()
-                                location.reload()
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                                setError(error.response.data.message)
-                            })
+                        
                         setSubmitting(false)
                     }}
                 >

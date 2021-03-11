@@ -37,20 +37,13 @@ export default function TaskModal({
 }: TaskModalProps) {
     const [editOpen, setEditOpen] = useState(false)
     const router = useRouter()
-    let isTeamTask = false
-    let teamModal = true
 
-    const openEditModal = () => {
-        isTeamTask = router.pathname.includes('/team')
-        teamModal = isTeamTask
-        setEditOpen(true)
-    }
     const closeEditTaskModal = () => {
         setEditOpen(false)
     }
 
     const deleteTask = () => {
-        if (isTeamTask) {
+        if (router.pathname.includes('/team')) {
             api.post(`/team/${router.asPath.split('/')[2]}/calendar/task/delete`, { task_id: id })
                 .then((response) => {
                     console.log(response)
@@ -73,29 +66,9 @@ export default function TaskModal({
         }
     }
 
-    useEffect(() => {
-        isTeamTask = router.pathname.includes('/team')
-    }, [editOpen])
-
     return (
         <>
-            {teamModal &&
-                createPortal(
-                    <EditTeamTaskModal
-                        isOpen={editOpen}
-                        closeModal={closeEditTaskModal}
-                        id={id}
-                        title={title}
-                        description={description}
-                        date={date}
-                        start_time={start}
-                        end_time={end}
-                        teamName={router.asPath.split('/')[2]}
-                    />,
-                    document.body
-                )}
-
-            {!teamModal &&
+            {editOpen &&
                 createPortal(
                     <EditTaskModal
                         isOpen={editOpen}
@@ -106,6 +79,7 @@ export default function TaskModal({
                         date={date}
                         start_time={start}
                         end_time={end}
+                        team={router.asPath.split('/')[2]}
                     />,
                     document.body
                 )}
@@ -130,7 +104,7 @@ export default function TaskModal({
                                 <RightArrowIcon className="w-4 h-4 mx-1 font-normal text-gray-400" />{' '}
                                 {dayjs(end, 'HH:mm A').format('h:mm A')}{' '}
                             </span>
-                            <button onClick={() => openEditModal()}>
+                            <button onClick={() => setEditOpen(true)}>
                                 <EditIcon className="w-4 h-4 text-gray-700 hover:text-gray-500" />
                             </button>
                         </p>

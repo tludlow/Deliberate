@@ -82,6 +82,25 @@ export async function ScheduleUserDay(
                     //Schedule a task in this period
                     console.log(`amount left to schedule: ${tasksToSchedule.length}`)
                     let schedulingIssue = tasksToSchedule[0]
+
+                    //Find how long to schedule for (from the task description)
+                    let lengthMinutes = 60
+                    if (!isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0]))) {
+                        lengthMinutes = Number(schedulingIssue.description.split('time:').pop().split('m')[0])
+                    }
+                    if (timeUntilNextTask * 60 < lengthMinutes) {
+                        console.log('no time to schedule here')
+                        //Jump to the next task so we can start scheduling again
+                        schedulingTime = dayjs(daysTasks[0].day)
+                            .hour(daysTasks[0].start_time.split(':')[0])
+                            .minute(daysTasks[0].start_time.split(':')[1])
+                            .second(daysTasks[0].start_time.split(':')[2])
+                            .millisecond(0)
+                        console.log(`jumping to: ${schedulingTime.format('YYYY-MM-DD HH:mm:ss')}`)
+                        continue
+                    }
+
+                    console.log(lengthMinutes)
                     let insertNewTask = await query(
                         'INSERT INTO tasks (title, description, day, start_time, end_time, calendar_id, type, issue_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
                         [
@@ -89,13 +108,15 @@ export async function ScheduleUserDay(
                             schedulingIssue.description,
                             schedulingTime.format('YYYY-MM-DD'),
                             `${schedulingTime.hour()}:${schedulingTime.minute()}:00`,
-                            `${schedulingTime.add(1, 'hour').hour()}:${schedulingTime.add(1, 'hour').minute()}:00`,
+                            `${schedulingTime.add(lengthMinutes / 60, 'hour').hour()}:${schedulingTime
+                                .add(lengthMinutes / 60, 'hour')
+                                .minute()}:00`,
                             user_id,
                             'github',
                             schedulingIssue.id,
                         ]
                     )
-                    schedulingTime = schedulingTime.add(1, 'hour')
+                    schedulingTime = schedulingTime.add(lengthMinutes / 60, 'hour')
                     tasksToSchedule = tasksToSchedule.filter((taskSched, index) => taskSched.id !== schedulingIssue.id)
                     console.log('-------------')
                 }
@@ -108,6 +129,10 @@ export async function ScheduleUserDay(
                 //Schedule a task in this period
                 console.log(`amount left to schedule: ${tasksToSchedule.length}`)
                 let schedulingIssue = tasksToSchedule[0]
+                let lengthMinutes = 60
+                if (!isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0]))) {
+                    lengthMinutes = Number(schedulingIssue.description.split('time:').pop().split('m')[0])
+                }
                 let insertNewTask = await query(
                     'INSERT INTO tasks (title, description, day, start_time, end_time, calendar_id, type, issue_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
                     [
@@ -115,13 +140,15 @@ export async function ScheduleUserDay(
                         schedulingIssue.description,
                         schedulingTime.format('YYYY-MM-DD'),
                         `${schedulingTime.hour()}:${schedulingTime.minute()}:00`,
-                        `${schedulingTime.add(1, 'hour').hour()}:${schedulingTime.add(1, 'hour').minute()}:00`,
+                        `${schedulingTime.add(lengthMinutes / 60, 'hour').hour()}:${schedulingTime
+                            .add(lengthMinutes / 60, 'hour')
+                            .minute()}:00`,
                         user_id,
                         'github',
                         schedulingIssue.id,
                     ]
                 )
-                schedulingTime = schedulingTime.add(1, 'hour')
+                schedulingTime = schedulingTime.add(lengthMinutes / 60, 'hour')
                 tasksToSchedule = tasksToSchedule.filter((taskSched, index) => taskSched.id !== schedulingIssue.id)
                 console.log('-------------')
             }
@@ -207,6 +234,25 @@ export async function ScheduleTeamDay(
                     //Schedule a task in this period
                     console.log(`amount left to schedule: ${tasksToSchedule.length}`)
                     let schedulingIssue = tasksToSchedule[0]
+
+                    //Find how long to schedule for (from the task description)
+                    let lengthMinutes = 60
+                    if (!isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0]))) {
+                        lengthMinutes = Number(schedulingIssue.description.split('time:').pop().split('m')[0])
+                    }
+                    if (timeUntilNextTask * 60 < lengthMinutes) {
+                        console.log('no time to schedule here')
+                        //Jump to the next task so we can start scheduling again
+                        schedulingTime = dayjs(daysTasks[0].day)
+                            .hour(daysTasks[0].start_time.split(':')[0])
+                            .minute(daysTasks[0].start_time.split(':')[1])
+                            .second(daysTasks[0].start_time.split(':')[2])
+                            .millisecond(0)
+                        console.log(`jumping to: ${schedulingTime.format('YYYY-MM-DD HH:mm:ss')}`)
+                        continue
+                    }
+
+                    console.log(lengthMinutes)
                     let insertNewTask = await query(
                         'INSERT INTO team_tasks (title, description, day, start_time, end_time, calendar_id, type, issue_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
                         [
@@ -233,6 +279,10 @@ export async function ScheduleTeamDay(
                 //Schedule a task in this period
                 console.log(`amount left to schedule: ${tasksToSchedule.length}`)
                 let schedulingIssue = tasksToSchedule[0]
+                let lengthMinutes = 60
+                if (!isNaN(Number(schedulingIssue.description.split('time:').pop().split('m')[0]))) {
+                    lengthMinutes = Number(schedulingIssue.description.split('time:').pop().split('m')[0])
+                }
                 let insertNewTask = await query(
                     'INSERT INTO team_tasks (title, description, day, start_time, end_time, calendar_id, type, issue_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
                     [
@@ -285,14 +335,14 @@ export async function ScheduleUserCalendar(user_id: number) {
                 [user_id, now.format('YYYY-MM-DD')]
             )
 
-            console.log(`Scheduling for ${now.format('YYYY-MM-DD')}`)
-            console.log('Scheduling issues:')
-            console.log(issuesLeft)
-            console.log('Scheduling around tasks:')
+            // console.log(`Scheduling for ${now.format('YYYY-MM-DD')}`)
+            // console.log('Scheduling issues:')
+            // console.log(issuesLeft)
+            // console.log('Scheduling around tasks:')
             console.log(scheduledPersonalTasksForToday.rows)
             let remainingIssues = await ScheduleUserDay(now, scheduledPersonalTasksForToday.rows, issuesLeft, user_id)
-            console.log('Remaining issues:')
-            console.log(remainingIssues)
+            // console.log('Remaining issues:')
+            // console.log(remainingIssues)
             if (issuesToSchedule.length === 0) {
                 console.log('breaking')
                 console.log('ENDING SCHEDULE')
@@ -335,14 +385,14 @@ export async function ScheduleTeamCalendar(team_id: number) {
                 [team_id, now.format('YYYY-MM-DD')]
             )
 
-            console.log(`Scheduling for ${now.format('YYYY-MM-DD')}`)
-            console.log('Scheduling issues:')
-            console.log(issuesLeft)
-            console.log('Scheduling around tasks:')
-            console.log(scheduledPersonalTasksForToday.rows)
+            // console.log(`Scheduling for ${now.format('YYYY-MM-DD')}`)
+            // console.log('Scheduling issues:')
+            // console.log(issuesLeft)
+            // console.log('Scheduling around tasks:')
+            // console.log(scheduledPersonalTasksForToday.rows)
             let remainingIssues = await ScheduleTeamDay(now, scheduledPersonalTasksForToday.rows, issuesLeft, team_id)
-            console.log('Remaining issues:')
-            console.log(remainingIssues)
+            // console.log('Remaining issues:')
+            // console.log(remainingIssues)
             if (issuesToSchedule.length === 0) {
                 console.log('breaking')
                 console.log('ENDING SCHEDULE')

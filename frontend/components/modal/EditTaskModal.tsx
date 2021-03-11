@@ -15,6 +15,7 @@ type EditTaskModalProps = {
     date: dayjs.Dayjs
     start_time: string
     end_time: string
+    team: string
 }
 
 export default function EditTaskModal({
@@ -26,13 +27,17 @@ export default function EditTaskModal({
     date,
     start_time,
     end_time,
+    team,
 }: EditTaskModalProps) {
     const [error, setError] = useState('')
 
+    useEffect(() => {
+        console.log(team)
+    }, [])
     return (
         <ModalHOC isOpen={isOpen} closeModal={closeModal} modalWidth="w-full lg:w-1/2 xl:w-5/12">
             <div className="flex justify-center">
-                <h4 className="text-xl font-bold">Edit Personal Task - {title}</h4>
+                <h4 className="text-xl font-bold">Edit Task - {title}</h4>
             </div>
 
             <div className="mt-6">
@@ -63,22 +68,42 @@ export default function EditTaskModal({
                     }}
                     onSubmit={async (values, { setSubmitting }) => {
                         setSubmitting(true)
-                        api.post('/calendar/task/edit', {
-                            id,
-                            title: values.title,
-                            description: values.description,
-                            day: values.day,
-                            start_time: `${values.start_time}:00`,
-                            end_time: `${values.end_time}:00`,
-                        })
-                            .then((response) => {
-                                closeModal()
-                                location.reload()
+                        if (team) {
+                            api.post(`/team/${team}/calendar/task/edit`, {
+                                id,
+                                title: values.title,
+                                description: values.description,
+                                day: values.day,
+                                start_time: `${values.start_time}:00`,
+                                end_time: `${values.end_time}:00`,
                             })
-                            .catch((error) => {
-                                console.log(error)
-                                setError(error.response.data.message)
+                                .then((response) => {
+                                    closeModal()
+                                    location.reload()
+                                })
+                                .catch((error) => {
+                                    console.log(error)
+                                    setError(error.response.data.message)
+                                })
+                        } else {
+                            api.post('/calendar/task/edit', {
+                                id,
+                                title: values.title,
+                                description: values.description,
+                                day: values.day,
+                                start_time: `${values.start_time}:00`,
+                                end_time: `${values.end_time}:00`,
                             })
+                                .then((response) => {
+                                    closeModal()
+                                    location.reload()
+                                })
+                                .catch((error) => {
+                                    console.log(error)
+                                    setError(error.response.data.message)
+                                })
+                        }
+
                         setSubmitting(false)
                     }}
                 >
